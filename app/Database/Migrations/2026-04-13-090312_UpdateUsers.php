@@ -1,0 +1,26 @@
+<?php
+
+namespace App\Database\Migrations;
+
+use CodeIgniter\Database\Migration;
+
+class UpdateUsers extends Migration
+{
+    public function up()
+    {
+        $fields = [
+            'role' => [
+                'type'       => 'ENUM',
+                'constraint' => ['Admin', 'User', 'Viewer'],
+                'default'    => 'User',
+                'after'      => 'password'
+            ],
+        ];
+        $this->forge->addColumn('users', $fields);
+    }
+
+    public function down()
+    {
+        $this->forge->dropColumn('users', 'role');
+    }
+}
