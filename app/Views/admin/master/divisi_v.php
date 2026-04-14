@@ -1,73 +1,81 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Master Divisi | PT Surveyor Indonesia</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-</head>
-<body class="bg-gray-50 min-h-screen">
+<?= $this->extend('layout/main') ?>
 
-    <nav class="bg-blue-900 text-white shadow-lg py-3 px-6 flex justify-between items-center mb-8">
-        <div class="flex items-center space-x-3">
-            <i class="fas fa-building text-blue-300 text-xl"></i>
-            <span class="font-bold text-lg tracking-tight">Master Divisi</span>
-        </div>
-        <a href="<?= base_url('dashboard') ?>" class="text-xs bg-blue-800 hover:bg-blue-700 px-4 py-2 rounded-lg transition font-bold">
-            <i class="fas fa-home mr-2"></i> DASHBOARD
-        </a>
-    </nav>
+<?= $this->section('content') ?>
+<div class="row mb-4 align-items-center">
+    <div class="col-md-8">
+        <h4 class="mb-1 fw-bold border-start border-primary border-4 ps-3">Manajemen Divisi</h4>
+        <p class="text-muted ms-3 mb-0 mt-1 fs-3 italic">Konfigurasi struktur organisasi perusahaan.</p>
+    </div>
+</div>
 
-    <div class="max-w-6xl mx-auto px-4">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 h-fit">
-                <h3 class="font-bold mb-6 text-gray-700 flex items-center">
-                    <i class="fas fa-plus-circle mr-2 text-green-500"></i> Tambah Divisi
-                </h3>
-                <form action="<?= base_url('master/divisi/save') ?>" method="POST" class="space-y-4">
-                    <div>
-                        <label class="block text-[10px] font-bold uppercase text-gray-400 mb-1">Kode Divisi</label>
-                        <input type="text" name="kode_divisi" placeholder="Contoh: IT" class="w-full border-b-2 border-gray-100 p-2 focus:border-blue-500 outline-none transition" required>
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card shadow-sm border-0 border-top border-4 border-success rounded-3">
+            <div class="card-body p-4">
+                <h5 class="card-title fw-bold text-dark mb-4"><i class="ti ti-plus me-2 text-success"></i>Tambah Divisi</h5>
+                <form action="<?= base_url('master/divisi/save') ?>" method="POST">
+                    <?= csrf_field() ?>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Kode Divisi</label>
+                        <input type="text" name="kode_divisi" class="form-control" placeholder="Contoh: IT" required>
                     </div>
-                    <div>
-                        <label class="block text-[10px] font-bold uppercase text-gray-400 mb-1">Nama Divisi</label>
-                        <input type="text" name="nama_divisi" placeholder="Contoh: Teknologi Informasi" class="w-full border-b-2 border-gray-100 p-2 focus:border-blue-500 outline-none transition" required>
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Nama Divisi</label>
+                        <input type="text" name="nama_divisi" class="form-control" placeholder="Contoh: Teknologi Informasi" required>
                     </div>
-                    <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700 shadow-lg transition transform hover:scale-[1.02]">
-                        SIMPAN DIVISI
-                    </button>
+                    <button type="submit" class="btn btn-success w-100 py-3 fw-bold text-uppercase shadow-sm">Simpan Divisi</button>
                 </form>
-            </div>
-
-            <div class="md:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-gray-50 border-b text-gray-400 text-[10px] uppercase tracking-widest">
-                            <th class="px-6 py-4 font-bold">Kode</th>
-                            <th class="px-6 py-4 font-bold">Nama Divisi</th>
-                            <th class="px-6 py-4 font-bold text-center">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-100">
-                        <?php foreach($divisi as $d): ?>
-                        <tr class="hover:bg-blue-50/30 transition">
-                            <td class="px-6 py-4 font-bold text-blue-600 font-mono"><?= $d['kode_divisi'] ?></td>
-                            <td class="px-6 py-4 text-gray-700 font-medium"><?= $d['nama_divisi'] ?></td>
-                            <td class="px-6 py-4 text-center">
-                                <a href="<?= base_url('master/divisi/delete/'.$d['id']) ?>" onclick="return confirm('Hapus divisi ini?')" class="text-red-400 hover:text-red-600 transition">
-                                    <i class="fas fa-trash-alt"></i>
-                                </a>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-                        <?php if(empty($divisi)): ?>
-                            <tr><td colspan="3" class="p-8 text-center text-gray-400 italic text-sm">Belum ada data divisi tersedia.</td></tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
             </div>
         </div>
     </div>
-</body>
-</html>
+
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0 rounded-3">
+            <div class="card-body p-4">
+                <div class="table-responsive">
+                    <table class="table text-nowrap mb-0 align-middle table-hover">
+                        <thead class="text-dark fs-4 bg-light">
+                            <tr>
+                                <th class="border-bottom-0">
+                                    <h6 class="fw-semibold mb-0">Kode</h6>
+                                </th>
+                                <th class="border-bottom-0">
+                                    <h6 class="fw-semibold mb-0">Nama Divisi</h6>
+                                </th>
+                                <th class="border-bottom-0 text-center">
+                                    <h6 class="fw-semibold mb-0">Aksi</h6>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach($divisi as $d): ?>
+                            <tr>
+                                <td class="border-bottom-0">
+                                    <h6 class="fw-bold mb-0 text-primary font-monospace text-uppercase"><?= $d['kode_divisi'] ?></h6>
+                                </td>
+                                <td class="border-bottom-0">
+                                    <p class="mb-0 fw-normal text-dark"><?= $d['nama_divisi'] ?></p>
+                                </td>
+                                <td class="border-bottom-0 text-center">
+                                    <a href="<?= base_url('master/divisi/delete/'.$d['id']) ?>" onclick="return confirm('Hapus divisi ini?')" class="btn btn-sm btn-outline-danger shadow-sm" title="Hapus">
+                                        <i class="ti ti-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                            <?php if(empty($divisi)): ?>
+                                <tr>
+                                    <td colspan="3" class="text-center py-5">
+                                        <i class="ti ti-building-off text-muted mb-3 d-block" style="font-size: 3rem;"></i>
+                                        <p class="text-muted fw-semibold mb-0">Belum ada data divisi tersedia.</p>
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<?= $this->endSection() ?>

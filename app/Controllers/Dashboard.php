@@ -53,13 +53,16 @@ class Dashboard extends BaseController
 
     public function save() {
         $model = new AssetModel();
-        $model->save([
+        if ($model->save([
             'nama_aset' => $this->request->getPost('nama_aset'),
             'kategori'  => $this->request->getPost('kategori'),
             'status'    => $this->request->getPost('status'),
             'pic'       => $this->request->getPost('pic'),
-        ]);
-        return redirect()->to('/dashboard')->with('sukses', 'Aset Berhasil Ditambah!');
+        ])) {
+            return redirect()->to('/dashboard')->with('sukses', 'Aset Berhasil Ditambah!');
+        } else {
+            return redirect()->back()->withInput()->with('error', 'Gagal menambah aset. Periksa kembali inputan Anda.');
+        }
     }
 
     public function edit($id) {
@@ -71,13 +74,16 @@ class Dashboard extends BaseController
 
     public function update($id) {
         $model = new AssetModel();
-        $model->update($id, [
+        if ($model->update($id, [
             'nama_aset' => $this->request->getPost('nama_aset'),
             'kategori'  => $this->request->getPost('kategori'),
             'status'    => $this->request->getPost('status'),
             'pic'       => $this->request->getPost('pic'),
-        ]);
-        return redirect()->to('/dashboard')->with('sukses', 'Aset Berhasil Diperbarui!');
+        ])) {
+            return redirect()->to('/dashboard')->with('sukses', 'Aset Berhasil Diperbarui!');
+        } else {
+            return redirect()->back()->withInput()->with('error', 'Gagal memperbarui aset.');
+        }
     }
 
     public function delete($id) {

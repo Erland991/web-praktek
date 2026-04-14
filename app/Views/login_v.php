@@ -1,94 +1,154 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Monitoring Aset SI</title>
+    <title>Login | SIMPA - PT Surveyor Indonesia</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-</head>
-<body class="bg-gradient-to-br from-blue-900 to-blue-600 min-h-screen flex items-center justify-center p-4">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
-    <div class="bg-white rounded-2xl shadow-2xl flex flex-col md:flex-row w-full max-w-4xl overflow-hidden">
-        
-        <div class="hidden md:flex md:w-1/2 bg-blue-50 items-center justify-center p-12">
-            <div class="text-center">
-                <div class="bg-blue-600 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
-                    <i class="fas fa-server text-white text-4xl"></i>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-100 min-h-screen flex items-center justify-center p-4">
+    <div class="flex flex-col md:flex-row bg-white rounded-2xl shadow-2xl overflow-hidden max-w-4xl w-full">
+
+        <!-- Kolom Kiri: Visual & Branding -->
+        <div
+            class="md:w-5/12 bg-gradient-to-br from-blue-900 via-blue-800 to-slate-900 p-10 text-white flex flex-col justify-between relative overflow-hidden hidden md:flex">
+            <!-- Ornamen Dekoratif -->
+            <div
+                class="absolute top-0 right-0 -mr-16 -mt-16 w-48 h-48 rounded-full bg-white opacity-5 mix-blend-overlay">
+            </div>
+            <div
+                class="absolute bottom-0 left-0 -ml-16 -mb-16 w-64 h-64 rounded-full bg-blue-400 opacity-20 mix-blend-overlay">
+            </div>
+
+            <div class="relative z-10 flex flex-col items-center">
+                <div class="bg-white p-4 rounded-3xl shadow-2xl mb-6">
+                    <img src="<?= base_url('images/logo_simpa.png') ?>" alt="Logo SIMPA" class="h-64 w-auto object-contain">
                 </div>
-                <h2 class="text-3xl font-extrabold text-blue-900 mb-2">Monitoring Aset</h2>
-                <p class="text-blue-600 font-medium">PT Surveyor Indonesia</p>
-                <div class="mt-8 space-y-3 text-left inline-block text-gray-600 text-sm">
-                    <p><i class="fas fa-check-circle text-green-500 mr-2"></i> COBIT-19 Integration</p>
-                    <p><i class="fas fa-check-circle text-green-500 mr-2"></i> Real-time Application Tracking</p>
-                    <p><i class="fas fa-check-circle text-green-500 mr-2"></i> Security Verified</p>
-                </div>
+            </div>
+
+            <div class="relative z-10 mt-12 md:mt-0">
+                <h2 class="text-lg font-bold mb-2">PT Surveyor Indonesia (Persero)</h2>
             </div>
         </div>
 
-        <div class="w-full md:w-1/2 p-8 md:p-12">
-            <div class="mb-10 text-center md:text-left">
-                <h3 class="text-2xl font-bold text-gray-800">Selamat Datang</h3>
-                <p class="text-gray-500">Silakan masuk ke akun Anda</p>
+        <!-- Kolom Kanan: Form Login -->
+        <div class="md:w-7/12 p-8 md:p-12 flex flex-col justify-center bg-white relative">
+
+            <!-- Deretan Logo Perusahaan -->
+            <div class="flex items-center justify-center gap-6 mb-8 pb-6 border-b border-slate-100">
+                <img src="<?= base_url('images/logo_danantara.png') ?>" alt="Logo Danantara"
+                    class="h-8 md:h-10 object-contain drop-shadow-sm">
+                <img src="<?= base_url('images/logo_idsurvey.png') ?>" alt="Logo IDSurvey"
+                    class="h-8 md:h-10 object-contain drop-shadow-sm">
+                <img src="<?= base_url('images/logo_si.png') ?>" alt="Logo Surveyor Indonesia"
+                    class="h-8 md:h-10 object-contain drop-shadow-sm">
             </div>
 
-            <?php if (session()->getFlashdata('error')) : ?>
-                <div class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-r shadow-sm flex items-center">
-                    <i class="fas fa-exclamation-triangle mr-3"></i>
-                    <span class="text-sm"><?= session()->getFlashdata('error') ?></span>
-                </div>
-            <?php endif; ?>
+            <!-- Header Form -->
+            <div class="mb-8 text-center">
+                <h3 class="text-2xl font-bold text-slate-800">Selamat Datang</h3>
+                <p class="text-slate-500 text-sm mt-2">Silakan masuk menggunakan kredensial Anda</p>
+                
+                <?php if (session()->getFlashdata('error')) : ?>
+                    <div class="mt-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm font-medium">
+                        <?= session()->getFlashdata('error') ?>
+                    </div>
+                <?php endif; ?>
 
-            <form action="<?= base_url('login') ?>" method="POST" class="space-y-6">
+
+            </div>
+
+            <!-- Form -->
+            <form action="<?= base_url('login') ?>" method="POST" class="space-y-5">
+                <?= csrf_field() ?>
+
                 <div>
-                    <label class="block text-gray-700 text-sm font-semibold mb-2">Username</label>
+                    <label class="block text-slate-700 text-sm font-semibold mb-2">Username</label>
                     <div class="relative">
-                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
-                            <i class="fas fa-user"></i>
-                        </span>
-                        <input type="text" name="username" autofocus
-                            class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition duration-200" 
-                            placeholder="Username" required>
+                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <input type="text" name="username"
+                            class="w-full pl-11 pr-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 focus:outline-none transition-all duration-300"
+                            placeholder="Masukkan Username" required autofocus>
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-gray-700 text-sm font-semibold mb-2">Password</label>
+                    <label class="block text-slate-700 text-sm font-semibold mb-2">Password</label>
                     <div class="relative">
-                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
-                            <i class="fas fa-lock"></i>
-                        </span>
-                        <input type="password" name="password" 
-                            class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition duration-200" 
-                            placeholder="Password" required>
+                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <input type="password" name="password"
+                            class="w-full pl-11 pr-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 focus:outline-none transition-all duration-300"
+                            placeholder="Masukkan Password" required>
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-gray-700 text-sm font-semibold mb-2">Login Sebagai</label>
-                    <div class="grid grid-cols-2 gap-4">
-                        <label class="relative flex items-center justify-center p-3 border rounded-lg cursor-pointer hover:bg-blue-50 transition border-gray-300 has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50">
-                            <input type="radio" name="role_akses" value="Admin" class="hidden" checked>
-                            <span class="text-sm font-medium text-gray-700">Admin</span>
-                        </label>
-                        <label class="relative flex items-center justify-center p-3 border rounded-lg cursor-pointer hover:bg-blue-50 transition border-gray-300 has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50">
-                            <input type="radio" name="role_akses" value="User" class="hidden">
-                            <span class="text-sm font-medium text-gray-700">User / PIC</span>
-                        </label>
+                    <label class="block text-slate-700 text-sm font-semibold mb-2">Pilih Role</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <select name="role_akses"
+                            class="w-full pl-11 pr-10 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 focus:outline-none transition-all duration-300 appearance-none cursor-pointer text-slate-700">
+                            <option value="Admin">Administrator</option>
+                            <option value="User">User / PIC Proyek</option>
+                        </select>
+                        <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                            <svg class="h-4 w-4 text-slate-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </div>
                     </div>
                 </div>
 
-                <button type="submit" 
-                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg shadow-lg transform transition active:scale-95 duration-200 uppercase tracking-wider">
-                    Sign In
-                </button>
+                <div class="pt-2">
+                    <button type="submit"
+                        class="w-full bg-gradient-to-r from-blue-700 to-blue-800 hover:from-blue-800 hover:to-blue-900 text-white font-bold py-3.5 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 flex justify-center items-center gap-2 group">
+                        <span>Masuk ke Sistem</span>
+                        <svg class="w-5 h-5 group-hover:translate-x-1.5 transition-transform duration-300" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                        </svg>
+                    </button>
+                </div>
             </form>
 
-            <div class="mt-12 text-center text-gray-400 text-xs">
-                &copy; 2026 PT Surveyor Indonesia. All rights reserved.
+            <div class="mt-10 text-center text-slate-400 text-xs font-medium">
+                &copy; <?= date('Y') ?> PT Surveyor Indonesia (Persero). All rights reserved.
             </div>
         </div>
     </div>
-
 </body>
+
 </html>

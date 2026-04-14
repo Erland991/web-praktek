@@ -6,33 +6,32 @@ class Home extends BaseController
 {
     public function index()
     {
-        // Jika sudah login, langsung lempar ke dashboard
         if (session()->get('logged_in')) {
             return redirect()->to('/dashboard');
         }
+        // Pastikan nama file sesuai dengan yang kamu simpan di Views
         return view('login_v'); 
     }
 
     public function login()
     {
-        $session  = session();
-        $model    = new \App\Models\UserModel();
+        $session = session();
+        $model   = new \App\Models\UserModel();
         
-        // Mengambil input dari form login_v.php
         $username = $this->request->getPost('username');
         $password = $this->request->getPost('password');
-        $role_pilihan = $this->request->getPost('role_akses'); // Ini dari radio button
-
+        $role_pilihan = $this->request->getPost('role_akses'); 
+        
         $user = $model->where('username', $username)->first();
 
         if ($user) {
-            // CEK 1: Apakah Role yang dipilih di form sesuai dengan Role di Database?
-            if ($user['role'] !== $role_pilihan) {
-                return redirect()->back()->with('error', "Maaf, akun ini tidak terdaftar sebagai $role_pilihan");
+            // Cek Kesesuaian Role (Case Insensitive)
+            if (strcasecmp($user['role'], $role_pilihan) !== 0) {
+                return redirect()->back()->with('error', "Akun tidak terdaftar sebagai $role_pilihan");
             }
 
-            // CEK 2: Password (Bypass sementara dengan admin123)
-            if ($password == 'admin123') { 
+            // Verifikasi Password (Mendukung Hash & Plain Text untuk migrasi)
+            if (password_verify($password, $user['password']) || $password == $user['password']) {
                 $session->set([
                     'id'           => $user['id'],
                     'username'     => $user['username'],

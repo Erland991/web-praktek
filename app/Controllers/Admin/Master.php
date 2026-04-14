@@ -85,7 +85,7 @@ class Master extends BaseController
         }
 
         if ($model->update($id, $data)) {
-            return redirect()->to(base_url('master/karyawan'))->with('sukses', 'Data Berhasil Diperbarui');
+            return redirect()->to('/master/karyawan')->with('sukses', 'Data Berhasil Diperbarui');
         } else {
             return redirect()->back()->with('error', 'Gagal memperbarui data.');
         }
