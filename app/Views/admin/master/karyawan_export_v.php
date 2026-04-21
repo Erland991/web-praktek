@@ -12,20 +12,18 @@
         table th { background-color: #004b87; color: white; text-transform: uppercase; }
         table tr:nth-child(even) { background-color: #f9f9f9; }
         .footer { margin-top: 30px; text-align: right; font-size: 11px; border-top: 1px solid #eee; padding-top: 10px; }
+        .filter-info { margin-bottom: 10px; font-size: 11px; color: #555; font-style: italic; }
     </style>
 </head>
 <body>
     <div class="header">
         <h2>PT SURVEYOR INDONESIA</h2>
-        <p>Laporan Monitoring Aset Digital - Unit IT</p>
+        <p>Laporan Data Karyawan & Hak Akses Sistem</p>
     </div>
 
-    <?php if (!empty($filters['keyword']) || !empty($filters['kategori']) || !empty($filters['status'])): ?>
-    <div style="margin-bottom: 10px; font-size: 11px; color: #555; font-style: italic;">
-        Filter: 
-        <?= !empty($filters['keyword']) ? 'Pencarian: "' . $filters['keyword'] . '"; ' : '' ?>
-        <?= !empty($filters['kategori']) ? 'Kategori: ' . $filters['kategori'] . '; ' : '' ?>
-        <?= !empty($filters['status']) ? 'Status: ' . $filters['status'] . '; ' : '' ?>
+    <?php if (!empty($keyword)): ?>
+    <div class="filter-info">
+        Hasil pencarian untuk: "<?= $keyword ?>"
     </div>
     <?php endif; ?>
 
@@ -33,22 +31,29 @@
         <thead>
             <tr>
                 <th width="5%">No</th>
-                <th>Nama Aset</th>
-                <th>Kategori</th>
-                <th>Status</th>
-                <th>PIC</th>
+                <th>NIP</th>
+                <th>Nama Lengkap</th>
+                <th>Username</th>
+                <th>Role</th>
+                <th>Divisi</th>
             </tr>
         </thead>
         <tbody>
-            <?php $no = 1; foreach($semua_aset as $row): ?>
+            <?php $no = 1; foreach($karyawan as $k): ?>
             <tr>
                 <td><?= $no++ ?></td>
-                <td><?= $row['nama_aset'] ?></td>
-                <td><?= $row['kategori'] ?></td>
-                <td><?= $row['status'] ?></td>
-                <td><?= $row['pic'] ?></td>
+                <td><?= $k['nip'] ?></td>
+                <td><?= $k['nama_lengkap'] ?></td>
+                <td><?= $k['username'] ?></td>
+                <td><?= $k['role'] ?></td>
+                <td><?= $k['divisi'] ?? '-' ?></td>
             </tr>
             <?php endforeach; ?>
+            <?php if (empty($karyawan)): ?>
+            <tr>
+                <td colspan="6" style="text-align: center;">Data tidak ditemukan</td>
+            </tr>
+            <?php endif; ?>
         </tbody>
     </table>
 

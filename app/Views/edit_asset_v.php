@@ -3,10 +3,11 @@
 <?= $this->section('content') ?>
 <div class="row pt-3">
     <div class="col-lg-8 mx-auto">
-        <div class="card shadow-sm border-0 border-top border-4 border-warning rounded-3">
+        <div class="hero-card shadow-lg mb-4 text-center" style="padding: 1.5rem !important;">
+            <h4 class="mb-0 fs-6 fw-bold">Edit Data Aset</h4>
+        </div>
+        <div class="card shadow-sm border-0 rounded-3">
             <div class="card-body p-4">
-                <h4 class="card-title fw-bold text-dark mb-4"><i class="ti ti-edit me-2 text-warning"></i>Edit Data Aset</h4>
-                
                 <form action="<?= base_url('dashboard/update/' . $aset['id']) ?>" method="POST">
                     <div class="mb-4">
                         <label class="form-label fw-semibold">Nama Aset</label>
@@ -38,9 +39,14 @@
                         <input type="text" name="pic" value="<?= $aset['pic'] ?>" class="form-control" required>
                     </div>
 
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Deskripsi Aset</label>
+                        <textarea name="deskripsi" class="form-control" rows="3"><?= $aset['deskripsi'] ?? '' ?></textarea>
+                    </div>
+
                     <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-warning px-4 fw-semibold text-white shadow-sm">Update Data</button>
-                        <a href="<?= base_url('dashboard') ?>" class="btn btn-light px-4 fw-semibold border">Batal</a>
+                        <button type="submit" class="btn btn-warning px-4 fw-bold shadow-sm text-uppercase" style="letter-spacing: 1px;">Update Data</button>
+                        <a href="<?= base_url('dashboard') ?>" class="btn btn-light px-4 fw-bold border text-uppercase" style="letter-spacing: 1px;">Batal</a>
                     </div>
                 </form>
             </div>

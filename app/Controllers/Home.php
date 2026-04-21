@@ -35,9 +35,10 @@ class Home extends BaseController
                 $session->set([
                     'id'           => $user['id'],
                     'username'     => $user['username'],
-                    'nama_lengkap' => $user['nama_lengkap'],
-                    'role'         => $user['role'],
-                    'logged_in'    => true,
+                    'nama_lengkap'  => $user['nama_lengkap'],
+                    'jenis_kelamin' => $user['jenis_kelamin'] ?? 'L',
+                    'role'          => $user['role'],
+                    'logged_in'     => true,
                 ]);
 
                 return redirect()->to('/dashboard');

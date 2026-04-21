@@ -5,6 +5,9 @@ namespace App\Controllers\Admin;
 use App\Controllers\BaseController;
 use App\Models\DivisiModel;
 use App\Models\UserModel;
+use App\Models\LogModel;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class Master extends BaseController
 {
@@ -39,10 +42,57 @@ class Master extends BaseController
         $userModel = new UserModel(); 
         $divisiModel = new DivisiModel();
 
-        $data['karyawan'] = $userModel->findAll();
+        $keyword = $this->request->getGet('keyword');
+        
+        $builder = $userModel;
+        if ($keyword) {
+            $builder = $builder->groupStart()
+                               ->like('nama_lengkap', $keyword)
+                               ->orLike('nip', $keyword)
+                               ->orLike('username', $keyword)
+                               ->groupEnd();
+        }
+
+        $data['karyawan'] = $builder->findAll();
         $data['list_divisi'] = $divisiModel->findAll(); 
+        $data['keyword'] = $keyword;
 
         return view('admin/master/karyawan_v', $data);
+    }
+
+    public function exportKaryawan()
+    {
+        if (!session()->get('logged_in')) return redirect()->to('/');
+        
+        $userModel = new UserModel();
+        $keyword = $this->request->getGet('keyword');
+
+        $builder = $userModel;
+        if ($keyword) {
+            $builder = $builder->groupStart()
+                               ->like('nama_lengkap', $keyword)
+                               ->orLike('nip', $keyword)
+                               ->orLike('username', $keyword)
+                               ->groupEnd();
+        }
+
+        $data = [
+            'karyawan'  => $builder->findAll(),
+            'tgl_cetak' => date('d F Y'),
+            'user'      => session()->get('username'),
+            'keyword'   => $keyword
+        ];
+
+        $html = view('admin/master/karyawan_export_v', $data);
+        $options = new Options();
+        $options->set('isRemoteEnabled', true);
+        $dompdf = new Dompdf($options);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+        
+        return $this->response->setHeader('Content-Type', 'application/pdf')
+                              ->setBody($dompdf->output());
     }
 
     public function saveKaryawan()
@@ -59,6 +109,7 @@ class Master extends BaseController
         ];
 
         if ($model->save($data)) {
+            (new LogModel())->record('TAMBAH KARYAWAN', 'Menambahkan karyawan: ' . $data['nama_lengkap']);
             return redirect()->to('/master/karyawan')->with('sukses', 'Data Karyawan Berhasil Disimpan');
         } else {
             return redirect()->back()->withInput()->with('error', 'Gagal menyimpan data.');
@@ -85,6 +136,7 @@ class Master extends BaseController
         }
 
         if ($model->update($id, $data)) {
+            (new LogModel())->record('UPDATE KARYAWAN', 'Memperbarui data id: ' . $id);
             return redirect()->to('/master/karyawan')->with('sukses', 'Data Berhasil Diperbarui');
         } else {
             return redirect()->back()->with('error', 'Gagal memperbarui data.');
@@ -95,6 +147,7 @@ class Master extends BaseController
     {
         $model = new UserModel();
         $model->delete($id);
+        (new LogModel())->record('HAPUS KARYAWAN', 'Menghapus karyawan id: ' . $id);
         return redirect()->to('/master/karyawan')->with('sukses', 'Karyawan berhasil dihapus');
     }
 }

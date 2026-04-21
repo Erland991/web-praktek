@@ -3,9 +3,11 @@
 <?= $this->section('content') ?>
 <div class="row pt-3">
     <div class="col-lg-8 mx-auto">
-        <div class="card shadow-sm border-0 border-top border-4 border-primary rounded-3">
+        <div class="hero-card shadow-lg mb-4 text-center" style="padding: 1.5rem !important;">
+            <h4 class="mb-0 fs-6 fw-bold">Register Aset Baru</h4>
+        </div>
+        <div class="card shadow-sm border-0 rounded-3">
             <div class="card-body p-4">
-                <h4 class="card-title fw-bold text-dark mb-4"><i class="ti ti-square-plus me-2 text-primary"></i>Tambah Data Aset Digital</h4>
                 
                 <form action="<?= base_url('dashboard/save') ?>" method="POST">
                     <div class="mb-4">
@@ -38,9 +40,14 @@
                         <input type="text" name="pic" class="form-control" placeholder="Nama Penanggung Jawab" required>
                     </div>
 
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Deskripsi Aset</label>
+                        <textarea name="deskripsi" class="form-control" rows="3" placeholder="Jelaskan fungsi atau detail aset secara singkat..."></textarea>
+                    </div>
+
                     <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-primary px-4 fw-semibold shadow-sm">Simpan Data</button>
-                        <a href="<?= base_url('dashboard') ?>" class="btn btn-light px-4 fw-semibold border">Batal</a>
+                        <button type="submit" class="btn btn-primary px-4 fw-bold shadow-sm text-uppercase" style="letter-spacing: 1px;">Simpan Data</button>
+                        <a href="<?= base_url('dashboard') ?>" class="btn btn-light px-4 fw-bold border text-uppercase" style="letter-spacing: 1px;">Batal</a>
                     </div>
                 </form>
             </div>

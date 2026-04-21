@@ -18,39 +18,46 @@
 <body class="bg-slate-100 min-h-screen flex items-center justify-center p-4">
     <div class="flex flex-col md:flex-row bg-white rounded-2xl shadow-2xl overflow-hidden max-w-4xl w-full">
 
-        <!-- Kolom Kiri: Visual & Branding -->
+        <!-- Kolom Kiri: Visual & Landing Branding -->
         <div
-            class="md:w-5/12 bg-gradient-to-br from-blue-900 via-blue-800 to-slate-900 p-10 text-white flex flex-col justify-between relative overflow-hidden hidden md:flex">
-            <!-- Ornamen Dekoratif -->
-            <div
-                class="absolute top-0 right-0 -mr-16 -mt-16 w-48 h-48 rounded-full bg-white opacity-5 mix-blend-overlay">
-            </div>
-            <div
-                class="absolute bottom-0 left-0 -ml-16 -mb-16 w-64 h-64 rounded-full bg-blue-400 opacity-20 mix-blend-overlay">
-            </div>
+            class="md:w-6/12 bg-cover bg-center p-10 text-white flex flex-col justify-between relative overflow-hidden hidden md:flex"
+            style="background-image: url('<?= base_url('images/1663301594-surveyor-indonesia.png') ?>');">
+            
+            <!-- Overlay untuk Keterbacaan -->
+            <div class="absolute inset-0 bg-gradient-to-t from-blue-900 via-blue-900/40 to-transparent z-0"></div>
 
-            <div class="relative z-10 flex flex-col items-center">
-                <div class="bg-white p-4 rounded-3xl shadow-2xl mb-6">
-                    <img src="<?= base_url('images/logo_simpa.png') ?>" alt="Logo SIMPA" class="h-64 w-auto object-contain">
+            <div class="relative z-10">
+                <div class="bg-white/10 backdrop-blur-md inline-block px-4 py-2 rounded-lg border border-white/20 mb-6">
+                    <span class="text-xs font-bold tracking-[0.2em] uppercase">Enterprise Management System</span>
                 </div>
+                <h1 class="text-5xl font-extrabold leading-tight mb-4 drop-shadow-2xl">
+                    Integrasi & <br><span class="text-blue-400">Integritas</span> Untuk Negeri.
+                </h1>
+                <p class="text-lg text-blue-100/90 max-w-md leading-relaxed">
+                    Menjamin kepastian melalui layanan inspeksi, pengujian, sertifikasi, konsultansi, dan verifikasi untuk masa depan Indonesia yang lebih baik.
+                </p>
             </div>
 
-            <div class="relative z-10 mt-12 md:mt-0">
-                <h2 class="text-lg font-bold mb-2">PT Surveyor Indonesia (Persero)</h2>
+            <div class="relative z-10 flex items-center gap-4">
+                <div class="w-12 h-1 bg-blue-500 rounded-full"></div>
+                <p class="text-sm font-semibold tracking-widest uppercase opacity-80">PT Surveyor Indonesia</p>
             </div>
         </div>
 
         <!-- Kolom Kanan: Form Login -->
-        <div class="md:w-7/12 p-8 md:p-12 flex flex-col justify-center bg-white relative">
+        <div class="md:w-6/12 p-8 md:p-14 flex flex-col justify-center bg-white relative">
 
             <!-- Deretan Logo Perusahaan -->
-            <div class="flex items-center justify-center gap-6 mb-8 pb-6 border-b border-slate-100">
+            <div class="flex items-center justify-center gap-2 mb-6 pb-4 border-b border-slate-100">
                 <img src="<?= base_url('images/logo_danantara.png') ?>" alt="Logo Danantara"
-                    class="h-8 md:h-10 object-contain drop-shadow-sm">
+                    class="h-5 md:h-6 object-contain opacity-60">
                 <img src="<?= base_url('images/logo_idsurvey.png') ?>" alt="Logo IDSurvey"
-                    class="h-8 md:h-10 object-contain drop-shadow-sm">
+                    class="h-5 md:h-6 object-contain opacity-60">
                 <img src="<?= base_url('images/logo_si.png') ?>" alt="Logo Surveyor Indonesia"
-                    class="h-8 md:h-10 object-contain drop-shadow-sm">
+                    class="h-10 md:h-12 object-contain drop-shadow-sm px-1">
+                <div class="h-8 border-l border-slate-200 mx-1"></div>
+                <img src="<?= base_url('images/logo_simpa.png') ?>" alt="Logo SIMPA"
+                    class="h-14 md:h-16 object-contain drop-shadow-md px-1">
             </div>
 
             <!-- Header Form -->
@@ -119,6 +126,7 @@
                             class="w-full pl-11 pr-10 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 focus:outline-none transition-all duration-300 appearance-none cursor-pointer text-slate-700">
                             <option value="Admin">Administrator</option>
                             <option value="User">User / PIC Proyek</option>
+                            <option value="Viewer">Viewer / Eksekutif Pemantau</option>
                         </select>
                         <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
                             <svg class="h-4 w-4 text-slate-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"

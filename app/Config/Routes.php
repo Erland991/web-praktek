@@ -10,6 +10,7 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/', 'Home::index');
 $routes->post('/login', 'Home::login');
 $routes->get('/logout', 'Home::logout');
+$routes->get('/setup-database', 'DatabaseSetup::index');
 
 // --- DASHBOARD ---
 $routes->get('/dashboard', 'Dashboard::index');
@@ -20,11 +21,24 @@ $routes->post('/dashboard/update/(:num)', 'Dashboard::update/$1');
 $routes->get('/dashboard/delete/(:num)', 'Dashboard::delete/$1');
 $routes->get('/dashboard/export', 'Dashboard::export');
 
+// --- PROGRESS FEATURES ---
+$routes->get('/progress', 'Progress::index');
+$routes->post('/progress/update', 'Progress::update');
+
+// --- VIEWER FEATURES ---
+$routes->get('/monitoring', 'Viewer\Monitoring::index');
+$routes->get('/document-center', 'DocumentCenter::index');
+
+// --- CALENDAR FEATURES ---
+$routes->get('/calendar', 'Calendar::index');
+$routes->get('/calendar/events', 'Calendar::events');
+
 // --- MASTER DATA ---
 $routes->group('master', ['namespace' => 'App\Controllers\Admin'], function($routes) {
     
     // Kelola Karyawan
     $routes->get('karyawan', 'Master::karyawan');
+    $routes->get('karyawan/export', 'Master::exportKaryawan');
     $routes->post('karyawan/save', 'Master::saveKaryawan');
     
     // INI YANG TADI SALAH TEMPAT (Sekarang sudah di dalam group)
@@ -36,4 +50,29 @@ $routes->group('master', ['namespace' => 'App\Controllers\Admin'], function($rou
     $routes->get('divisi', 'Master::divisi');
     $routes->post('divisi/save', 'Master::saveDivisi');
     $routes->get('divisi/delete/(:num)', 'Master::deleteDivisi/$1');
+});
+
+// --- ADMIN FEATURES ---
+$routes->group('admin', ['namespace' => 'App\Controllers\Admin'], function($routes) {
+    $routes->get('logs', 'Logs::index');
+    
+    // Master Aplikasi Register
+    $routes->get('app-master', 'AppMaster::index');
+    $routes->post('app-master/save', 'AppMaster::save');
+    $routes->post('app-master/release', 'AppMaster::release');
+    $routes->get('app-master/delete/(:num)', 'AppMaster::delete/$1');
+
+    // Master KPI
+    $routes->get('kpi', 'Kpi::index');
+    $routes->post('kpi/save', 'Kpi::save');
+    $routes->get('kpi/delete/(:num)', 'Kpi::delete/$1');
+
+    // Master COBIT
+    $routes->get('cobit', 'Cobit::index');
+    $routes->post('cobit/save', 'Cobit::save');
+    $routes->get('cobit/delete/(:num)', 'Cobit::delete/$1');
+
+    // Approval Progress
+    $routes->get('approval', 'Approval::index');
+    $routes->post('approval/action/(:num)/(:num)', 'Approval::action/$1/$2');
 });
