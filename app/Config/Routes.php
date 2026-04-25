@@ -8,6 +8,7 @@ use CodeIgniter\Router\RouteCollection;
 
 // --- AUTH / LOGIN ---
 $routes->get('/', 'Home::index');
+$routes->get('/login-page', 'Home::loginPage');
 $routes->post('/login', 'Home::login');
 $routes->get('/logout', 'Home::logout');
 $routes->get('/setup-database', 'DatabaseSetup::index');

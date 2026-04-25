@@ -9,7 +9,14 @@ class Home extends BaseController
         if (session()->get('logged_in')) {
             return redirect()->to('/dashboard');
         }
-        // Pastikan nama file sesuai dengan yang kamu simpan di Views
+        return view('landing_v'); 
+    }
+
+    public function loginPage()
+    {
+        if (session()->get('logged_in')) {
+            return redirect()->to('/dashboard');
+        }
         return view('login_v'); 
     }
 

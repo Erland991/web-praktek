@@ -117,12 +117,9 @@
     <aside class="left-sidebar">
       <!-- Sidebar scroll-->
       <div>
-        <div class="brand-logo d-flex align-items-center justify-content-between">
-          <a href="<?= base_url('dashboard') ?>" class="text-nowrap logo-img d-flex align-items-center mt-3 gap-2 text-decoration-none">
-            <div class="bg-primary p-2 rounded text-white shadow-sm">
-                <i class="fas fa-server"></i>
-            </div>
-            <span class="fw-bold fs-5 text-dark">Monitoring SI</span>
+        <div class="brand-logo d-flex align-items-center justify-content-between px-4">
+          <a href="<?= base_url('dashboard') ?>" class="text-nowrap logo-img d-flex align-items-center mt-4 text-decoration-none">
+            <img src="<?= base_url('images/logo_simpa.png') ?>" alt="SIMPA Logo" height="60" class="object-contain">
           </a>
           <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
             <i class="ti ti-x fs-8"></i>

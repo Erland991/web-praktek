@@ -48,16 +48,15 @@
         <div class="md:w-6/12 p-8 md:p-14 flex flex-col justify-center bg-white relative">
 
             <!-- Deretan Logo Perusahaan -->
-            <div class="flex items-center justify-center gap-2 mb-6 pb-4 border-b border-slate-100">
+            <div class="flex items-center justify-center gap-3 mb-6 pb-4 border-b border-slate-100">
                 <img src="<?= base_url('images/logo_danantara.png') ?>" alt="Logo Danantara"
                     class="h-5 md:h-6 object-contain opacity-60">
                 <img src="<?= base_url('images/logo_idsurvey.png') ?>" alt="Logo IDSurvey"
                     class="h-5 md:h-6 object-contain opacity-60">
                 <img src="<?= base_url('images/logo_si.png') ?>" alt="Logo Surveyor Indonesia"
                     class="h-10 md:h-12 object-contain drop-shadow-sm px-1">
-                <div class="h-8 border-l border-slate-200 mx-1"></div>
                 <img src="<?= base_url('images/logo_simpa.png') ?>" alt="Logo SIMPA"
-                    class="h-14 md:h-16 object-contain drop-shadow-md px-1">
+                    class="h-6 md:h-8 object-contain drop-shadow-md -ml-4">
             </div>
 
             <!-- Header Form -->
