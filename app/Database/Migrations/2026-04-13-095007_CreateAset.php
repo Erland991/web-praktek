@@ -19,7 +19,7 @@ class CreateAset extends Migration
             'updated_at'  => ['type' => 'DATETIME', 'null' => true],
         ]);
         $this->forge->addKey('id', true);
-        $this->forge->createTable('aset');
+        $this->forge->createTable('aset', true);
     }
 
     public function down()

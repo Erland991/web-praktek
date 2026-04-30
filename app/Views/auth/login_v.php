@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Login | Monitoring Aset PT Surveyor Indonesia</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <style>
         @keyframes blob {
             0% { transform: translate(0px, 0px) scale(1); }
@@ -23,8 +24,8 @@
 </head>
 <body class="bg-slate-50 font-sans min-h-screen flex text-slate-800">
     <!-- Left Section - Login Form -->
-    <div class="w-full lg:w-5/12 xl:w-1/3 flex flex-col justify-center px-8 sm:px-16 md:px-24 bg-white relative z-10 shadow-2xl">
-        <div class="mb-10 text-center lg:text-left">
+    <div class="w-full lg:w-5/12 xl:w-1/3 flex flex-col justify-center px-8 sm:px-16 md:px-24 bg-white relative z-10 shadow-2xl animate__animated animate__fadeInLeft">
+        <div class="mb-10 text-center lg:text-left animate__animated animate__fadeInDown animate__delay-1s">
             <div class="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-blue-600 shadow-lg shadow-blue-600/30 mb-6 mx-auto lg:mx-0">
                 <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
             </div>
@@ -39,7 +40,7 @@
             </div>
         <?php endif; ?>
 
-        <form action="/login" method="POST" class="space-y-6">
+        <form action="/login" method="POST" class="space-y-6 animate__animated animate__fadeInUp animate__delay-1s">
             <?= csrf_field() ?>
             <div>
                 <label class="block text-sm font-bold text-slate-700 mb-2 tracking-wide uppercase">Username</label>
@@ -53,19 +54,7 @@
                 <input type="password" name="password" class="w-full px-5 py-4 rounded-xl bg-slate-100 border-transparent focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100 transition-all duration-300 text-slate-800" placeholder="Enter your password" required>
             </div>
 
-            <div>
-                <label class="block text-sm font-bold text-slate-700 mb-2 tracking-wide uppercase">Role Access</label>
-                <div class="relative">
-                    <select name="role_akses" class="w-full px-5 py-4 rounded-xl bg-slate-100 border-transparent focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100 transition-all duration-300 appearance-none text-slate-800 font-medium">
-                        <option value="admin">Administrator (IT/System Ops)</option>
-                        <option value="user">User / PIC Project</option>
-                        <option value="viewer">Viewer / Eksekutif Pemantau</option>
-                    </select>
-                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
-                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </div>
-                </div>
-            </div>
+
 
             <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-600/30 transform hover:-translate-y-1 transition duration-300 mt-8 tracking-wider">
                 SIGN IN SECURELY
@@ -90,7 +79,7 @@
         </div>
 
         <div class="relative z-10 p-20 flex flex-col items-center text-center">
-            <h2 class="text-5xl lg:text-6xl font-extrabold text-white mb-6 leading-tight drop-shadow-lg">
+            <h2 class="text-5xl lg:text-6xl font-extrabold text-white mb-6 leading-tight drop-shadow-lg animate__animated animate__zoomIn">
                 Enterprise<br>
                 <span class="text-blue-400">Asset Intelligence</span>
             </h2>

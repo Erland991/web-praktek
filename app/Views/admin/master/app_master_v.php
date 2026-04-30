@@ -87,6 +87,9 @@
                                 <button type="button" class="btn btn-sm btn-light text-success hover-success px-2" data-bs-toggle="tooltip" title="Catat Go-Live" onclick="showReleaseModal(<?= $app['id'] ?>, '<?= $app['nama_app'] ?>')">
                                     <i class="ti ti-rocket fs-4"></i>
                                 </button>
+                                <button type="button" class="btn btn-sm btn-light text-primary hover-primary px-2" data-bs-toggle="tooltip" title="Kelola Modul & Bobot" onclick="showModulModal(<?= $app['id'] ?>, '<?= $app['nama_app'] ?>')">
+                                    <i class="ti ti-puzzle fs-4"></i>
+                                </button>
                                 <a href="<?= base_url('admin/app-master/delete/'.$app['id']) ?>" onclick="return confirm('Hapus data master aplikasi ini?')" class="btn btn-sm btn-light text-danger hover-danger px-2" data-bs-toggle="tooltip" title="Hapus Data">
                                     <i class="ti ti-trash fs-4"></i>
                                 </a>
@@ -101,6 +104,9 @@
     </div>
 </div>
 
+<?= $this->endSection() ?>
+
+<?= $this->section('modals') ?>
 <!-- Modal Tambah -->
 <div class="modal fade" id="modalTambah" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -113,13 +119,23 @@
                 <?= csrf_field() ?>
                 <div class="modal-body p-4">
                     <div class="row g-3">
+                        <div class="col-12 mb-2">
+                            <label class="form-label fw-bold text-primary"><i class="ti ti-wand me-1"></i> Auto-Fill dari Data Dashboard (Opsional)</label>
+                            <select class="form-select border-primary" onchange="autoFillApp(this)">
+                                <option value="">-- Pilih untuk otomatis mengisi nama & PIC --</option>
+                                <?php foreach($list_aset as $aset): ?>
+                                    <option value="<?= htmlspecialchars(json_encode($aset)) ?>"><?= esc($aset['nama_aset']) ?> (PIC: <?= esc($aset['pic']) ?>)</option>
+                                <?php endforeach; ?>
+                            </select>
+                            <small class="text-muted d-block mt-1">Pilih data ini jika aplikasi sudah pernah Anda tambahkan lewat menu "Tambah Aset" di Dashboard.</small>
+                        </div>
                         <div class="col-12">
                             <label class="form-label fw-semibold">Nama Aplikasi</label>
-                            <input type="text" name="nama_app" class="form-control" required>
+                            <input type="text" name="nama_app" id="input_nama_app" class="form-control" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">PIC User</label>
-                            <select name="pic_id" class="form-select">
+                            <select name="pic_id" id="input_pic_id" class="form-select">
                                 <option value="">Pilih User</option>
                                 <?php foreach($list_pic as $p): ?>
                                     <option value="<?= $p['id'] ?>"><?= $p['nama_lengkap'] ?></option>
@@ -153,7 +169,7 @@
                         </div>
                         <div class="col-12">
                             <label class="form-label fw-semibold">Deskripsi Singkat</label>
-                            <textarea name="deskripsi" class="form-control" rows="2"></textarea>
+                            <textarea name="deskripsi" id="input_deskripsi" class="form-control" rows="2"></textarea>
                         </div>
                     </div>
                 </div>
@@ -165,6 +181,7 @@
         </div>
     </div>
 </div>
+
 <!-- Modal Release / Go-Live -->
 <div class="modal fade" id="modalRelease" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
@@ -213,11 +230,156 @@
     </div>
 </div>
 
+<!-- Modal Kelola Modul & Bobot -->
+<div class="modal fade" id="modalModul" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header bg-dark text-white p-4">
+                <h5 class="modal-title fw-bold"><i class="ti ti-puzzle me-2"></i>Kelola Modul & Bobot Kesulitan</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="alert alert-info border-0 bg-light-info text-info d-flex align-items-center rounded-3 mb-4">
+                    <i class="ti ti-info-circle fs-5 me-2"></i>
+                    <div>
+                        Sistem akan menghitung progres aplikasi secara otomatis berdasarkan <strong>rata-rata tertimbang</strong> dari modul-modul di bawah ini.
+                    </div>
+                </div>
+                
+                <h6 class="fw-bold text-dark mb-3" id="modul_app_name">Aplikasi: -</h6>
+                
+                <!-- Form Tambah Modul -->
+                <form action="<?= base_url('admin/app-master/save-module') ?>" method="POST" class="bg-light p-3 rounded-3 mb-4 border">
+                    <?= csrf_field() ?>
+                    <input type="hidden" name="aplikasi_id" id="modul_app_id">
+                    <div class="row g-2 align-items-end">
+                        <div class="col-md-7">
+                            <label class="form-label small fw-bold">Nama Fitur / Modul</label>
+                            <input type="text" name="nama_modul" class="form-control" placeholder="Misal: Modul Dashboard, API Integration..." required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label small fw-bold">Bobot (1-100)</label>
+                            <input type="number" name="bobot_kesulitan" class="form-control" placeholder="Bobot" min="1" max="100" required>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary w-100 fw-bold">Tambah</button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover align-middle border">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Nama Modul</th>
+                                <th class="text-center">Bobot</th>
+                                <th class="text-center">Progres</th>
+                                <th class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="list_modul_body">
+                            <!-- Data dimuat via AJAX -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
+    let releaseModal = null;
+    let modulModal = null;
+
+    function autoFillApp(selectElement) {
+        if(!selectElement.value) {
+            document.getElementById('input_nama_app').value = '';
+            document.getElementById('input_pic_id').value = '';
+            document.getElementById('input_deskripsi').value = '';
+            return;
+        }
+        
+        try {
+            const data = JSON.parse(selectElement.value);
+            // Isi nama
+            document.getElementById('input_nama_app').value = data.nama_aset || '';
+            // Isi deskripsi
+            document.getElementById('input_deskripsi').value = data.deskripsi || '';
+            
+            // Cari dan set PIC otomatis (Pencarian lebih pintar)
+            const picSelect = document.getElementById('input_pic_id');
+            let foundPic = false;
+            
+            if (data.pic) {
+                const picAset = data.pic.toLowerCase().trim();
+                const firstWord = picAset.split(' ')[0]; // Ambil kata pertama
+                
+                for (let i = 0; i < picSelect.options.length; i++) {
+                    const optText = picSelect.options[i].text.toLowerCase().trim();
+                    if (!optText || optText === 'pilih user') continue;
+                    
+                    // 1. Cocok persis
+                    if (optText === picAset) {
+                        picSelect.selectedIndex = i;
+                        foundPic = true;
+                        break;
+                    }
+                    // 2. Cocok sebagian (misal: "Rendi" ada di "Rendi Wijaya")
+                    if (optText.includes(picAset) || picAset.includes(optText) || optText.includes(firstWord)) {
+                        picSelect.selectedIndex = i;
+                        foundPic = true;
+                        break;
+                    }
+                }
+            }
+            if(!foundPic) picSelect.value = ''; // Reset jika tidak ketemu
+        } catch(e) {
+            console.error(e);
+        }
+    }
+
     function showReleaseModal(id, name) {
         document.getElementById('rel_app_id').value = id;
         document.getElementById('rel_app_name').innerText = 'Aplikasi: ' + name;
-        new bootstrap.Modal(document.getElementById('modalRelease')).show();
+        if(!releaseModal) releaseModal = new bootstrap.Modal(document.getElementById('modalRelease'));
+        releaseModal.show();
+    }
+
+    function showModulModal(id, name) {
+        document.getElementById('modul_app_id').value = id;
+        document.getElementById('modul_app_name').innerText = 'Aplikasi: ' + name;
+        
+        const body = document.getElementById('list_modul_body');
+        body.innerHTML = '<tr><td colspan="4" class="text-center py-3 text-muted"><div class="spinner-border spinner-border-sm text-primary me-2"></div>Memuat data...</td></tr>';
+
+        fetch('<?= base_url('admin/app-master/get-modules') ?>/' + id)
+            .then(response => response.json())
+            .then(data => {
+                body.innerHTML = '';
+                if (data.length === 0) {
+                    body.innerHTML = '<tr><td colspan="4" class="text-center py-3 text-muted">Belum ada modul. Tambahkan modul untuk mengaktifkan sistem bobot.</td></tr>';
+                } else {
+                    data.forEach(m => {
+                        body.innerHTML += `
+                            <tr>
+                                <td>${m.nama_modul}</td>
+                                <td class="text-center font-monospace">${m.bobot_kesulitan}</td>
+                                <td class="text-center">
+                                    <div class="progress" style="height: 5px;">
+                                        <div class="progress-bar bg-success" style="width: ${m.persentase}%"></div>
+                                    </div>
+                                    <small>${m.persentase}%</small>
+                                </td>
+                                <td class="text-center">
+                                    <a href="<?= base_url('admin/app-master/delete-module') ?>/${m.id}" onclick="return confirm('Hapus modul ini?')" class="text-danger"><i class="ti ti-trash fs-4"></i></a>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                }
+                if(!modulModal) modulModal = new bootstrap.Modal(document.getElementById('modalModul'));
+                modulModal.show();
+            });
     }
 </script>
 <?= $this->endSection() ?>

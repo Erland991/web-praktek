@@ -63,6 +63,11 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin'], function($rout
     $routes->post('app-master/release', 'AppMaster::release');
     $routes->get('app-master/delete/(:num)', 'AppMaster::delete/$1');
 
+    // Modul & Bobot Per Aplikasi
+    $routes->get('app-master/get-modules/(:num)', 'AppMaster::get_modules/$1');
+    $routes->post('app-master/save-module', 'AppMaster::save_module');
+    $routes->get('app-master/delete-module/(:num)', 'AppMaster::delete_module/$1');
+
     // Master KPI
     $routes->get('kpi', 'Kpi::index');
     $routes->post('kpi/save', 'Kpi::save');

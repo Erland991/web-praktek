@@ -37,7 +37,7 @@
 
                     <div class="mb-4">
                         <label class="form-label fw-semibold">PIC (Penanggung Jawab)</label>
-                        <input type="text" name="pic" class="form-control" placeholder="Nama Penanggung Jawab" required>
+                        <input type="text" name="pic" class="form-control" placeholder="Ketik nama penanggung jawab..." required>
                     </div>
 
                     <div class="mb-4">

@@ -18,14 +18,9 @@ class Auth extends BaseController
 
         $user = $this->request->getPost('username');
         $pass = $this->request->getPost('password');
-        $role = $this->request->getPost('role');
-
         $dataUser = $model->where('username', $user)->first();
 
         if ($dataUser) {
-            if ($dataUser['role'] != $role) {
-                return redirect()->back()->with('error', 'Role tidak sesuai!');
-            }
 
             if ($pass === $dataUser['password']) {
                 $session->set([

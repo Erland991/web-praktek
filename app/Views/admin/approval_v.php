@@ -88,6 +88,9 @@
     </div>
 </div>
 
+<?= $this->endSection() ?>
+
+<?= $this->section('modals') ?>
 <!-- Modal Approval Action -->
 <div class="modal fade" id="modalApproval" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
@@ -115,6 +118,7 @@
 </div>
 
 <script>
+    let approvalModal = null;
     function showApprovalModal(id, status) {
         const form = document.getElementById('formApproval');
         const title = document.getElementById('approval_title');
@@ -138,8 +142,8 @@
             btn.innerText = 'REJECT LAPORAN';
         }
 
-        const modal = new bootstrap.Modal(document.getElementById('modalApproval'));
-        modal.show();
+        if(!approvalModal) approvalModal = new bootstrap.Modal(document.getElementById('modalApproval'));
+        approvalModal.show();
     }
 </script>
 <?= $this->endSection() ?>

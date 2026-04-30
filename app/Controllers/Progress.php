@@ -26,12 +26,34 @@ class Progress extends BaseController
 
         // Ambil history progress terakhir untuk masing-masing app
         foreach ($apps as &$app) {
-            $lastProgress = $db->table('progres_log')
-                               ->where('aplikasi_id', $app['id'])
-                               ->orderBy('tgl_update', 'DESC')
-                               ->get()->getRowArray();
-            $app['last_percent'] = $lastProgress['persentase'] ?? 0;
-            $app['last_status']  = $lastProgress['is_approved'] ?? 0; // 0: Pending, 1: Approved, 2: Rejected
+            // Cek Modul (Sistem Bobot)
+            $modulList = $db->table('aplikasi_modul')->where('aplikasi_id', $app['id'])->get()->getResultArray();
+            
+            if (count($modulList) > 0) {
+                // Kalkulasi Weighted Progress
+                $totalBobot = 0;
+                $totalProgresTertimbang = 0;
+                foreach ($modulList as $m) {
+                    $totalBobot += $m['bobot_kesulitan'];
+                    $totalProgresTertimbang += ($m['persentase'] * $m['bobot_kesulitan']);
+                }
+                $app['last_percent'] = ($totalBobot > 0) ? round($totalProgresTertimbang / $totalBobot) : 0;
+            } else {
+                // Fallback manual persentase lama
+                $lastProgress = $db->table('progres_log')
+                                   ->where('aplikasi_id', $app['id'])
+                                   ->orderBy('tgl_update', 'DESC')
+                                   ->get()->getRowArray();
+                $app['last_percent'] = $lastProgress['persentase'] ?? 0;
+            }
+
+            // Status Laporan Terakhir
+            $lastLog = $db->table('progres_log')
+                          ->where('aplikasi_id', $app['id'])
+                          ->orderBy('tgl_update', 'DESC')
+                          ->get()->getRowArray();
+            $app['last_status']  = $lastLog['is_approved'] ?? 0;
+            $app['modules']      = $modulList;
         }
 
         $cobitPoints = $db->table('master_cobit_19')->get()->getResultArray();
@@ -57,8 +79,16 @@ class Progress extends BaseController
             $file->move(ROOTPATH . 'public/uploads/progress', $fileName);
         }
 
+        $modul_id = $this->request->getPost('modul_id');
+
+        // Jika user update spesifik modul, update persentase di tabel modul
+        if (!empty($modul_id)) {
+            $db->table('aplikasi_modul')->where('id', $modul_id)->update(['persentase' => $persentase]);
+        }
+
         $db->table('progres_log')->insert([
             'aplikasi_id'   => $aplikasi_id,
+            'modul_id'      => empty($modul_id) ? null : $modul_id,
             'user_id'       => session()->get('id'),
             'cobit_id'      => $this->request->getPost('cobit_id'),
             'pesan_update'  => $pesan,

@@ -138,6 +138,9 @@
     </div>
 </div>
 
+<?= $this->endSection() ?>
+
+<?= $this->section('modals') ?>
 <!-- Modal Tambah -->
 <div class="modal fade" id="modalTambah" tabindex="-1" aria-labelledby="modalTambahLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -247,15 +250,16 @@
 </div>
 
 <script>
+    let modalEditInstance = null;
     function editKaryawan(data) {
-        const modalEdit = new bootstrap.Modal(document.getElementById('modalEdit'));
+        if(!modalEditInstance) modalEditInstance = new bootstrap.Modal(document.getElementById('modalEdit'));
         document.getElementById('formEdit').action = '<?= base_url('master/karyawan/update') ?>/' + data.id;
         document.getElementById('edit_nama').value = data.nama_lengkap;
         document.getElementById('edit_nip').value = data.nip;
         document.getElementById('edit_username').value = data.username;
         document.getElementById('edit_role').value = data.role;
         document.getElementById('edit_divisi').value = data.divisi;
-        modalEdit.show();
+        modalEditInstance.show();
     }
 </script>
 <?= $this->endSection() ?>

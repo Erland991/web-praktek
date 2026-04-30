@@ -43,6 +43,9 @@ class Dashboard extends BaseController
         if ($kategori) $builder = $builder->where('kategori', $kategori);
         if ($status)   $builder = $builder->where('status', $status);
         $assets = $builder->findAll();
+        foreach ($assets as &$asset) {
+            $asset['is_app'] = false;
+        }
 
         // B. Ambil Data dari Tabel APLIKASI_MASTER (Agar sinkron)
         $db = \Config\Database::connect();
@@ -64,6 +67,9 @@ class Dashboard extends BaseController
         }
         
         $apps = $appQuery->get()->getResultArray();
+        foreach ($apps as &$app) {
+            $app['is_app'] = true;
+        }
 
         // C. Siapkan Data untuk View (Gabungkan Aset & Aplikasi)
         $data = [
@@ -92,8 +98,25 @@ class Dashboard extends BaseController
         $apps = $db->table('aplikasi_master')->limit(5)->get()->getResultArray();
         foreach ($apps as $app) {
             $data['proj_labels'][] = $app['nama_app'];
-            $lastP = $db->table('progres_log')->where('aplikasi_id', $app['id'])->where('is_approved', 1)->orderBy('tgl_update', 'DESC')->get()->getRowArray();
-            $data['proj_percents'][] = $lastP['persentase'] ?? 0;
+            
+            // CEK APAKAH ADA MODUL (Jika ada, pakai rata-rata tertimbang)
+            $modules = $db->table('aplikasi_modul')->where('aplikasi_id', $app['id'])->get()->getResultArray();
+            
+            if (!empty($modules)) {
+                $totalBobot = 0;
+                $totalProgresTertimbang = 0;
+                foreach ($modules as $m) {
+                    $totalBobot += $m['bobot_kesulitan'];
+                    $totalProgresTertimbang += ($m['persentase'] * $m['bobot_kesulitan']);
+                }
+                $progresFinal = ($totalBobot > 0) ? round($totalProgresTertimbang / $totalBobot, 2) : 0;
+            } else {
+                // Fallback ke log terakhir jika tidak ada modul
+                $lastP = $db->table('progres_log')->where('aplikasi_id', $app['id'])->where('is_approved', 1)->orderBy('tgl_update', 'DESC')->get()->getRowArray();
+                $progresFinal = $lastP['persentase'] ?? 0;
+            }
+            
+            $data['proj_percents'][] = $progresFinal;
         }
 
         return view('dashboard_v', $data);
@@ -102,21 +125,40 @@ class Dashboard extends BaseController
     // Fungsi lain (add, save, edit, update, delete) biarkan seperti kode lama kamu
     public function add() { 
         if (!session()->get('logged_in')) return redirect()->to('/');
-        return view('add_asset_v'); 
+        $data['list_pic'] = (new \App\Models\UserModel())->findAll();
+        return view('add_asset_v', $data); 
     }
 
     public function save() {
         $model = new AssetModel();
+        $picName = $this->request->getPost('pic');
+        
+        // --- FITUR AUTO-REGISTER USER ---
+        // Jika PIC yang diketik belum ada di tabel users, buatkan akunnya otomatis
+        $userModel = new \App\Models\UserModel();
+        $cekUser = $userModel->where('nama_lengkap', $picName)->first();
+        
+        if (!$cekUser && !empty($picName)) {
+            $userModel->save([
+                'nama_lengkap' => $picName,
+                'username'     => strtolower(str_replace(' ', '', $picName)),
+                'password'     => password_hash('si12345', PASSWORD_DEFAULT),
+                'role'         => 'User',
+                'divisi'       => 'Umum'
+            ]);
+        }
+
         if ($model->save([
             'nama_aset' => $this->request->getPost('nama_aset'),
             'kategori'  => $this->request->getPost('kategori'),
             'status'    => $this->request->getPost('status'),
-            'pic'       => $this->request->getPost('pic'),
+            'pic'       => $picName,
+            'deskripsi' => $this->request->getPost('deskripsi'),
         ])) {
-            (new LogModel())->record('TAMBAH ASET', 'Menambahkan aset: ' . $this->request->getPost('nama_aset'));
+            (new LogModel())->record('TAMBAH ASET', 'Menambahkan aset: ' . $this->request->getPost('nama_aset') . ' (PIC: '.$picName.')');
             return redirect()->to('/dashboard')->with('sukses', 'Aset Berhasil Ditambah!');
         } else {
-            return redirect()->back()->withInput()->with('error', 'Gagal menambah aset. Periksa kembali inputan Anda.');
+            return redirect()->back()->withInput()->with('error', 'Gagal menambah aset.');
         }
     }
 
@@ -124,16 +166,33 @@ class Dashboard extends BaseController
         if (!session()->get('logged_in')) return redirect()->to('/');
         $model = new AssetModel();
         $data['aset'] = $model->find($id);
+        $data['list_pic'] = (new \App\Models\UserModel())->findAll();
         return view('edit_asset_v', $data);
     }
 
     public function update($id) {
         $model = new AssetModel();
+        $picName = $this->request->getPost('pic');
+
+        // --- FITUR AUTO-REGISTER USER ---
+        $userModel = new \App\Models\UserModel();
+        $cekUser = $userModel->where('nama_lengkap', $picName)->first();
+        if (!$cekUser && !empty($picName)) {
+            $userModel->save([
+                'nama_lengkap' => $picName,
+                'username'     => strtolower(str_replace(' ', '', $picName)),
+                'password'     => password_hash('si12345', PASSWORD_DEFAULT),
+                'role'         => 'User',
+                'divisi'       => 'Umum'
+            ]);
+        }
+
         if ($model->update($id, [
             'nama_aset' => $this->request->getPost('nama_aset'),
             'kategori'  => $this->request->getPost('kategori'),
             'status'    => $this->request->getPost('status'),
-            'pic'       => $this->request->getPost('pic'),
+            'pic'       => $picName,
+            'deskripsi' => $this->request->getPost('deskripsi'),
         ])) {
             (new LogModel())->record('UPDATE ASET', 'Memperbarui aset id: ' . $id);
             return redirect()->to('/dashboard')->with('sukses', 'Aset Berhasil Diperbarui!');

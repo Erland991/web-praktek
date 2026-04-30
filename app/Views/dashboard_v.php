@@ -5,8 +5,8 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <div class="row mb-4 mt-3">
-    <div class="col-12">
-        <div class="card border-0 rounded-4 overflow-hidden position-relative shadow-sm" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);">
+    <div class="col-12" data-aos="fade-down">
+        <div class="card border-0 rounded-4 overflow-hidden position-relative shadow-sm hover-scale" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);">
             <!-- Decorative circle -->
             <div class="position-absolute top-0 end-0 bg-white opacity-10 rounded-circle" style="width: 300px; height: 300px; transform: translate(25%, -25%);"></div>
             <div class="position-absolute bottom-0 start-0 bg-primary opacity-20 rounded-circle" style="width: 200px; height: 200px; transform: translate(-30%, 30%); blur: 40px;"></div>
@@ -21,7 +21,7 @@
                     </p>
                 </div>
                 <div class="d-none d-lg-block">
-                    <img src="<?= base_url('assets/images/backgrounds/rocket.png') ?>" alt="Dashboard Hero" class="img-fluid" style="max-height: 140px; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2)); opacity: 0.9;" onerror="this.style.display='none';">
+                    <img src="<?= base_url('assets/images/backgrounds/rocket.png') ?>" alt="Dashboard Hero" class="img-fluid rocket-float" style="max-height: 140px; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2)); opacity: 0.9;" onerror="this.style.display='none';">
                 </div>
             </div>
         </div>
@@ -30,7 +30,7 @@
 
 <div class="row g-4 mb-4">
     <!-- Stats Cards -->
-    <div class="col-lg-3 col-md-6">
+    <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
         <div class="card border-0 shadow-sm rounded-4 h-100 hover-elevate">
             <div class="card-body p-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -50,7 +50,7 @@
         </div>
     </div>
     
-    <div class="col-lg-3 col-md-6">
+    <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
         <div class="card border-0 shadow-sm rounded-4 h-100 hover-elevate">
             <div class="card-body p-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -70,7 +70,7 @@
         </div>
     </div>
     
-    <div class="col-lg-3 col-md-6">
+    <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
         <div class="card border-0 shadow-sm rounded-4 h-100 hover-elevate">
             <div class="card-body p-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -90,7 +90,7 @@
         </div>
     </div>
     
-    <div class="col-lg-3 col-md-6">
+    <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="400">
         <div class="card border-0 shadow-sm rounded-4 h-100 hover-elevate">
             <div class="card-body p-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -112,7 +112,7 @@
 </div>
 
 <!-- Main Inventory Table -->
-<div class="card shadow-sm border-0 rounded-4 mb-4">
+<div class="card shadow-sm border-0 rounded-4 mb-4" data-aos="fade-up" data-aos-delay="500">
     <div class="card-header bg-white border-bottom-0 pt-4 px-4 pb-2 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
         <div>
             <h5 class="fw-bold mb-1 text-dark"><i class="ti ti-list-check text-primary me-2"></i>Database Inventaris & Aplikasi</h5>
@@ -170,24 +170,24 @@
                                     <i class="ti ti-<?= (isset($a['pic_id']) ? 'apps' : 'box') ?> fs-5"></i>
                                 </div>
                                 <div>
-                                    <h6 class="fw-bold mb-0 text-dark"><?= esc($a['nama_aset']) ?></h6>
-                                    <small class="text-muted d-block mt-1">ID Ref: #<?= sprintf('%04d', $a['id']) ?></small>
+                                    <h6 class="fw-bold mb-0 text-dark"><?= esc($a['nama_aset'] ?? $a['nama_app'] ?? 'Aset Tidak Diketahui') ?></h6>
+                                    <small class="text-muted d-block mt-1">ID Ref: #<?= sprintf('%04d', $a['id'] ?? 0) ?></small>
                                 </div>
                             </div>
                         </td>
                         <td class="text-center">
-                            <span class="badge bg-light text-dark fw-medium border px-2 py-1 rounded-pill shadow-none fst-normal"><?= esc($a['kategori']) ?></span>
+                            <span class="badge bg-light text-dark fw-medium border px-2 py-1 rounded-pill shadow-none fst-normal"><?= esc($a['kategori'] ?? 'Umum') ?></span>
                         </td>
                         <td>
                             <div class="d-flex align-items-center gap-2">
                                 <div class="avatar-sm d-flex align-items-center justify-content-center rounded-circle bg-light-info text-info border border-info border-opacity-10 fw-bold" style="width: 32px; height: 32px;">
-                                    <?= substr(strtoupper(esc($a['pic'])), 0, 1) ?>
+                                    <?= substr(strtoupper(esc($a['pic'] ?? 'U')), 0, 1) ?>
                                 </div>
-                                <span class="fs-3 fw-medium text-dark"><?= esc($a['pic']) ?></span>
+                                <span class="fs-3 fw-medium text-dark"><?= esc($a['pic'] ?? 'Unassigned') ?></span>
                             </div>
                         </td>
                         <td class="text-center">
-                            <?php if ($a['status'] == 'Aktif') : ?>
+                            <?php if (isset($a['status']) && $a['status'] == 'Aktif') : ?>
                                 <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3 py-1 rounded-pill fw-semibold d-inline-flex gap-1 align-items-center"><span class="bg-success rounded-circle" style="width:6px;height:6px;"></span> Online</span>
                             <?php else : ?>
                                 <span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 px-3 py-1 rounded-pill fw-semibold d-inline-flex gap-1 align-items-center"><span class="bg-warning rounded-circle" style="width:6px;height:6px;"></span> Maintenance</span>
@@ -196,8 +196,8 @@
                         <?php if (session()->get('role') == 'Admin') : ?>
                         <td class="text-end px-4">
                             <div class="d-flex gap-1 justify-content-end">
-                                <a href="<?= base_url('dashboard/edit/' . $a['id']) ?>" class="btn btn-sm btn-light text-primary hover-primary px-2" data-bs-toggle="tooltip" title="Edit Data"><i class="ti ti-pencil fs-4"></i></a>
-                                <a href="<?= base_url('dashboard/delete/' . $a['id']) ?>" onclick="return confirm('Apakah Anda yakin ingin menghapus aset ini secara permanen?')" class="btn btn-sm btn-light text-danger hover-danger px-2" data-bs-toggle="tooltip" title="Hapus Data"><i class="ti ti-trash fs-4"></i></a>
+                                <a href="<?= !empty($a['is_app']) ? base_url('admin/app-master') : base_url('dashboard/edit/' . ($a['id'] ?? '')) ?>" class="btn btn-sm btn-light text-primary hover-primary px-2" data-bs-toggle="tooltip" title="Edit Data"><i class="ti ti-pencil fs-4"></i></a>
+                                <a href="<?= !empty($a['is_app']) ? base_url('admin/app-master/delete/' . ($a['id'] ?? '')) : base_url('dashboard/delete/' . ($a['id'] ?? '')) ?>" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini secara permanen?')" class="btn btn-sm btn-light text-danger hover-danger px-2" data-bs-toggle="tooltip" title="Hapus Data"><i class="ti ti-trash fs-4"></i></a>
                             </div>
                         </td>
                         <?php endif; ?>
@@ -217,7 +217,7 @@
 
 <div class="row g-4 mt-1">
     <!-- Chart Kategori -->
-    <div class="col-lg-7">
+    <div class="col-lg-7" data-aos="fade-right" data-aos-delay="600">
         <div class="card border-0 shadow-sm rounded-4 h-100">
             <div class="card-header bg-white border-bottom-0 pt-4 px-4 pb-0 d-flex justify-content-between align-items-center">
                 <h5 class="fw-bold mb-0 text-dark"><i class="ti ti-chart-bar text-primary me-2"></i>Distribusi Aset Per Kategori</h5>
@@ -230,7 +230,7 @@
         </div>
     </div>
     <!-- Chart Progress -->
-    <div class="col-lg-5">
+    <div class="col-lg-5" data-aos="fade-left" data-aos-delay="600">
         <div class="card border-0 shadow-sm rounded-4 h-100">
             <div class="card-header bg-white border-bottom-0 pt-4 px-4 pb-0 d-flex justify-content-between align-items-center">
                 <h5 class="fw-bold mb-0 text-dark"><i class="ti ti-target text-success me-2"></i>Realisasi Project Utama</h5>
@@ -350,13 +350,21 @@ document.addEventListener("DOMContentLoaded", function() {
 <style>
     /* Premium Dashboard Styles */
     .tracking-wider { letter-spacing: 0.05em; }
-    .hover-elevate { transition: transform 0.3s ease, box-shadow 0.3s ease; }
-    .hover-elevate:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important; }
     .hover-primary:hover { background-color: #5d87ff !important; color: white !important; }
     .hover-danger:hover { background-color: #fa896b !important; color: white !important; }
     .avatar-sm { font-size: 14px; }
     .bg-light-info { background-color: #e8f7ff !important; }
     .text-info { color: #13deb9 !important; } /* Reused modernzie colors */
     table > thead > tr > th { text-transform: uppercase; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.5px; }
+
+    /* Floating Animation */
+    .rocket-float {
+        animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-15px); }
+        100% { transform: translateY(0px); }
+    }
 </style>
 <?= $this->endSection() ?>

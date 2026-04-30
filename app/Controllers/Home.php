@@ -27,15 +27,10 @@ class Home extends BaseController
         
         $username = $this->request->getPost('username');
         $password = $this->request->getPost('password');
-        $role_pilihan = $this->request->getPost('role_akses'); 
         
         $user = $model->where('username', $username)->first();
 
         if ($user) {
-            // Cek Kesesuaian Role (Case Insensitive)
-            if (strcasecmp($user['role'], $role_pilihan) !== 0) {
-                return redirect()->back()->with('error', "Akun tidak terdaftar sebagai $role_pilihan");
-            }
 
             // Verifikasi Password (Mendukung Hash & Plain Text untuk migrasi)
             if (password_verify($password, $user['password']) || $password == $user['password']) {

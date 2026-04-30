@@ -11,6 +11,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Animation Libraries -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <style>
     :root {
       --primary-color: #0b5ed7;
@@ -105,6 +109,42 @@
     .form-control, .form-select { border-radius: 8px; border: 1px solid var(--border-color); padding: 0.6rem 1rem; transition: all 0.2s; box-shadow: none !important; background-color: #f8fafc; }
     .form-control:focus, .form-select:focus { border-color: var(--primary-color); background-color: #fff; box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.1) !important; }
     .input-group-text { background-color: transparent; border: 1px solid var(--border-color); }
+
+    /* Custom Animations */
+    .fade-in-up { animation: fadeInUp 0.6s ease-out both; }
+    .stagger-1 { animation-delay: 0.1s; }
+    .stagger-2 { animation-delay: 0.2s; }
+    .stagger-3 { animation-delay: 0.3s; }
+    .stagger-4 { animation-delay: 0.4s; }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hover-scale { transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .hover-scale:hover { transform: scale(1.02); }
+    
+    .hover-elevate { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .hover-elevate:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important; }
+
+    /* Staggered Table Row Appearance (Global) */
+    .table tbody tr {
+        opacity: 0;
+        animation: slideInRight 0.5s ease forwards;
+    }
+    <?php for($i=1; $i<=50; $i++): ?>
+    .table tbody tr:nth-child(<?= $i ?>) { animation-delay: <?= 0.1 + ($i * 0.05) ?>s; }
+    <?php endfor; ?>
+
+    @keyframes slideInRight {
+        from { opacity: 0; transform: translateX(20px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+    
+    /* Smooth page loading */
+    #main-wrapper { opacity: 0; transition: opacity 0.5s ease; }
+    #main-wrapper.loaded { opacity: 1; }
   </style>
 </head>
 
@@ -180,7 +220,7 @@
             </li>
             <?php endif; ?>
 
-            <?php if (session()->get('role') == 'User' || session()->get('role') == 'Admin') : ?>
+            <?php if (session()->get('role') == 'User') : ?>
             <li class="nav-small-cap">
               <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
               <span class="hide-menu">OPERATION</span>
@@ -321,7 +361,9 @@
       
       <div class="container-fluid">
         <!-- Render Content Here -->
-        <?= $this->renderSection('content') ?>
+        <div class="animate__animated animate__fadeIn">
+          <?= $this->renderSection('content') ?>
+        </div>
         
         <div class="py-6 px-6 text-center mt-4">
           <p class="mb-0 fs-4">&copy; 2026 PT Surveyor Indonesia | Portal Monitoring Progres Aplikasi. Design based on <a href="https://adminmart.com/" target="_blank" class="pe-1 text-primary text-decoration-underline">AdminMart</a></p>
@@ -335,6 +377,49 @@
   <script src="<?= base_url('template/src/assets/js/sidebarmenu.js') ?>"></script>
   <script src="<?= base_url('template/src/assets/js/app.min.js') ?>"></script>
   <script src="<?= base_url('template/src/assets/libs/simplebar/dist/simplebar.js') ?>"></script>
+  
+  <!-- Animation Scripts -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      
+      // --- GLOBAL AUTO ANIMATOR ---
+      // Automatically add fade-up animations and hover-elevate to all cards and important elements across ALL pages
+      const animateElements = document.querySelectorAll('.container-fluid .card:not([data-aos]), .container-fluid .alert:not([data-aos]), .container-fluid form:not([data-aos]), .container-fluid .table-responsive:not([data-aos])');
+      
+      animateElements.forEach((el, index) => {
+        el.setAttribute('data-aos', 'fade-up');
+        // Add a slight staggered delay
+        let delay = ((index % 4) + 1) * 100;
+        el.setAttribute('data-aos-delay', delay.toString());
+        
+        // Add hover elevate class to cards automatically if it's a card
+        if(el.classList.contains('card') && !el.classList.contains('hover-scale')) {
+            el.classList.add('hover-elevate');
+        }
+      });
+      // ----------------------------
+
+      // Initialize AOS
+      AOS.init({
+        duration: 800,
+        easing: 'ease-in-out',
+        once: true,
+        mirror: false
+      });
+
+      // Page Load Animation
+      document.getElementById('main-wrapper').classList.add('loaded');
+
+      // Add stagger animations to sidebar items
+      const sidebarItems = document.querySelectorAll('#sidebarnav .sidebar-item');
+      sidebarItems.forEach((item, index) => {
+        item.style.animationDelay = `${(index + 1) * 0.05}s`;
+        item.classList.add('animate__animated', 'animate__fadeInLeft');
+      });
+    });
+  </script>
+  <?= $this->renderSection('modals') ?>
 </body>
 
 </html>

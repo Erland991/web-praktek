@@ -68,6 +68,9 @@
     </div>
 </div>
 
+<?= $this->endSection() ?>
+
+<?= $this->section('modals') ?>
 <!-- Modal Add KPI -->
 <div class="modal fade" id="modalAddKpi" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">

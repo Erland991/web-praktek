@@ -82,6 +82,9 @@
     </div>
 </div>
 
+<?= $this->endSection() ?>
+
+<?= $this->section('modals') ?>
 <!-- Modal Update Progress -->
 <div class="modal fade" id="modalProgress" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -97,6 +100,15 @@
                     <h5 class="fw-bold text-primary mb-4 pb-2 border-bottom" id="prog_app_name">Aplikasi Nama</h5>
                     
                     <div class="row">
+                        <!-- Dynamic Module Selection Container -->
+                        <div class="col-12 mb-3" id="modul_container" style="display:none;">
+                            <label class="form-label fw-bold text-success"><i class="ti ti-puzzle me-1"></i> Modul / Fitur yang Dikerjakan</label>
+                            <select name="modul_id" id="prog_modul_id" class="form-select border-2 border-success">
+                                <option value="">Pilih Modul...</option>
+                            </select>
+                            <small class="text-muted d-block mt-1">Pilih modul untuk update progres. Bobot kesulitan akan otomatis diperhitungkan.</small>
+                        </div>
+
                         <div class="col-md-6 mb-4">
                             <label class="form-label fw-bold">Tahapan SDLC (COBIT-19)</label>
                             <select name="cobit_id" class="form-select border-2" required>
@@ -136,12 +148,45 @@
 </div>
 
 <script>
+    let progModal = null;
     function openModalProgress(app) {
         document.getElementById('prog_app_id').value = app.id;
         document.getElementById('prog_app_name').innerText = app.nama_app;
         document.getElementById('prog_percent').value = app.last_percent;
-        const modal = new bootstrap.Modal(document.getElementById('modalProgress'));
-        modal.show();
+        
+        // Handle Module Selection
+        const modulContainer = document.getElementById('modul_container');
+        const modulSelect = document.getElementById('prog_modul_id');
+        
+        // Bersihkan opsi lama
+        modulSelect.innerHTML = '<option value="">Pilih Modul...</option>';
+        
+        if (app.modules && app.modules.length > 0) {
+            modulContainer.style.display = 'block';
+            modulSelect.required = true;
+            app.modules.forEach(m => {
+                const option = document.createElement('option');
+                option.value = m.id;
+                option.text = m.nama_modul + ' (Bobot: ' + m.bobot_kesulitan + ') - Selesai: ' + m.persentase + '%';
+                modulSelect.appendChild(option);
+            });
+            
+            modulSelect.onchange = function() {
+                const selectedModul = app.modules.find(x => x.id == this.value);
+                if (selectedModul) {
+                    document.getElementById('prog_percent').value = selectedModul.persentase;
+                } else {
+                    document.getElementById('prog_percent').value = 0;
+                }
+            };
+        } else {
+            modulContainer.style.display = 'none';
+            modulSelect.required = false;
+            modulSelect.onchange = null;
+        }
+
+        if(!progModal) progModal = new bootstrap.Modal(document.getElementById('modalProgress'));
+        progModal.show();
     }
 </script>
 <?= $this->endSection() ?>

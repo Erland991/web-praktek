@@ -2,7 +2,7 @@
 
 <?= $this->section('content') ?>
 <div class="row mb-4 mt-3">
-    <div class="col-12">
+    <div class="col-12" data-aos="fade-down">
         <div class="card border-0 rounded-4 overflow-hidden position-relative shadow-sm" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);">
             <div class="position-absolute top-0 end-0 bg-white opacity-10 rounded-circle" style="width: 250px; height: 250px; transform: translate(30%, -30%);"></div>
             <div class="card-body p-4 p-xl-5 position-relative z-1 d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
@@ -23,7 +23,7 @@
     </div>
 </div>
 
-<div class="card shadow-sm border-0 rounded-4 mb-4">
+<div class="card shadow-sm border-0 rounded-4 mb-4" data-aos="fade-up" data-aos-delay="100">
     <div class="card-body p-0">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0 text-nowrap">
@@ -68,6 +68,9 @@
     </div>
 </div>
 
+<?= $this->endSection() ?>
+
+<?= $this->section('modals') ?>
 <!-- Modal Tambah Cobit -->
 <div class="modal fade" id="modalCobit" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">

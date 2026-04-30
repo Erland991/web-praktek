@@ -18,7 +18,11 @@ class CreateSystemExtensions extends Migration
             'created_at'     => ['type' => 'DATETIME', 'null' => true],
             'updated_at'     => ['type' => 'DATETIME', 'null' => true],
         ];
-        $this->forge->addColumn('aplikasi_master', $fields);
+        foreach ($fields as $column => $attributes) {
+            if (!$this->db->fieldExists($column, 'aplikasi_master')) {
+                $this->forge->addColumn('aplikasi_master', [$column => $attributes]);
+            }
+        }
 
         // 2. Tabel Master COBIT-19 Form
         $this->forge->addField([
@@ -31,7 +35,7 @@ class CreateSystemExtensions extends Migration
             'created_at'     => ['type' => 'DATETIME', 'null' => true],
         ]);
         $this->forge->addKey('id', true);
-        $this->forge->createTable('master_cobit_19');
+        $this->forge->createTable('master_cobit_19', true);
 
         // 3. Tabel Detail Implementasi (Request 2)
         $this->forge->addField([
@@ -45,7 +49,7 @@ class CreateSystemExtensions extends Migration
             'created_at'     => ['type' => 'DATETIME', 'null' => true],
         ]);
         $this->forge->addKey('id', true);
-        $this->forge->createTable('implementasi_data');
+        $this->forge->createTable('implementasi_data', true);
 
         // 4. Perbaikan progres_log (Tambah Lampiran & Approval)
         $fields_progress = [
@@ -53,7 +57,11 @@ class CreateSystemExtensions extends Migration
             'komentar_admin' => ['type' => 'TEXT', 'null' => true],
             'updated_at'     => ['type' => 'DATETIME', 'null' => true],
         ];
-        $this->forge->addColumn('progres_log', $fields_progress);
+        foreach ($fields_progress as $column => $attributes) {
+            if (!$this->db->fieldExists($column, 'progres_log')) {
+                $this->forge->addColumn('progres_log', [$column => $attributes]);
+            }
+        }
 
         // 5. Tabel Log History (Request 3)
         $this->forge->addField([
@@ -67,7 +75,7 @@ class CreateSystemExtensions extends Migration
             'created_at'     => ['type' => 'DATETIME', 'null' => true],
         ]);
         $this->forge->addKey('id', true);
-        $this->forge->createTable('system_logs');
+        $this->forge->createTable('system_logs', true);
     }
 
     public function down()
