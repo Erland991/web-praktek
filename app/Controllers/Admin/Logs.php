@@ -18,4 +18,25 @@ class Logs extends BaseController
 
         return view('admin/logs_v', $data);
     }
+
+    public function delete($id)
+    {
+        if (session()->get('role') != 'Admin') return redirect()->to('/dashboard');
+        
+        $model = new LogModel();
+        $model->delete($id);
+        
+        return redirect()->to('/admin/logs')->with('sukses', 'Log berhasil dihapus!');
+    }
+
+    public function clear()
+    {
+        if (session()->get('role') != 'Admin') return redirect()->to('/dashboard');
+        
+        // Truncate table
+        $db = \Config\Database::connect();
+        $db->table('system_logs')->truncate();
+        
+        return redirect()->to('/admin/logs')->with('sukses', 'Semua log aktivitas berhasil dibersihkan!');
+    }
 }

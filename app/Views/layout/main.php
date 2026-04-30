@@ -10,7 +10,7 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
   
   <!-- Animation Libraries -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
@@ -37,16 +37,21 @@
       color: var(--text-main);
     }
     
+    h1, h2, h3, h4, h5, h6, .hero-card h4 {
+      font-family: 'Outfit', sans-serif !important;
+    }
+    
     /* Elegant Cards */
     .card {
-      border: none !important;
-      border-radius: var(--radius-md) !important;
+      border: 1px solid rgba(255,255,255,0.4) !important;
+      border-radius: var(--radius-lg) !important;
       box-shadow: var(--shadow-sm) !important;
-      transition: all 0.3s ease;
+      transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
       background: var(--surface-color);
     }
     .card:hover {
-      box-shadow: var(--shadow-md) !important;
+      box-shadow: var(--shadow-lg) !important;
+      border-color: rgba(13, 110, 253, 0.1) !important;
     }
     
     /* Hero / Header Cards */
@@ -97,13 +102,15 @@
     .bg-light-primary { background-color: #eff6ff !important; color: #2563eb !important; border: 1px solid #dbeafe; }
     
     /* Sidebar */
-    .left-sidebar { box-shadow: 1px 0 10px rgba(0,0,0,0.03) !important; border-right: 1px solid var(--border-color); }
-    .sidebar-link { border-radius: 8px !important; margin: 0 0.5rem; transition: all 0.2s; color: var(--text-muted) !important; }
-    .sidebar-link:hover, .sidebar-link.active { background-color: #f1f5f9 !important; color: var(--primary-color) !important; }
-    .sidebar-link i { font-size: 1.2rem; }
+    .left-sidebar { box-shadow: 4px 0 24px rgba(0,0,0,0.02) !important; border-right: 1px solid var(--border-color); background: #ffffff; }
+    .sidebar-link { border-radius: 10px !important; margin: 0 0.8rem; transition: all 0.3s ease; color: var(--text-muted) !important; font-weight: 500; }
+    .sidebar-link:hover { background-color: #f1f5f9 !important; color: var(--primary-color) !important; transform: translateX(4px); }
+    .sidebar-link.active { background: linear-gradient(90deg, rgba(13,110,253,0.1) 0%, rgba(13,110,253,0.02) 100%) !important; color: var(--primary-color) !important; border-left: 3px solid var(--primary-color); }
+    .sidebar-link i { font-size: 1.25rem; transition: transform 0.3s; }
+    .sidebar-link:hover i { transform: scale(1.1); }
     
     /* Header */
-    .app-header { background: rgba(255,255,255,0.9) !important; backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-color); box-shadow: none !important; }
+    .app-header { background: rgba(255,255,255,0.85) !important; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); box-shadow: 0 4px 20px rgba(0,0,0,0.02) !important; transition: all 0.3s; }
     
     /* Inputs */
     .form-control, .form-select { border-radius: 8px; border: 1px solid var(--border-color); padding: 0.6rem 1rem; transition: all 0.2s; box-shadow: none !important; background-color: #f8fafc; }
@@ -125,8 +132,8 @@
     .hover-scale { transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
     .hover-scale:hover { transform: scale(1.02); }
     
-    .hover-elevate { transition: transform 0.3s ease, box-shadow 0.3s ease; }
-    .hover-elevate:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important; }
+    .hover-elevate { transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); }
+    .hover-elevate:hover { transform: translateY(-6px); box-shadow: 0 15px 30px rgba(0,0,0,0.08) !important; }
 
     /* Staggered Table Row Appearance (Global) */
     .table tbody tr {

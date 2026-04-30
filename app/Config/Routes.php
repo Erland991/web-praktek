@@ -56,6 +56,8 @@ $routes->group('master', ['namespace' => 'App\Controllers\Admin'], function($rou
 // --- ADMIN FEATURES ---
 $routes->group('admin', ['namespace' => 'App\Controllers\Admin'], function($routes) {
     $routes->get('logs', 'Logs::index');
+    $routes->get('logs/clear', 'Logs::clear');
+    $routes->get('logs/delete/(:num)', 'Logs::delete/$1');
     
     // Master Aplikasi Register
     $routes->get('app-master', 'AppMaster::index');

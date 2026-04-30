@@ -4,19 +4,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | SIMPA - PT Surveyor Indonesia</title>
+    <title>Login | SIMPA - PT Surveyor Indonesia (Persero)</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;800&display=swap');
 
         body {
             font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+        }
+        h1, h2, h3 {
+            font-family: 'Outfit', sans-serif;
+        }
+        .bg-animate {
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
     </style>
 </head>
 
-<body class="bg-slate-100 min-h-screen flex items-center justify-center p-4">
-    <div class="flex flex-col md:flex-row bg-white rounded-2xl shadow-2xl overflow-hidden max-w-4xl w-full">
+<body class="bg-slate-100 min-h-screen flex items-center justify-center p-4 overflow-hidden relative">
+    
+    <!-- Animated Background Elements -->
+    <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-[100px] opacity-40 animate-[pulse_6s_ease-in-out_infinite]"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-yellow-400 rounded-full mix-blend-multiply filter blur-[100px] opacity-30 animate-[pulse_8s_ease-in-out_infinite]" style="animation-delay: 2s;"></div>
+
+    <div class="flex flex-col md:flex-row glass-panel rounded-3xl shadow-[0_20px_50px_rgba(8,_112,_184,_0.15)] overflow-hidden max-w-5xl w-full relative z-10 border border-white/50" data-aos="zoom-in" data-aos-duration="1000">
 
         <!-- Kolom Kiri: Visual & Landing Branding -->
         <div
@@ -27,25 +52,25 @@
             <div class="absolute inset-0 bg-gradient-to-t from-blue-900 via-blue-900/40 to-transparent z-0"></div>
 
             <div class="relative z-10">
-                <div class="bg-white/10 backdrop-blur-md inline-block px-4 py-2 rounded-lg border border-white/20 mb-6">
-                    <span class="text-xs font-bold tracking-[0.2em] uppercase">Enterprise Management System</span>
+                <div class="bg-white/10 backdrop-blur-md inline-block px-4 py-2 rounded-lg border border-white/20 mb-6" data-aos="fade-right" data-aos-delay="300">
+                    <span class="text-xs font-bold tracking-[0.2em] uppercase text-yellow-400">Enterprise Management System</span>
                 </div>
-                <h1 class="text-5xl font-extrabold leading-tight mb-4 drop-shadow-2xl">
-                    Integrasi & <br><span class="text-blue-400">Integritas</span> Untuk Negeri.
+                <h1 class="text-5xl lg:text-6xl font-extrabold leading-tight mb-4 drop-shadow-2xl" data-aos="fade-right" data-aos-delay="500">
+                    Integrasi & <br><span class="text-blue-300">Integritas</span><br>Untuk Negeri.
                 </h1>
-                <p class="text-lg text-blue-100/90 max-w-md leading-relaxed">
+                <p class="text-lg text-blue-100/90 max-w-md leading-relaxed" data-aos="fade-up" data-aos-delay="700">
                     Menjamin kepastian melalui layanan inspeksi, pengujian, sertifikasi, konsultansi, dan verifikasi untuk masa depan Indonesia yang lebih baik.
                 </p>
             </div>
 
-            <div class="relative z-10 flex items-center gap-4">
-                <div class="w-12 h-1 bg-blue-500 rounded-full"></div>
-                <p class="text-sm font-semibold tracking-widest uppercase opacity-80">PT Surveyor Indonesia</p>
+            <div class="relative z-10 flex items-center gap-4" data-aos="fade-up" data-aos-delay="900">
+                <div class="w-12 h-1 bg-yellow-400 rounded-full"></div>
+                <p class="text-sm font-semibold tracking-widest uppercase opacity-90">PT Surveyor Indonesia (Persero)</p>
             </div>
         </div>
 
         <!-- Kolom Kanan: Form Login -->
-        <div class="md:w-6/12 p-8 md:p-14 flex flex-col justify-center bg-white relative">
+        <div class="md:w-6/12 p-8 md:p-14 flex flex-col justify-center bg-white/80 backdrop-blur-md relative" data-aos="fade-left" data-aos-delay="200">
 
             <!-- Deretan Logo Perusahaan -->
             <div class="flex items-center justify-center gap-3 mb-6 pb-4 border-b border-slate-100">
@@ -123,11 +148,22 @@
                 </div>
             </form>
 
-            <div class="mt-10 text-center text-slate-400 text-xs font-medium">
+            </form>
+
+            <div class="mt-10 text-center text-slate-400 text-xs font-medium" data-aos="fade-up" data-aos-delay="600">
                 &copy; <?= date('Y') ?> PT Surveyor Indonesia (Persero). All rights reserved.
             </div>
         </div>
     </div>
+    
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            once: true,
+            duration: 800,
+            easing: 'ease-out-cubic',
+        });
+    </script>
 </body>
 
 </html>
