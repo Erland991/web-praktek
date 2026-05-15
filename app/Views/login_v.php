@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | SIMPA - PT Surveyor Indonesia (Persero)</title>
+    <link rel="shortcut icon" type="image/png" href="<?= base_url('images/icon_simpa.png') ?>" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
@@ -53,7 +54,7 @@
 
             <div class="relative z-10">
                 <div class="bg-white/10 backdrop-blur-md inline-block px-4 py-2 rounded-lg border border-white/20 mb-6" data-aos="fade-right" data-aos-delay="300">
-                    <span class="text-xs font-bold tracking-[0.2em] uppercase text-yellow-400">Enterprise Management System</span>
+                    <span class="text-xs font-bold tracking-[0.2em] uppercase text-yellow-400">Sistem Manajemen Proyek Aplikasi</span>
                 </div>
                 <h1 class="text-5xl lg:text-6xl font-extrabold leading-tight mb-4 drop-shadow-2xl" data-aos="fade-right" data-aos-delay="500">
                     Integrasi & <br><span class="text-blue-300">Integritas</span><br>Untuk Negeri.

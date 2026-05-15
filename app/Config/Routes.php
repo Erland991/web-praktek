@@ -21,6 +21,7 @@ $routes->get('/dashboard/edit/(:num)', 'Dashboard::edit/$1');
 $routes->post('/dashboard/update/(:num)', 'Dashboard::update/$1');
 $routes->get('/dashboard/delete/(:num)', 'Dashboard::delete/$1');
 $routes->get('/dashboard/export', 'Dashboard::export');
+$routes->post('/dashboard/update-profile-photo', 'Dashboard::updateProfilePhoto');
 
 // --- PROGRESS FEATURES ---
 $routes->get('/progress', 'Progress::index');
@@ -34,6 +35,15 @@ $routes->get('/document-center', 'DocumentCenter::index');
 $routes->get('/calendar', 'Calendar::index');
 $routes->get('/calendar/events', 'Calendar::events');
 
+// --- NOTULA FEATURES ---
+$routes->get('/notula', 'NotulaController::index');
+$routes->get('/notula/list/(:num)', 'NotulaController::list/$1');
+$routes->get('/notula/edit/(:num)', 'NotulaController::index/$1');
+$routes->post('/notula/save', 'NotulaController::save');
+$routes->get('/notula/approve/(:num)/(:num)', 'NotulaController::approve/$1/$2');
+$routes->get('/notula/export/(:num)', 'NotulaController::export/$1');
+$routes->get('/notula/print/(:num)', 'NotulaController::print/$1');
+
 // --- MASTER DATA ---
 $routes->group('master', ['namespace' => 'App\Controllers\Admin'], function($routes) {
     
@@ -46,6 +56,7 @@ $routes->group('master', ['namespace' => 'App\Controllers\Admin'], function($rou
     $routes->post('karyawan/update/(:num)', 'Master::updateKaryawan/$1'); 
     
     $routes->get('karyawan/delete/(:num)', 'Master::deleteKaryawan/$1');
+    $routes->get('karyawan/detail/(:num)', 'Master::detailKaryawan/$1');
 
     // Kelola Divisi
     $routes->get('divisi', 'Master::divisi');

@@ -61,9 +61,14 @@
                             <?php endif; ?>
                         </td>
                         <td class="text-center px-4">
-                            <button class="btn btn-primary btn-sm fw-bold px-3 shadow-sm d-inline-flex align-items-center" onclick='openModalProgress(<?= json_encode($app) ?>)'>
-                                <i class="ti ti-edit me-1"></i> Update Progres
-                            </button>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-primary btn-sm flex-fill fw-bold shadow-sm d-inline-flex align-items-center" onclick='openModalProgress(<?= json_encode($app) ?>)'>
+                                    <i class="ti ti-edit me-1"></i> Update Progres
+                                </button>
+                                <a href="<?= base_url('notula/list/' . $app['id']) ?>" class="btn btn-outline-primary btn-sm fw-bold px-3">
+                                    <i class="ti ti-notes me-1"></i> Memo
+                                </a>
+                            </div>
                         </td>
                     </tr>
                     <?php endforeach; ?>

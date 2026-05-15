@@ -4,8 +4,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Auth | Monitoring Aset SI</title>
-  <link rel="shortcut icon" type="image/png" href="<?= base_url('template/src/assets/images/logos/favicon.png') ?>" />
+  <title>Auth | SIMPA</title>
+  <link rel="shortcut icon" type="image/png" href="<?= base_url('images/icon_simpa.png') ?>" />
   <link rel="stylesheet" href="<?= base_url('template/src/assets/css/styles.min.css') ?>" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <!-- Animation Libraries -->

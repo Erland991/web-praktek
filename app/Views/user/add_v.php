@@ -9,7 +9,7 @@
     <div class="max-w-2xl mx-auto bg-white p-8 rounded-xl shadow-md">
         <h2 class="text-2xl font-bold mb-6 text-gray-800 text-center">Tambah Master Karyawan</h2>
         
-        <form action="<?= base_url('user/save') ?>" method="POST" class="space-y-4">
+        <form action="<?= base_url('user/save') ?>" method="POST" enctype="multipart/form-data" class="space-y-4">
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-bold mb-1">NIP</label>
@@ -39,6 +39,12 @@
                     <label class="block text-sm font-bold mb-1">Divisi</label>
                     <input type="text" name="divisi" placeholder="Contoh: IT, Keuangan, Ops" class="w-full border p-2 rounded">
                 </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-bold mb-1">Photo Profil</label>
+                <input type="file" name="photo" class="w-full border p-2 rounded text-sm file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                <p class="text-xs text-gray-500 mt-1">Format: JPG, PNG, JPEG. Maks: 2MB</p>
             </div>
 
             <div class="flex justify-between pt-4">

@@ -99,13 +99,22 @@ class Master extends BaseController
     {
         $model = new UserModel();
         
+        $filePhoto = $this->request->getFile('photo');
+        if ($filePhoto && $filePhoto->isValid() && !$filePhoto->hasMoved()) {
+            $namaPhoto = $filePhoto->getRandomName();
+            $filePhoto->move('uploads/profile', $namaPhoto);
+        } else {
+            $namaPhoto = 'default.png';
+        }
+
         $data = [
             'nip'          => $this->request->getPost('nip'),
             'nama_lengkap' => $this->request->getPost('nama_lengkap'),
             'username'     => $this->request->getPost('username'),
-            'password'     => password_hash('admin123', PASSWORD_DEFAULT), // Pakai hash biar aman
+            'password'     => password_hash('admin123', PASSWORD_DEFAULT),
             'role'         => $this->request->getPost('role'),
             'divisi'       => $this->request->getPost('divisi'),
+            'photo'        => $namaPhoto,
         ];
 
         if ($model->save($data)) {
@@ -120,6 +129,7 @@ class Master extends BaseController
     public function updateKaryawan($id)
     {
         $model = new UserModel();
+        $userLama = $model->find($id);
 
         $data = [
             'nip'          => $this->request->getPost('nip'),
@@ -128,6 +138,18 @@ class Master extends BaseController
             'role'         => $this->request->getPost('role'),
             'divisi'       => $this->request->getPost('divisi'),
         ];
+
+        $filePhoto = $this->request->getFile('photo');
+        if ($filePhoto && $filePhoto->isValid() && !$filePhoto->hasMoved()) {
+            $namaPhoto = $filePhoto->getRandomName();
+            $filePhoto->move('uploads/profile', $namaPhoto);
+            $data['photo'] = $namaPhoto;
+
+            // Hapus foto lama jika bukan default
+            if ($userLama['photo'] != 'default.png' && file_exists('uploads/profile/' . $userLama['photo'])) {
+                unlink('uploads/profile/' . $userLama['photo']);
+            }
+        }
 
         // Jika password diisi di form edit, baru di-hash dan diupdate
         $pass = $this->request->getPost('password');
@@ -146,8 +168,22 @@ class Master extends BaseController
     public function deleteKaryawan($id)
     {
         $model = new UserModel();
+        $user = $model->find($id);
+
+        // Hapus foto jika bukan default
+        if ($user['photo'] != 'default.png' && file_exists('uploads/profile/' . $user['photo'])) {
+            unlink('uploads/profile/' . $user['photo']);
+        }
+
         $model->delete($id);
         (new LogModel())->record('HAPUS KARYAWAN', 'Menghapus karyawan id: ' . $id);
         return redirect()->to('/master/karyawan')->with('sukses', 'Karyawan berhasil dihapus');
+    }
+
+    public function detailKaryawan($id)
+    {
+        $model = new UserModel();
+        $user = $model->find($id);
+        return $this->response->setJSON($user);
     }
 }

@@ -28,7 +28,8 @@ class UserModel extends Model
         'username', 
         'password', 
         'role', 
-        'divisi'
+        'divisi',
+        'photo'
     ];
 
     /**

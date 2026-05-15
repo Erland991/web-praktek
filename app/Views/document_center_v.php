@@ -7,7 +7,7 @@
             <div class="position-absolute top-0 end-0 bg-white opacity-10 rounded-circle" style="width: 250px; height: 250px; transform: translate(30%, -30%);"></div>
             <div class="card-body p-4 p-xl-5 position-relative z-1 d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
                 <div>
-                    <span class="badge bg-white bg-opacity-20 text-white mb-2 fs-2 fw-medium px-3 py-2 rounded-pill border border-white border-opacity-10"><i class="ti ti-folder me-1"></i> SIMPA Vault</span>
+                    <span class="badge bg-white bg-opacity-10 text-white mb-2 fs-2 fw-medium px-3 py-2 rounded-pill border border-white border-opacity-10"><i class="ti ti-folder me-1"></i> SIMPA Vault</span>
                     <h2 class="fw-bold text-white mb-2">Pusat Dokumen Proyek</h2>
                     <p class="mb-0 fs-4 text-white-50" style="max-width: 600px;">Cari dan unduh seluruh berkas pendukung progress aplikasi (Laporan, Bukti Implementasi, dll) secara terpusat.</p>
                 </div>

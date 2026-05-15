@@ -40,6 +40,7 @@ class Home extends BaseController
                     'nama_lengkap'  => $user['nama_lengkap'],
                     'jenis_kelamin' => $user['jenis_kelamin'] ?? 'L',
                     'role'          => $user['role'],
+                    'photo'         => $user['photo'] ?? 'default.png',
                     'logged_in'     => true,
                 ]);
 

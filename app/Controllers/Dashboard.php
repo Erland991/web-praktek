@@ -251,4 +251,30 @@ class Dashboard extends BaseController
         $dompdf->render();
         return $this->response->setHeader('Content-Type', 'application/pdf')->setBody($dompdf->output());
     }
+    public function updateProfilePhoto()
+    {
+        $userModel = new \App\Models\UserModel();
+        $userId = session()->get('id');
+        $user = $userModel->find($userId);
+
+        $filePhoto = $this->request->getFile('photo');
+        if ($filePhoto && $filePhoto->isValid() && !$filePhoto->hasMoved()) {
+            $namaPhoto = $filePhoto->getRandomName();
+            $filePhoto->move('uploads/profile', $namaPhoto);
+
+            // Hapus foto lama jika bukan default
+            if ($user['photo'] != 'default.png' && file_exists('uploads/profile/' . $user['photo'])) {
+                unlink('uploads/profile/' . $user['photo']);
+            }
+
+            $userModel->update($userId, ['photo' => $namaPhoto]);
+            
+            // Update Session agar header langsung berubah
+            session()->set('photo', $namaPhoto);
+
+            return redirect()->back()->with('sukses', 'Foto profil berhasil diperbarui!');
+        }
+
+        return redirect()->back()->with('error', 'Gagal memperbarui foto profil.');
+    }
 }

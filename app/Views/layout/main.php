@@ -4,8 +4,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Monitoring Aset SI</title>
-  <link rel="shortcut icon" type="image/png" href="<?= base_url('template/src/assets/images/logos/favicon.png') ?>" />
+  <title>SIMPA</title>
+  <link rel="shortcut icon" type="image/png" href="<?= base_url('images/icon_simpa.png') ?>" />
   <link rel="stylesheet" href="<?= base_url('template/src/assets/css/styles.min.css') ?>" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -347,15 +347,19 @@
                 <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
                   aria-expanded="false">
                   <?php 
-                    $jk = session()->get('jenis_kelamin');
-                    $avatar = ($jk == 'P') 
-                      ? 'https://cdn-icons-png.flaticon.com/512/6997/6997674.png' 
+                    $photo = session()->get('photo');
+                    $avatar = (!empty($photo)) 
+                      ? base_url('uploads/profile/' . $photo) 
                       : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
                   ?>
-                  <img src="<?= $avatar ?>" alt="Profile" width="35" height="35" class="rounded-circle border border-2 border-primary shadow-sm bg-light">
+                  <img src="<?= $avatar ?>" alt="Profile" width="35" height="35" class="rounded-circle border border-2 border-primary shadow-sm bg-light" style="object-fit: cover;">
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                   <div class="message-body">
+                    <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item" data-bs-toggle="modal" data-bs-target="#modalGantiFoto">
+                      <i class="ti ti-user-circle fs-6"></i>
+                      <p class="mb-0 fs-3">Ganti Foto Profil</p>
+                    </a>
                     <a href="<?= base_url('logout') ?>" class="btn btn-outline-danger mx-3 mt-2 d-block">Logout</a>
                   </div>
                 </div>
@@ -427,6 +431,31 @@
     });
   </script>
   <?= $this->renderSection('modals') ?>
+
+  <!-- Modal Ganti Foto Profil -->
+  <div class="modal fade" id="modalGantiFoto" tabindex="-1" aria-labelledby="modalGantiFotoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title fw-bold fs-3" id="modalGantiFotoLabel">Ganti Profil</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="<?= base_url('dashboard/update-profile-photo') ?>" method="POST" enctype="multipart/form-data">
+                <?= csrf_field() ?>
+                <div class="modal-body text-center p-4">
+                    <div class="mb-4">
+                        <img src="<?= $avatar ?>" alt="Profile Preview" class="rounded-circle border border-4 border-light shadow-sm" width="100" height="100" style="object-fit: cover;">
+                    </div>
+                    <div class="text-start mb-3">
+                        <label class="form-label fw-bold small">Pilih Foto Baru</label>
+                        <input type="file" name="photo" class="form-control form-control-sm" accept="image/*" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">Update Foto</button>
+                </div>
+            </form>
+        </div>
+    </div>
+  </div>
 </body>
 
 </html>

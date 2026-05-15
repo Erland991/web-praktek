@@ -89,11 +89,19 @@
                         </td>
                         <td class="border-bottom-0">
                             <div class="d-flex align-items-center">
-                                <div class="avatar-sm d-flex align-items-center justify-content-center rounded-circle bg-light-primary text-primary border border-primary border-opacity-10 fw-bold me-3" style="width: 40px; height: 40px;">
-                                    <?= substr(strtoupper(esc($k['nama_lengkap'])), 0, 1) ?>
+                                <div class="avatar-sm d-flex align-items-center justify-content-center rounded-circle bg-light-primary text-primary border border-primary border-opacity-10 fw-bold me-3" style="width: 40px; height: 40px; overflow: hidden;">
+                                    <?php if(!empty($k['photo']) && $k['photo'] != 'default.png'): ?>
+                                        <img src="<?= base_url('uploads/profile/'.$k['photo']) ?>" class="w-full h-full object-cover" style="width: 100%; height: 100%; object-fit: cover;">
+                                    <?php else: ?>
+                                        <?= substr(strtoupper(esc($k['nama_lengkap'])), 0, 1) ?>
+                                    <?php endif; ?>
                                 </div>
                                 <div>
-                                    <h6 class="fw-bold mb-0 text-dark"><?= $k['nama_lengkap'] ?></h6>
+                                    <h6 class="fw-bold mb-0 text-dark">
+                                        <button type="button" onclick="showKaryawanDetail(<?= $k['id'] ?>)" class="btn btn-link p-0 text-dark fw-bold text-decoration-none hover-primary">
+                                            <?= $k['nama_lengkap'] ?>
+                                        </button>
+                                    </h6>
                                     <small class="text-muted d-block mt-1 font-monospace">ID: <?= $k['nip'] ?></small>
                                 </div>
                             </div>
@@ -149,7 +157,7 @@
                 <h5 class="modal-title fw-bold text-uppercase tracking-wider fs-3" id="modalTambahLabel">Karyawan Baru</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="<?= base_url('master/karyawan/save') ?>" method="POST">
+            <form action="<?= base_url('master/karyawan/save') ?>" method="POST" enctype="multipart/form-data">
                 <?= csrf_field() ?>
                 <div class="modal-body p-4">
                     <div class="row g-3">
@@ -182,6 +190,11 @@
                                 <?php endforeach; ?>
                             </select>
                         </div>
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Photo Profil</label>
+                            <input type="file" name="photo" class="form-control">
+                            <small class="text-muted">Format: JPG, PNG. Max: 2MB. Kosongkan untuk default.</small>
+                        </div>
                         <div class="col-12 mt-4">
                             <button type="submit" class="btn btn-primary w-100 py-3 fw-bold text-uppercase">Simpan Data</button>
                         </div>
@@ -200,7 +213,7 @@
                 <h5 class="modal-title fw-bold text-uppercase tracking-wider fs-3" id="modalEditLabel">Edit Karyawan</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="formEdit" method="POST">
+            <form id="formEdit" method="POST" enctype="multipart/form-data">
                 <?= csrf_field() ?>
                 <div class="modal-body p-4">
                     <div class="row g-3">
@@ -232,6 +245,11 @@
                                 <?php endforeach; ?>
                             </select>
                         </div>
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Ganti Photo Profil</label>
+                            <input type="file" name="photo" class="form-control">
+                            <small class="text-muted">Kosongkan jika tidak ingin mengubah foto.</small>
+                        </div>
                         <div class="col-12 mt-3">
                             <div class="p-3 rounded-3 bg-light-warning border border-warning shadow-sm">
                                 <label class="form-label fw-bold text-warning text-uppercase mb-1 fs-1">Ganti Password</label>
@@ -261,5 +279,85 @@
         document.getElementById('edit_divisi').value = data.divisi;
         modalEditInstance.show();
     }
+
+    let modalDetailInstance = null;
+    function showKaryawanDetail(id) {
+        if(!modalDetailInstance) modalDetailInstance = new bootstrap.Modal(document.getElementById('modalDetailKaryawan'));
+        
+        fetch('<?= base_url('master/karyawan/detail') ?>/' + id)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('det_nama').innerText = data.nama_lengkap;
+                document.getElementById('det_nip').innerText = data.nip;
+                document.getElementById('det_role').innerText = data.role;
+                document.getElementById('det_divisi').innerText = data.divisi || 'Belum diatur';
+                document.getElementById('det_username').innerText = data.username;
+                
+                const photoPath = data.photo ? '<?= base_url('uploads/profile') ?>/' + data.photo : '<?= base_url('uploads/profile/default.png') ?>';
+                document.getElementById('det_photo').src = photoPath;
+                
+                modalDetailInstance.show();
+            });
+    }
 </script>
+
+<!-- Modal Detail Karyawan -->
+<div class="modal fade" id="modalDetailKaryawan" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="modal-body p-0">
+                <div class="position-relative" style="height: 120px; background: linear-gradient(135deg, #1e293b 0%, #334155 100%);">
+                    <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="px-4 pb-4 text-center" style="margin-top: -60px;">
+                    <div class="mb-3 position-relative d-inline-block">
+                        <img id="det_photo" src="" alt="Profile" class="rounded-circle border border-4 border-white shadow-sm" style="width: 120px; height: 120px; background: white; object-fit: cover;">
+                    </div>
+                    <h4 id="det_nama" class="fw-bold mb-1"></h4>
+                    <p id="det_role" class="badge bg-light-primary text-primary border border-primary border-opacity-10 px-3 py-1 rounded-pill mb-4"></p>
+                    
+                    <div class="row g-3 text-start">
+                        <div class="col-12">
+                            <div class="p-3 rounded-3 bg-light border border-opacity-10 d-flex align-items-center gap-3">
+                                <div class="bg-white rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                    <i class="ti ti-id-badge text-primary fs-5"></i>
+                                </div>
+                                <div>
+                                    <small class="text-muted d-block text-uppercase fw-bold tracking-tighter fs-1">Nomor Induk Pegawai</small>
+                                    <span id="det_nip" class="fw-bold text-dark"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="p-3 rounded-3 bg-light border border-opacity-10 d-flex align-items-center gap-3">
+                                <div class="bg-white rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                    <i class="ti ti-building text-success fs-5"></i>
+                                </div>
+                                <div>
+                                    <small class="text-muted d-block text-uppercase fw-bold tracking-tighter fs-1">Penempatan Divisi</small>
+                                    <span id="det_divisi" class="fw-bold text-dark"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="p-3 rounded-3 bg-light border border-opacity-10 d-flex align-items-center gap-3">
+                                <div class="bg-white rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                    <i class="ti ti-user-circle text-purple fs-5"></i>
+                                </div>
+                                <div>
+                                    <small class="text-muted d-block text-uppercase fw-bold tracking-tighter fs-1">Username Akses</small>
+                                    <span id="det_username" class="fw-bold text-dark"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-light border-0 p-3">
+                <button type="button" class="btn btn-outline-secondary w-100 rounded-3 fw-bold" data-bs-dismiss="modal">Tutup Detail</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <?= $this->endSection() ?>
