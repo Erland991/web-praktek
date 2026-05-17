@@ -19,9 +19,9 @@
             border-collapse: collapse;
             border: 1.5px solid black;
         }
-        .main-table td {
+        .main-table > tbody > tr > td {
             border: 1.5px solid black;
-            padding: 8px;
+            padding: 5px 8px;
             vertical-align: top;
         }
         .bg-grey {
@@ -32,17 +32,18 @@
             vertical-align: middle !important;
         }
         .logo-img {
-            height: 45px;
+            height: 40px;
             vertical-align: middle;
         }
         .company-name {
-            font-size: 16pt;
+            font-size: 15pt;
             font-weight: bold;
             color: #1e40af;
             margin-left: 10px;
+            vertical-align: middle;
         }
         .text-center { text-align: center; }
-        .fw-bold { font-weight: bold; }
+        .text-middle { vertical-align: middle !important; }
         
         .btn-print {
             position: fixed;
@@ -66,117 +67,112 @@
     <button class="btn-print" onclick="window.print()">KLIK UNTUK DOWNLOAD (SIMPAN KE PDF)</button>
 
     <table class="main-table">
-        <!-- Baris 1: Logo & Header Info -->
-        <tr>
-            <td colspan="2" style="width: 70%; border-right: 1.5px solid black; vertical-align: middle;">
-                <table style="border: none; width: 100%;">
-                    <tr style="border: none;">
-                        <td style="border: none; width: 50px;">
-                            <img src="<?= base_url('images/logo_si.png') ?>" class="logo-img">
-                        </td>
-                        <td style="border: none; vertical-align: middle;">
-                            <span class="company-name">PT SURVEYOR INDONESIA (Persero)</span>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-            <td style="width: 30%; font-size: 9pt;">
-                No Dok. &nbsp;: <?= $doc_number ?><br>
-                Revisi &nbsp;&nbsp;&nbsp;&nbsp;: <?= $revision ?>
-            </td>
-        </tr>
+        <colgroup>
+            <col style="width: 8%;">
+            <col style="width: 60%;">
+            <col style="width: 16%;">
+            <col style="width: 16%;">
+        </colgroup>
+        <tbody>
+            <!-- Baris 1: Logo & Header Info -->
+            <tr>
+                <td colspan="2" class="text-middle">
+                    <img src="<?= base_url('images/logo_si.png') ?>" class="logo-img">
+                    <span class="company-name">PT SURVEYOR INDONESIA (Persero)</span>
+                </td>
+                <td colspan="2" style="font-size: 9pt;">
+                    <table style="border: none; border-collapse: collapse;">
+                        <tr><td style="border: none; padding: 0 10px 2px 0;">No Dok.</td><td style="border: none; padding: 0 5px 2px 0;">:</td><td style="border: none; padding: 0 0 2px 0;"><?= $doc_number ?></td></tr>
+                        <tr><td style="border: none; padding: 0 10px 0 0;">Revisi</td><td style="border: none; padding: 0 5px 0 0;">:</td><td style="border: none; padding: 0;"><?= $revision ?></td></tr>
+                    </table>
+                </td>
+            </tr>
 
-        <!-- Baris 2: Judul & Waktu -->
-        <tr>
-            <td class="bg-grey" colspan="2" style="height: 40px;">
-                NOTULA RAPAT
-            </td>
-            <td style="font-size: 9pt;">
-                Tanggal : <?= date('d/m/Y', strtotime($notula['tanggal'])) ?><br>
-                Tempat : <?= $notula['tempat'] ?>
-            </td>
-        </tr>
+            <!-- Baris 2: Judul & Waktu -->
+            <tr>
+                <td colspan="2" class="bg-grey" style="height: 40px;">
+                    NOTULA RAPAT
+                </td>
+                <td colspan="2" style="font-size: 9pt;">
+                    Tanggal : <?= date('d/m/Y', strtotime($notula['tanggal'])) ?><br>
+                    Tempat &nbsp;: <?= $notula['tempat'] ?>
+                </td>
+            </tr>
 
-        <!-- Baris 3: Agenda & Distribusi -->
-        <tr>
-            <td colspan="2" style="height: 80px;">
-                <table style="border: none; width: 100%; border-collapse: collapse;">
-                    <tr style="border: none;">
-                        <td style="border: none; width: 80px; padding: 0 0 5px 0;"><strong>AGENDA</strong></td>
-                        <td style="border: none; width: 10px; padding: 0 0 5px 0;">:</td>
-                        <td style="border: none; padding: 0 0 5px 0;"><?= $notula['agenda'] ?></td>
-                    </tr>
-                    <tr style="border: none;">
-                        <td style="border: none; vertical-align: top;"><strong>PESERTA</strong></td>
-                        <td style="border: none; vertical-align: top;">:</td>
-                        <td style="border: none;">
-                            <?php 
-                                $peserta = explode(',', $notula['peserta']);
-                                foreach($peserta as $p):
-                            ?>
-                            - <?= trim($p) ?><br>
-                            <?php endforeach; ?>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-            <td style="font-size: 9pt;">
-                <strong>DISTRIBUSI NOTULA RAPAT:</strong><br>
-                - Unit Kerja Terkait
-            </td>
-        </tr>
+            <!-- Baris 3: Agenda & Distribusi -->
+            <tr>
+                <td colspan="2" style="height: 80px;">
+                    <table style="border: none; width: 100%; border-collapse: collapse; font-size: 10pt;">
+                        <tr style="border: none;">
+                            <td style="border: none; width: 80px; padding: 0 0 5px 0;">AGENDA</td>
+                            <td style="border: none; width: 10px; padding: 0 0 5px 0;">:</td>
+                            <td style="border: none; padding: 0 0 5px 0;"><?= $notula['agenda'] ?></td>
+                        </tr>
+                        <tr style="border: none;">
+                            <td style="border: none; vertical-align: top;">PESERTA</td>
+                            <td style="border: none; vertical-align: top;">:</td>
+                            <td style="border: none;">
+                                <?php 
+                                    $peserta = explode(',', $notula['peserta']);
+                                    foreach($peserta as $p):
+                                ?>
+                                &nbsp;&nbsp;- <?= trim($p) ?><br>
+                                <?php endforeach; ?>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td colspan="2" style="font-size: 10pt;">
+                    DISTRIBUSI NOTULA RAPAT:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;- Unit Kerja Terkait
+                </td>
+            </tr>
 
-        <!-- Table Header -->
-        <tr>
-            <td class="text-center" style="width: 8%;"><strong>ITEM</strong></td>
-            <td class="text-center" style="width: 52%;"><strong>HASIL PEMBAHASAN</strong></td>
-            <td style="padding: 0; width: 40%;">
-                <table style="width: 100%; border-collapse: collapse; height: 100%;">
-                    <tr>
-                        <td class="text-center" style="border: none; border-right: 1.5px solid black; width: 50%; padding: 8px;"><strong>PENANGGUNG JAWAB</strong></td>
-                        <td class="text-center" style="border: none; padding: 8px;"><strong>TARGET WAKTU</strong></td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
+            <!-- Table Header -->
+            <tr>
+                <td class="text-center text-middle">ITEM</td>
+                <td class="text-center text-middle">HASIL PEMBAHASAN</td>
+                <td class="text-center text-middle">PENANGGUNG<br>JAWAB</td>
+                <td class="text-center text-middle">TARGET<br>WAKTU</td>
+            </tr>
 
-        <!-- Table Content -->
-        <?php foreach($notula['hasil_pembahasan'] as $it): ?>
-        <tr>
-            <td class="text-center"><?= $it['item'] ?></td>
-            <td><?= nl2br(esc($it['hasil'])) ?></td>
-            <td style="padding: 0;">
-                <table style="width: 100%; border-collapse: collapse; height: 100%;">
-                    <tr>
-                        <td class="text-center" style="border: none; border-right: 1.5px solid black; width: 50%; padding: 8px;"><?= $it['pic'] ?></td>
-                        <td class="text-center" style="border: none; padding: 8px;"><?= !empty($it['target']) ? date('d/m/Y', strtotime($it['target'])) : '-' ?></td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <?php endforeach; ?>
+            <!-- Table Content -->
+            <?php foreach($notula['hasil_pembahasan'] as $it): ?>
+            <tr>
+                <td class="text-center"><?= $it['item'] ?></td>
+                <td><?= nl2br(esc($it['hasil'])) ?></td>
+                <td class="text-center"><?= $it['pic'] ?></td>
+                <td class="text-center"><?= !empty($it['target']) ? date('d/m/Y', strtotime($it['target'])) : '-' ?></td>
+            </tr>
+            <?php endforeach; ?>
 
-        <!-- Footer signatures labels -->
-        <tr>
-            <td class="text-center" style="width: 33.33%;">Disiapkan oleh</td>
-            <td class="text-center" style="width: 33.33%;">Disetujui oleh</td>
-            <td class="text-center" style="width: 33.33%;">Disetujui oleh</td>
-        </tr>
-        <!-- Footer names/titles -->
-        <tr>
-            <td class="text-center" style="height: 120px; vertical-align: bottom; border-top: none;">
-                <strong><?= $notula['nama_disiapkan'] ?></strong><br>
-                <?= $notula['jabatan_disiapkan'] ?>
-            </td>
-            <td class="text-center" style="height: 120px; vertical-align: bottom; border-top: none;">
-                <strong><?= $notula['nama_setuju1'] ?></strong><br>
-                <?= $notula['jabatan_setuju1'] ?>
-            </td>
-            <td class="text-center" style="height: 120px; vertical-align: bottom; border-top: none;">
-                <strong><?= $notula['nama_setuju2'] ?></strong><br>
-                <?= $notula['jabatan_setuju2'] ?>
-            </td>
-        </tr>
+            <!-- Signatures (One single cell to prevent vertical borders) -->
+            <tr>
+                <td colspan="4" style="padding: 0;">
+                    <table style="width: 100%; border-collapse: collapse; border: none; height: 140px;">
+                        <tr>
+                            <td class="text-center" style="border: none; width: 33.33%; padding-top: 15px;">Disiapkan oleh</td>
+                            <td class="text-center" style="border: none; width: 33.33%; padding-top: 15px;">Disetujui oleh</td>
+                            <td class="text-center" style="border: none; width: 33.33%; padding-top: 15px;">Disetujui oleh</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center" style="border: none; vertical-align: bottom; padding-bottom: 15px;">
+                                <?= $notula['nama_disiapkan'] ?><br>
+                                <?= $notula['jabatan_disiapkan'] ?>
+                            </td>
+                            <td class="text-center" style="border: none; vertical-align: bottom; padding-bottom: 15px;">
+                                <?= $notula['nama_setuju1'] ?><br>
+                                <?= $notula['jabatan_setuju1'] ?>
+                            </td>
+                            <td class="text-center" style="border: none; vertical-align: bottom; padding-bottom: 15px;">
+                                <?= $notula['nama_setuju2'] ?><br>
+                                <?= $notula['jabatan_setuju2'] ?>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
     </table>
 </body>
 </html>

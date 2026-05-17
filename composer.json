@@ -15,7 +15,9 @@
         "ext-mbstring": "*",
         "dompdf/dompdf": "*",
         "laminas/laminas-escaper": "^2.18",
-        "psr/log": "^3.0"
+        "psr/log": "^3.0",
+        "setasign/fpdf": "*",
+        "setasign/fpdi": "*"
     },
     "require-dev": {
         "codeigniter/phpstan-codeigniter": "^1.5",

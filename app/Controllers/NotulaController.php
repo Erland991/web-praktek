@@ -18,19 +18,48 @@ class NotulaController extends BaseController
         $db = \Config\Database::connect();
         $notula = null;
         $app_id = $this->request->getGet('app_id');
+        $appData = null;
 
         if ($id) {
             $notula = $db->table('notula_rapat')->where('id', $id)->get()->getRowArray();
             if ($notula) {
                 $notula['hasil_pembahasan'] = json_decode($notula['hasil_pembahasan'], true);
+                $app_id = $notula['aplikasi_id'];
             }
+        }
+
+        // Fetch application details to auto-fill the form
+        if ($app_id) {
+            $appData = $db->table('aplikasi_master')
+                          ->select('aplikasi_master.*, users.nama_lengkap as pic_name, divisi.nama_divisi')
+                          ->join('users', 'users.id = aplikasi_master.pic_id', 'left')
+                          ->join('divisi', 'divisi.id = aplikasi_master.divisi_id', 'left')
+                          ->where('aplikasi_master.id', $app_id)
+                          ->get()->getRowArray();
+        }
+
+        // Auto-fill defaults for new notula
+        if (!$notula && $appData) {
+            $notula = [
+                'tanggal' => date('Y-m-d'),
+                'tempat' => 'Ruang Rapat Utama',
+                'agenda' => 'Pembahasan Proyek: ' . $appData['nama_app'],
+                'peserta' => session()->get('nama_lengkap') . ' (IT), ' . ($appData['pic_name'] ?? 'PM') . ' (PM), Tim ' . ($appData['nama_divisi'] ?? 'Terkait'),
+                'nama_disiapkan' => session()->get('nama_lengkap'),
+                'jabatan_disiapkan' => session()->get('role'),
+                'nama_setuju1' => $appData['pic_name'] ?? '',
+                'jabatan_setuju1' => 'Project Manager',
+                'nama_setuju2' => '',
+                'jabatan_setuju2' => 'Manajer Divisi ' . ($appData['nama_divisi'] ?? ''),
+                'hasil_pembahasan' => [['item'=>'01', 'hasil'=>'Review Progress Aplikasi ' . $appData['nama_app'], 'pic'=>$appData['pic_name'] ?? '', 'target'=>'']]
+            ];
         }
 
         $data = [
             'doc_number' => 'FP-MR07-04',
             'revision' => '00',
             'notula' => $notula,
-            'app_id' => $app_id ?? ($notula['aplikasi_id'] ?? null)
+            'app_id' => $app_id
         ];
 
         return view('notula/notula_v', $data);
@@ -162,29 +191,157 @@ class NotulaController extends BaseController
             
             $notula['hasil_pembahasan'] = json_decode($notula['hasil_pembahasan'], true);
 
-            $data = [
-                'doc_number' => 'FP-MR07-04',
-                'revision' => '00',
-                'notula' => $notula,
-                'logo_base64' => null
-            ];
+            // Create new FPDF instance
+            $pdf = new \setasign\Fpdi\Fpdi('P', 'mm', 'A4');
+            $pdf->SetAutoPageBreak(true, 10);
+            $pdf->AddPage();
+            
+            // Set Base Config
+            $pdf->SetDrawColor(0, 0, 0); // Black borders
+            $pdf->SetLineWidth(0.4);
 
-            $html = view('notula/export_pdf_v', $data);
+            // 1. Top Logo Row (Y=10)
+            $pdf->Rect(10, 10, 130, 20);
+            $logoPath = FCPATH . 'images/logo_si.png';
+            if (file_exists($logoPath)) {
+                $pdf->Image($logoPath, 15, 12, 22);
+            }
+            $pdf->SetFont('Arial', 'B', 14);
+            $pdf->SetTextColor(30, 64, 175); // Blue
+            $pdf->SetXY(45, 16);
+            $pdf->Cell(80, 10, 'PT SURVEYOR INDONESIA (Persero)', 0, 0, 'L');
 
-            $options = new Options();
-            $options->set('isRemoteEnabled', true);
-            $options->set('isHtml5ParserEnabled', true);
-            $dompdf = new Dompdf($options);
-            $dompdf->loadHtml($html);
-            $dompdf->setPaper('A4', 'portrait');
-            $dompdf->render();
+            // Dok Row 
+            $pdf->Rect(140, 10, 60, 20);
+            $pdf->SetFont('Arial', '', 9);
+            $pdf->SetTextColor(0, 0, 0);
+            $pdf->SetXY(142, 12);
+            $pdf->Cell(60, 6, 'No Dok.   : FP-MR07-04', 0, 1);
+            $pdf->SetXY(142, 18);
+            $pdf->Cell(60, 6, 'Revisi      : 00', 0, 1);
+
+            // 2. Title Row (Y=30)
+            $pdf->SetFillColor(204, 204, 204); // Grey background
+            $pdf->Rect(10, 30, 130, 15, 'DF'); 
+            $pdf->SetFont('Arial', 'B', 12);
+            $pdf->SetXY(10, 34);
+            $pdf->Cell(130, 8, 'NOTULA RAPAT', 0, 0, 'C');
+
+            $pdf->Rect(140, 30, 60, 15);
+            $pdf->SetFont('Arial', '', 9);
+            $pdf->SetXY(142, 31);
+            $pdf->Cell(60, 6, 'Tanggal : ' . date('d/m/Y', strtotime($notula['tanggal'])), 0, 1);
+            $pdf->SetXY(142, 37);
+            $pdf->Cell(60, 6, 'Tempat : ' . $notula['tempat'], 0, 1);
+
+            // 3. Agenda Row (Y=45)
+            $pdf->Rect(10, 45, 130, 35);
+            $pdf->SetXY(12, 47);
+            $pdf->Cell(20, 5, 'AGENDA', 0, 0);
+            $pdf->Cell(3, 5, ':', 0, 0);
+            $pdf->Cell(95, 5, $notula['agenda'], 0, 1);
+
+            $pdf->SetXY(12, 53);
+            $pdf->Cell(20, 5, 'PESERTA', 0, 0);
+            $pdf->Cell(3, 5, ':', 0, 1);
+            $yP = 58;
+            $peserta = explode(',', $notula['peserta']);
+            foreach($peserta as $p) {
+                $pdf->SetXY(20, $yP);
+                $pdf->Cell(100, 5, '- ' . trim($p), 0, 1);
+                $yP += 5;
+                if ($yP > 75) break; 
+            }
+
+            $pdf->Rect(140, 45, 60, 35);
+            $pdf->SetXY(142, 47);
+            $pdf->Cell(60, 5, 'DISTRIBUSI NOTULA RAPAT:', 0, 1);
+            $pdf->SetXY(145, 53);
+            $pdf->Cell(60, 5, '- Unit Kerja Terkait', 0, 1);
+
+            // 4. Table Header (Y=80)
+            $pdf->SetFont('Arial', 'B', 9);
+            $pdf->Rect(10, 80, 15, 10);
+            $pdf->SetXY(10, 82); $pdf->Cell(15, 6, 'ITEM', 0, 0, 'C');
+
+            $pdf->Rect(25, 80, 100, 10);
+            $pdf->SetXY(25, 82); $pdf->Cell(100, 6, 'HASIL PEMBAHASAN', 0, 0, 'C');
+
+            $pdf->Rect(125, 80, 35, 10);
+            $pdf->SetXY(125, 80); $pdf->Cell(35, 5, 'PENANGGUNG', 0, 1, 'C');
+            $pdf->SetXY(125, 84); $pdf->Cell(35, 5, 'JAWAB', 0, 0, 'C');
+
+            $pdf->Rect(160, 80, 40, 10);
+            $pdf->SetXY(160, 80); $pdf->Cell(40, 5, 'TARGET', 0, 1, 'C');
+            $pdf->SetXY(160, 84); $pdf->Cell(40, 5, 'WAKTU', 0, 0, 'C');
+
+            // 5. Table Data (Y=90)
+            $pdf->SetFont('Arial', '', 9);
+            $y = 90;
+            $no = 1;
+            
+            foreach ($notula['hasil_pembahasan'] as $it) {
+                $hasil = $it['hasil'];
+                // Estimate height needed for text
+                $numLines = ceil($pdf->GetStringWidth($hasil) / 95) + substr_count($hasil, "\n");
+                $h = max(10, $numLines * 5 + 4);
+
+                if ($y + $h > 260) {
+                    $pdf->AddPage();
+                    $y = 10;
+                }
+
+                $pdf->Rect(10, $y, 15, $h);
+                $pdf->Rect(25, $y, 100, $h);
+                $pdf->Rect(125, $y, 35, $h);
+                $pdf->Rect(160, $y, 40, $h);
+
+                $pdf->SetXY(10, $y + 2);
+                $pdf->Cell(15, 5, $no++, 0, 0, 'C');
+
+                $pdf->SetXY(27, $y + 2);
+                $pdf->MultiCell(96, 5, $hasil, 0, 'L');
+
+                $pdf->SetXY(125, $y + 2);
+                $pdf->MultiCell(35, 5, $it['pic'], 0, 'C');
+
+                $pdf->SetXY(160, $y + 2);
+                $targetDate = !empty($it['target']) ? date('d/m/Y', strtotime($it['target'])) : '-';
+                $pdf->Cell(40, 5, $targetDate, 0, 0, 'C');
+
+                $y += $h;
+            }
+
+            // 6. Signatures
+            $sigH = 35;
+            if ($y + $sigH > 280) {
+                $pdf->AddPage();
+                $y = 10;
+            }
+            $pdf->Rect(10, $y, 190, $sigH); // One big cell
+            $pdf->SetXY(10, $y + 5);
+            $pdf->Cell(63, 5, 'Disiapkan oleh', 0, 0, 'C');
+            $pdf->Cell(63, 5, 'Disetujui oleh', 0, 0, 'C');
+            $pdf->Cell(64, 5, 'Disetujui oleh', 0, 1, 'C');
+
+            $pdf->SetXY(10, $y + 22);
+            $pdf->SetFont('Arial', 'B', 9);
+            $pdf->Cell(63, 4, $notula['nama_disiapkan'], 0, 0, 'C');
+            $pdf->Cell(63, 4, $notula['nama_setuju1'], 0, 0, 'C');
+            $pdf->Cell(64, 4, $notula['nama_setuju2'], 0, 1, 'C');
+
+            $pdf->SetXY(10, $y + 26);
+            $pdf->SetFont('Arial', '', 9);
+            $pdf->Cell(63, 4, $notula['jabatan_disiapkan'], 0, 0, 'C');
+            $pdf->Cell(63, 4, $notula['jabatan_setuju1'], 0, 0, 'C');
+            $pdf->Cell(64, 4, $notula['jabatan_setuju2'], 0, 1, 'C');
 
             return $this->response->setHeader('Content-Type', 'application/pdf')
-                                  ->setHeader('Content-Disposition', 'attachment; filename="Notula_Rapat_'.$id.'.pdf"')
-                                  ->setBody($dompdf->output());
+                                  ->setHeader('Content-Disposition', 'inline; filename="Notula_Rapat_'.$id.'.pdf"')
+                                  ->setBody($pdf->Output('S'));
 
         } catch (\Exception $e) {
-            log_message('error', 'Notula Export Error: ' . $e->getMessage() . ' in ' . $e->getFile() . ' on line ' . $e->getLine());
+            log_message('error', 'Notula FPDF Error: ' . $e->getMessage() . ' in ' . $e->getFile() . ' on line ' . $e->getLine());
             return redirect()->back()->with('error', 'Gagal membuat PDF: ' . $e->getMessage());
         }
     }

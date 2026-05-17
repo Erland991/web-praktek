@@ -6,6 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'setasign\\Fpdi\\' => array($vendorDir . '/setasign/fpdi/src'),
     'Utils\\' => array($baseDir . '/utils/src'),
     'Svg\\' => array($vendorDir . '/dompdf/php-svg-lib/src/Svg'),
     'ShipMonk\\PHPStan\\Baseline\\' => array($vendorDir . '/shipmonk/phpstan-baseline-per-identifier/src'),
