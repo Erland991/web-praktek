@@ -428,6 +428,156 @@
         item.style.animationDelay = `${(index + 1) * 0.05}s`;
         item.classList.add('animate__animated', 'animate__fadeInLeft');
       });
+
+      // --- GLOBAL AJAX FORMS INTERCEPTOR ---
+      document.addEventListener('submit', function(e) {
+          const form = e.target;
+          
+          // Skip auth actions
+          if (form.action.includes('logout') || form.action.includes('login') || form.action.includes('auth')) {
+              return;
+          }
+          
+          // Skip already custom-handled forms
+          if (form.id === 'formProgress' || form.id === 'formApproval' || form.getAttribute('data-no-ajax')) {
+              return;
+          }
+
+          e.preventDefault();
+          const btn = form.querySelector('button[type="submit"]');
+          const originalText = btn ? btn.innerHTML : '';
+          if (btn) {
+              btn.innerHTML = '<i class="ti ti-loader ti-spin"></i> Processing...';
+              btn.disabled = true;
+          }
+
+          const formData = new FormData(form);
+          fetch(form.action, {
+              method: form.method || 'POST',
+              body: formData,
+              headers: {
+                  'X-Requested-With': 'XMLHttpRequest'
+              }
+          })
+          .then(res => {
+              const contentType = res.headers.get('content-type');
+              if (contentType && contentType.includes('application/json')) {
+                  return res.json();
+              } else {
+                  window.location.reload();
+                  return null;
+              }
+          })
+          .then(data => {
+              if (!data) return;
+              if (data.status === 'success') {
+                  const modalEl = form.closest('.modal');
+                  if (modalEl) {
+                      const modalInstance = bootstrap.Modal.getInstance(modalEl);
+                      if (modalInstance) modalInstance.hide();
+                  }
+                  alert(data.message || 'Berhasil menyimpan data.');
+                  
+                  // Special check for AppMaster module modal
+                  if (form.action.includes('save-module')) {
+                      if (typeof showModulModal === 'function') {
+                          const appId = document.getElementById('modul_app_id').value;
+                          const appName = document.getElementById('modul_app_name').innerText.replace('Aplikasi: ', '');
+                          showModulModal(appId, appName);
+                          form.reset();
+                          if (btn) {
+                              btn.innerHTML = originalText;
+                              btn.disabled = false;
+                          }
+                      } else {
+                          window.location.reload();
+                      }
+                  } else {
+                      window.location.reload();
+                  }
+              } else {
+                  alert(data.message || 'Terjadi kesalahan');
+                  if (btn) {
+                      btn.innerHTML = originalText;
+                      btn.disabled = false;
+                  }
+              }
+          })
+          .catch(err => {
+              console.error(err);
+              if (btn) {
+                  btn.innerHTML = originalText;
+                  btn.disabled = false;
+              }
+          });
+      });
+
+      // --- GLOBAL AJAX DELETES INTERCEPTOR ---
+      document.addEventListener('click', function(e) {
+          const anchor = e.target.closest('a');
+          if (!anchor || !anchor.href) return;
+          
+          const isDeleteRoute = anchor.href.includes('/delete/') || anchor.href.includes('/delete-module/');
+          if (!isDeleteRoute) return;
+
+          e.preventDefault();
+
+          const clickAttr = anchor.getAttribute('onclick');
+          let confirmMsg = 'Apakah Anda yakin ingin menghapus data ini?';
+          if (clickAttr && clickAttr.includes('confirm')) {
+              const match = clickAttr.match(/confirm\('([^']+)'\)/);
+              if (match) confirmMsg = match[1];
+          }
+              
+          if (!confirm(confirmMsg)) {
+              return;
+          }
+
+          fetch(anchor.href, {
+              headers: {
+                  'X-Requested-With': 'XMLHttpRequest'
+              }
+          })
+          .then(res => {
+              const contentType = res.headers.get('content-type');
+              if (contentType && contentType.includes('application/json')) {
+                  return res.json();
+              } else {
+                  window.location.reload();
+                  return null;
+              }
+          })
+          .then(data => {
+              if (!data) return;
+              if (data.status === 'success') {
+                  // Dynamically remove row
+                  const row = anchor.closest('tr');
+                  if (row) {
+                      row.style.transition = 'all 0.5s ease';
+                      row.style.opacity = '0';
+                      row.style.transform = 'scale(0.9)';
+                      setTimeout(() => {
+                          row.remove();
+                          if (anchor.href.includes('/delete-module/')) {
+                              if (typeof showModulModal === 'function') {
+                                  const appId = document.getElementById('modul_app_id').value;
+                                  const appName = document.getElementById('modul_app_name').innerText.replace('Aplikasi: ', '');
+                                  showModulModal(appId, appName);
+                              }
+                          }
+                      }, 500);
+                  } else {
+                      window.location.reload();
+                  }
+              } else {
+                  alert(data.message || 'Gagal menghapus data.');
+              }
+          })
+          .catch(err => {
+              console.error(err);
+              alert('Terjadi kesalahan jaringan.');
+          });
+      });
     });
   </script>
   <?= $this->renderSection('modals') ?>

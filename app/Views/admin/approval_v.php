@@ -43,7 +43,7 @@
                         </tr>
                     <?php endif; ?>
                     <?php foreach($pending as $p): ?>
-                    <tr>
+                    <tr id="row-<?= $p['id'] ?>">
                         <td class="border-bottom-0 ps-4">
                             <div class="d-flex align-items-center">
                                 <div class="bg-light-primary rounded-2 p-2 me-3 text-primary">
@@ -145,5 +145,52 @@
         if(!approvalModal) approvalModal = new bootstrap.Modal(document.getElementById('modalApproval'));
         approvalModal.show();
     }
+
+    document.getElementById('formApproval').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('btn_submit_approval');
+        const originalText = btn.innerText;
+        btn.innerHTML = '<i class="ti ti-loader ti-spin"></i> Processing...';
+        btn.disabled = true;
+
+        const formData = new FormData(this);
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'success') {
+                approvalModal.hide();
+                const urlParts = this.action.split('/');
+                const id = urlParts[urlParts.length - 2];
+                const row = document.getElementById('row-' + id);
+                if (row) {
+                    row.style.transition = 'all 0.5s ease';
+                    row.style.opacity = '0';
+                    row.style.transform = 'scale(0.9)';
+                    setTimeout(() => {
+                        row.remove();
+                        const tbody = document.querySelector('tbody');
+                        if (tbody && tbody.querySelectorAll('tr[id^="row-"]').length === 0) {
+                            tbody.innerHTML = `<tr><td colspan="5" class="text-center py-5 text-muted italic">Tidak ada antrean persetujuan saat ini. Semua data sudah tervalidasi.</td></tr>`;
+                        }
+                    }, 500);
+                }
+            } else {
+                alert(data.message || 'Terjadi kesalahan');
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+        })
+        .catch(err => {
+            alert('Terjadi kesalahan jaringan.');
+            btn.innerText = originalText;
+            btn.disabled = false;
+        });
+    });
 </script>
 <?= $this->endSection() ?>

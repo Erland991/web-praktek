@@ -32,6 +32,10 @@ class Cobit extends BaseController
         $model->save($data);
         (new LogModel())->record('TAMBAH COBIT', 'Menambahkan standar COBIT: ' . $data['kode_proses']);
 
+        if ($this->request->isAJAX()) {
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Standar COBIT-19 berhasil didaftarkan.']);
+        }
+
         return redirect()->back()->with('sukses', 'Standar COBIT-19 berhasil didaftarkan.');
     }
 
@@ -40,6 +44,11 @@ class Cobit extends BaseController
         if (session()->get('role') != 'Admin') return redirect()->back();
         (new CobitModel())->delete($id);
         (new LogModel())->record('HAPUS COBIT', 'Menghapus standar COBIT ID: ' . $id);
+        
+        if ($this->request->isAJAX()) {
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Standar berhasil dihapus.']);
+        }
+
         return redirect()->back()->with('sukses', 'Standar berhasil dihapus.');
     }
 }

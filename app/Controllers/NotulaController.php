@@ -171,8 +171,13 @@ class NotulaController extends BaseController
         
         // Cek jika keduanya sudah approve, tandai final
         $notula = $db->table('notula_rapat')->where('id', $id)->get()->getRowArray();
-        if ($notula['is_approved1'] && $notula['is_approved2']) {
+        $is_final = ($notula['is_approved1'] && $notula['is_approved2']);
+        if ($is_final) {
             $db->table('notula_rapat')->where('id', $id)->update(['is_final' => 1]);
+        }
+
+        if ($this->request->isAJAX()) {
+            return $this->response->setJSON(['status' => 'success', 'is_final' => $is_final]);
         }
 
         return redirect()->back()->with('sukses', 'Notula berhasil disetujui.');
@@ -319,26 +324,70 @@ class NotulaController extends BaseController
                 $y = 10;
             }
             $pdf->Rect(10, $y, 190, $sigH); // One big cell
-            $pdf->SetXY(10, $y + 5);
+            $pdf->SetXY(10, $y + 3);
             $pdf->Cell(63, 5, 'Disiapkan oleh', 0, 0, 'C');
             $pdf->Cell(63, 5, 'Disetujui oleh', 0, 0, 'C');
             $pdf->Cell(64, 5, 'Disetujui oleh', 0, 1, 'C');
 
-            $pdf->SetXY(10, $y + 22);
+            // --- ADD QR CODES ---
+            $qrFiles = [];
+            $generateQR = function($text) {
+                $tempFile = sys_get_temp_dir() . '/' . uniqid('qr_') . '.png';
+                $url = 'https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=' . urlencode($text);
+                if (function_exists('curl_init')) {
+                    $ch = curl_init($url);
+                    $fp = fopen($tempFile, 'wb');
+                    curl_setopt($ch, CURLOPT_FILE, $fp);
+                    curl_setopt($ch, CURLOPT_HEADER, 0);
+                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                    curl_exec($ch);
+                    curl_close($ch);
+                    fclose($fp);
+                } else {
+                    file_put_contents($tempFile, file_get_contents($url));
+                }
+                return $tempFile;
+            };
+
+            // Disiapkan
+            $qrFiles[] = $f = $generateQR('Disiapkan: ' . $notula['nama_disiapkan']);
+            if (file_exists($f)) $pdf->Image($f, 33.5, $y + 8, 16, 16);
+
+            // Disetujui 1
+            if ($notula['is_approved1']) {
+                $qrFiles[] = $f = $generateQR('Disetujui 1: ' . $notula['nama_setuju1'] . "\nApp 1: " . date('Y-m-d'));
+                if (file_exists($f)) $pdf->Image($f, 96.5, $y + 8, 16, 16);
+            }
+
+            // Disetujui 2
+            if ($notula['is_approved2']) {
+                $qrFiles[] = $f = $generateQR('Disetujui 2: ' . $notula['nama_setuju2'] . "\nApp 2: " . date('Y-m-d'));
+                if (file_exists($f)) $pdf->Image($f, 160, $y + 8, 16, 16);
+            }
+
+            $pdf->SetXY(10, $y + 25);
             $pdf->SetFont('Arial', 'B', 9);
             $pdf->Cell(63, 4, $notula['nama_disiapkan'], 0, 0, 'C');
             $pdf->Cell(63, 4, $notula['nama_setuju1'], 0, 0, 'C');
             $pdf->Cell(64, 4, $notula['nama_setuju2'], 0, 1, 'C');
 
-            $pdf->SetXY(10, $y + 26);
+            $pdf->SetXY(10, $y + 29);
             $pdf->SetFont('Arial', '', 9);
             $pdf->Cell(63, 4, $notula['jabatan_disiapkan'], 0, 0, 'C');
             $pdf->Cell(63, 4, $notula['jabatan_setuju1'], 0, 0, 'C');
             $pdf->Cell(64, 4, $notula['jabatan_setuju2'], 0, 1, 'C');
 
+            // Capture PDF output
+            $output = $pdf->Output('S');
+
+            // Cleanup temp files
+            foreach($qrFiles as $f) { 
+                if(file_exists($f)) @unlink($f); 
+            }
+
             return $this->response->setHeader('Content-Type', 'application/pdf')
                                   ->setHeader('Content-Disposition', 'inline; filename="Notula_Rapat_'.$id.'.pdf"')
-                                  ->setBody($pdf->Output('S'));
+                                  ->setBody($output);
 
         } catch (\Exception $e) {
             log_message('error', 'Notula FPDF Error: ' . $e->getMessage() . ' in ' . $e->getFile() . ' on line ' . $e->getLine());

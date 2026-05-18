@@ -42,6 +42,10 @@ class Kpi extends BaseController
         $model->save($data);
         (new LogModel())->record('TAMBAH KPI', 'Menambahkan KPI: ' . $data['nama_kpi']);
 
+        if ($this->request->isAJAX()) {
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Master KPI berhasil ditambahkan.']);
+        }
+
         return redirect()->back()->with('sukses', 'Master KPI berhasil ditambahkan.');
     }
 
@@ -54,6 +58,10 @@ class Kpi extends BaseController
         
         $model->delete($id);
         (new LogModel())->record('HAPUS KPI', 'Menghapus KPI: ' . ($kpi['nama_kpi'] ?? $id));
+
+        if ($this->request->isAJAX()) {
+            return $this->response->setJSON(['status' => 'success', 'message' => 'KPI berhasil dihapus.']);
+        }
 
         return redirect()->back()->with('sukses', 'KPI berhasil dihapus.');
     }

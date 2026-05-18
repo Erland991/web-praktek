@@ -162,7 +162,7 @@
                         <h6 class="fw-bold text-muted mb-4 text-uppercase tracking-wider">Disiapkan Oleh:</h6>
                         
                         <div class="signature-box mx-auto mb-4 d-flex align-items-center justify-content-center flex-column" style="height: 100px;">
-                            <div class="digital-stamp bg-success bg-opacity-10 text-success rounded-circle p-3 mb-2 shadow-sm">
+                            <div class="digital-stamp bg-success bg-opacity-10 text-success rounded-circle mb-2 shadow-sm d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
                                 <i class="ti ti-check fs-2"></i>
                             </div>
                             <span class="text-success small fw-bold tracking-wider">Digitally Signed</span>
@@ -183,12 +183,12 @@
                         
                         <div class="signature-box mx-auto mb-4 d-flex align-items-center justify-content-center flex-column" style="height: 100px;">
                             <?php if(!empty($notula['is_approved1'])): ?>
-                                <div class="digital-stamp bg-success bg-opacity-10 text-success rounded-circle p-3 mb-2 shadow-sm">
+                                <div class="digital-stamp bg-success bg-opacity-10 text-success rounded-circle mb-2 shadow-sm d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
                                     <i class="ti ti-check fs-2"></i>
                                 </div>
                                 <span class="text-success small fw-bold tracking-wider">APPROVED</span>
                             <?php elseif(!empty($notula['id'])): ?>
-                                <a href="<?= base_url('notula/approve/'.$notula['id'].'/1') ?>" class="btn btn-outline-primary rounded-pill px-4 shadow-sm hover-elevate">Approve Sekarang</a>
+                                <button type="button" onclick="approveNotula(<?= $notula['id'] ?>, 1, this)" class="btn btn-outline-primary rounded-pill px-4 shadow-sm hover-elevate">Approve Sekarang</button>
                             <?php else: ?>
                                 <div class="text-muted opacity-50 d-flex flex-column align-items-center">
                                     <i class="ti ti-clock fs-3 mb-1"></i>
@@ -212,12 +212,12 @@
                         
                         <div class="signature-box mx-auto mb-4 d-flex align-items-center justify-content-center flex-column" style="height: 100px;">
                             <?php if(!empty($notula['is_approved2'])): ?>
-                                <div class="digital-stamp bg-success bg-opacity-10 text-success rounded-circle p-3 mb-2 shadow-sm">
+                                <div class="digital-stamp bg-success bg-opacity-10 text-success rounded-circle mb-2 shadow-sm d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
                                     <i class="ti ti-check fs-2"></i>
                                 </div>
                                 <span class="text-success small fw-bold tracking-wider">APPROVED</span>
                             <?php elseif(!empty($notula['id'])): ?>
-                                <a href="<?= base_url('notula/approve/'.$notula['id'].'/2') ?>" class="btn btn-outline-primary rounded-pill px-4 shadow-sm hover-elevate">Approve Sekarang</a>
+                                <button type="button" onclick="approveNotula(<?= $notula['id'] ?>, 2, this)" class="btn btn-outline-primary rounded-pill px-4 shadow-sm hover-elevate">Approve Sekarang</button>
                             <?php else: ?>
                                 <div class="text-muted opacity-50 d-flex flex-column align-items-center">
                                     <i class="ti ti-clock fs-3 mb-1"></i>
@@ -368,6 +368,47 @@
         } else {
             alert('Minimal harus ada 1 hasil pembahasan!');
         }
+    }
+
+    function approveNotula(id, side, btn) {
+        btn.innerHTML = '<i class="ti ti-loader ti-spin"></i> Memproses...';
+        btn.disabled = true;
+
+        fetch(`<?= base_url('notula/approve/') ?>${id}/${side}`, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                const container = btn.parentElement;
+                container.innerHTML = `
+                    <div class="digital-stamp bg-success bg-opacity-10 text-success rounded-circle mb-2 shadow-sm d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; transform: scale(0);">
+                        <i class="ti ti-check fs-2"></i>
+                    </div>
+                    <span class="text-success small fw-bold tracking-wider" style="animation: fadeIn 0.5s ease 0.3s forwards; opacity: 0;">APPROVED</span>
+                `;
+                
+                // Add keyframes dynamically if not exists
+                if (!document.getElementById('approveStyles')) {
+                    const style = document.createElement('style');
+                    style.id = 'approveStyles';
+                    style.innerHTML = `
+                        @keyframes popIn { 100% { transform: scale(1); } }
+                        @keyframes fadeIn { 100% { opacity: 1; } }
+                    `;
+                    document.head.appendChild(style);
+                }
+
+                if (data.is_final) {
+                    setTimeout(() => window.location.reload(), 1500);
+                }
+            }
+        })
+        .catch(err => {
+            alert('Terjadi kesalahan. Silakan coba lagi.');
+            btn.innerHTML = 'Approve Sekarang';
+            btn.disabled = false;
+        });
     }
 </script>
 <?= $this->endSection() ?>

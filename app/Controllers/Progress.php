@@ -100,6 +100,13 @@ class Progress extends BaseController
 
         (new LogModel())->record('UPDATE PROGRESS', 'Mengajukan progress aplikasi ID: ' . $aplikasi_id);
 
+        if ($this->request->isAJAX()) {
+            return $this->response->setJSON([
+                'status'  => 'success',
+                'message' => 'Progress berhasil diajukan. Menunggu persetujuan Admin.'
+            ]);
+        }
+
         return redirect()->back()->with('sukses', 'Progress berhasil diajukan. Menunggu persetujuan Admin.');
     }
 }

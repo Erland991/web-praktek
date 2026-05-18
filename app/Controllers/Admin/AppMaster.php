@@ -43,7 +43,13 @@ class AppMaster extends BaseController
 
         if ($model->save($data)) {
             (new LogModel())->record('TAMBAH MASTER APP', 'Menambahkan aplikasi master: ' . $data['nama_app']);
+            if ($this->request->isAJAX()) {
+                return $this->response->setJSON(['status' => 'success', 'message' => 'Aplikasi Master Berhasil Ditambah']);
+            }
             return redirect()->back()->with('sukses', 'Aplikasi Master Berhasil Ditambah');
+        }
+        if ($this->request->isAJAX()) {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Gagal menambah data']);
         }
         return redirect()->back()->with('error', 'Gagal menambah data');
     }
@@ -53,6 +59,9 @@ class AppMaster extends BaseController
         $model = new AppMasterModel();
         $model->delete($id);
         (new LogModel())->record('HAPUS MASTER APP', 'Menghapus aplikasi master id: ' . $id);
+        if ($this->request->isAJAX()) {
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Aplikasi berhasil dihapus']);
+        }
         return redirect()->back()->with('sukses', 'Aplikasi berhasil dihapus');
     }
 
@@ -72,6 +81,9 @@ class AppMaster extends BaseController
         $db->table('implementasi_data')->insert($data);
         (new LogModel())->record('RELEASE APP', 'Mencatat rilis aplikasi ID: ' . $data['aplikasi_id']);
 
+        if ($this->request->isAJAX()) {
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Data Implementasi (Go-Live) berhasil dicatat.']);
+        }
         return redirect()->back()->with('sukses', 'Data Implementasi (Go-Live) berhasil dicatat.');
     }
 
@@ -94,6 +106,9 @@ class AppMaster extends BaseController
         ];
 
         $db->table('aplikasi_modul')->insert($data);
+        if ($this->request->isAJAX()) {
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Modul berhasil ditambahkan.']);
+        }
         return redirect()->back()->with('sukses', 'Modul berhasil ditambahkan.');
     }
 
@@ -101,6 +116,9 @@ class AppMaster extends BaseController
     {
         $db = \Config\Database::connect();
         $db->table('aplikasi_modul')->where('id', $id)->delete();
+        if ($this->request->isAJAX()) {
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Modul berhasil dihapus.']);
+        }
         return redirect()->back()->with('sukses', 'Modul berhasil dihapus.');
     }
 }

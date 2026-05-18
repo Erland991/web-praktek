@@ -98,7 +98,7 @@
                 <h5 class="modal-title fw-bold">Update Capaian Pengerjaan</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            <form action="<?= base_url('progress/update') ?>" method="POST" enctype="multipart/form-data">
+            <form id="formProgress" action="<?= base_url('progress/update') ?>" method="POST" enctype="multipart/form-data">
                 <?= csrf_field() ?>
                 <input type="hidden" name="aplikasi_id" id="prog_app_id">
                 <div class="modal-body p-4 text-dark">
@@ -145,7 +145,7 @@
                 </div>
                 <div class="modal-footer p-4 border-top bg-light">
                     <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary px-5 fw-bold shadow">KIRIM LAPORAN</button>
+                    <button type="submit" id="btn_submit_progress" class="btn btn-primary px-5 fw-bold shadow">KIRIM LAPORAN</button>
                 </div>
             </form>
         </div>
@@ -193,5 +193,39 @@
         if(!progModal) progModal = new bootstrap.Modal(document.getElementById('modalProgress'));
         progModal.show();
     }
+
+    document.getElementById('formProgress').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('btn_submit_progress');
+        const originalText = btn.innerText;
+        btn.innerHTML = '<i class="ti ti-loader ti-spin"></i> Memproses...';
+        btn.disabled = true;
+
+        const formData = new FormData(this);
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'success') {
+                progModal.hide();
+                alert(data.message || 'Laporan progress berhasil dikirim!');
+                window.location.reload();
+            } else {
+                alert(data.message || 'Terjadi kesalahan');
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+        })
+        .catch(err => {
+            alert('Terjadi kesalahan jaringan.');
+            btn.innerText = originalText;
+            btn.disabled = false;
+        });
+    });
 </script>
 <?= $this->endSection() ?>

@@ -26,6 +26,9 @@ class Master extends BaseController
             'nama_divisi' => $this->request->getPost('nama_divisi'),
             'kode_divisi' => $this->request->getPost('kode_divisi'),
         ]);
+        if ($this->request->isAJAX()) {
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Divisi berhasil ditambah']);
+        }
         return redirect()->to('/master/divisi')->with('sukses', 'Divisi berhasil ditambah');
     }
 
@@ -33,6 +36,9 @@ class Master extends BaseController
     {
         $model = new DivisiModel();
         $model->delete($id);
+        if ($this->request->isAJAX()) {
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Divisi berhasil dihapus']);
+        }
         return redirect()->to('/master/divisi')->with('sukses', 'Divisi berhasil dihapus');
     }
 
@@ -119,8 +125,14 @@ class Master extends BaseController
 
         if ($model->save($data)) {
             (new LogModel())->record('TAMBAH KARYAWAN', 'Menambahkan karyawan: ' . $data['nama_lengkap']);
+            if ($this->request->isAJAX()) {
+                return $this->response->setJSON(['status' => 'success', 'message' => 'Data Karyawan Berhasil Disimpan']);
+            }
             return redirect()->to('/master/karyawan')->with('sukses', 'Data Karyawan Berhasil Disimpan');
         } else {
+            if ($this->request->isAJAX()) {
+                return $this->response->setJSON(['status' => 'error', 'message' => 'Gagal menyimpan data.']);
+            }
             return redirect()->back()->withInput()->with('error', 'Gagal menyimpan data.');
         }
     }
@@ -159,8 +171,14 @@ class Master extends BaseController
 
         if ($model->update($id, $data)) {
             (new LogModel())->record('UPDATE KARYAWAN', 'Memperbarui data id: ' . $id);
+            if ($this->request->isAJAX()) {
+                return $this->response->setJSON(['status' => 'success', 'message' => 'Data Berhasil Diperbarui']);
+            }
             return redirect()->to('/master/karyawan')->with('sukses', 'Data Berhasil Diperbarui');
         } else {
+            if ($this->request->isAJAX()) {
+                return $this->response->setJSON(['status' => 'error', 'message' => 'Gagal memperbarui data.']);
+            }
             return redirect()->back()->with('error', 'Gagal memperbarui data.');
         }
     }
@@ -177,6 +195,9 @@ class Master extends BaseController
 
         $model->delete($id);
         (new LogModel())->record('HAPUS KARYAWAN', 'Menghapus karyawan id: ' . $id);
+        if ($this->request->isAJAX()) {
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Karyawan berhasil dihapus']);
+        }
         return redirect()->to('/master/karyawan')->with('sukses', 'Karyawan berhasil dihapus');
     }
 

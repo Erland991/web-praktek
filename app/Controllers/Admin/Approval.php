@@ -41,6 +41,13 @@ class Approval extends BaseController
         $statusText = ($status == 1) ? 'APPROVE' : 'REJECT';
         (new LogModel())->record($statusText . ' PROGRESS', 'Admin meninjau progress ID: ' . $id);
 
+        if ($this->request->isAJAX()) {
+            return $this->response->setJSON([
+                'status'  => 'success',
+                'message' => 'Status progress berhasil diperbarui.'
+            ]);
+        }
+
         return redirect()->back()->with('sukses', 'Status progress berhasil diperbarui.');
     }
 }
