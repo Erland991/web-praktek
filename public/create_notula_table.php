@@ -39,6 +39,14 @@ $fields = [
     'hasil_pembahasan' => [
         'type' => 'JSON', // CI4 will treat it as text if JSON is not supported by DB, but modern DBs support it
     ],
+    'attendance_list' => ['type' => 'TEXT', 'null' => true],
+    'approval_method' => ['type' => 'VARCHAR', 'constraint' => 20, 'null' => true, 'default' => 'manual'],
+    'approval_user1_id' => ['type' => 'INT', 'constraint' => 11, 'unsigned' => true, 'null' => true],
+    'approval_user2_id' => ['type' => 'INT', 'constraint' => 11, 'unsigned' => true, 'null' => true],
+    'doc_status' => ['type' => 'VARCHAR', 'constraint' => 20, 'null' => true, 'default' => 'draft'],
+    'revision_notes' => ['type' => 'TEXT', 'null' => true],
+    'approval_history' => ['type' => 'TEXT', 'null' => true],
+    'parent_id' => ['type' => 'INT', 'constraint' => 11, 'unsigned' => true, 'null' => true],
     'nama_disiapkan' => ['type' => 'VARCHAR', 'constraint' => '100', 'null' => true],
     'jabatan_disiapkan' => ['type' => 'VARCHAR', 'constraint' => '100', 'null' => true],
     'nama_setuju1' => ['type' => 'VARCHAR', 'constraint' => '100', 'null' => true],

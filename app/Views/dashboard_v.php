@@ -6,22 +6,17 @@
 
 <div class="row mb-4 mt-3">
     <div class="col-12" data-aos="fade-down">
-        <div class="card border-0 rounded-4 overflow-hidden position-relative shadow-sm hover-scale" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);">
-            <!-- Decorative circle -->
-            <div class="position-absolute top-0 end-0 bg-white opacity-10 rounded-circle" style="width: 300px; height: 300px; transform: translate(25%, -25%);"></div>
-            <div class="position-absolute bottom-0 start-0 bg-primary opacity-20 rounded-circle" style="width: 200px; height: 200px; transform: translate(-30%, 30%); blur: 40px;"></div>
-            
-            <div class="card-body p-4 p-xl-5 position-relative z-1 d-flex justify-content-between align-items-center">
+        <div class="hero-card">
+            <div class="position-relative z-1 d-flex justify-content-between align-items-center">
                 <div>
-                    <span class="badge bg-white bg-opacity-10 text-white mb-2 fs-2 fw-medium px-3 py-2 rounded-pill border border-white border-opacity-10"><i class="ti ti-building-monitor me-1"></i> SIMPA Enterprise</span>
-                    <h2 class="fw-bold text-white mb-2">Executive Monitoring Dashboard</h2>
-                    <p class="mb-0 fs-4 text-white-50" style="max-width: 600px;">
-                        Selamat datang, <span class="text-white fw-semibold"><?= session()->get('nama_lengkap') ?></span>. 
+                    <h4 class="fw-bold text-white mb-2" style="font-size: 1.75rem;"><i class="ti ti-chart-line me-2"></i>Executive Monitoring Dashboard</h4>
+                    <p class="mb-0 text-white-50 fs-3" style="max-width: 650px; font-weight: 400; line-height: 1.6;">
+                        Selamat datang kembali, <span class="text-white fw-bold"><?= session()->get('nama_lengkap') ?></span>. 
                         Tinjau ringkasan performa aset fisik dan progres aplikasi digital perusahaan secara real-time.
                     </p>
                 </div>
-                <div class="d-none d-lg-block">
-                    <img src="<?= base_url('assets/images/backgrounds/rocket.png') ?>" alt="Dashboard Hero" class="img-fluid rocket-float" style="max-height: 140px; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2)); opacity: 0.9;" onerror="this.style.display='none';">
+                <div class="d-none d-lg-block text-end">
+                    <span class="badge bg-white bg-opacity-20 text-white fs-3 fw-bold px-3 py-2 rounded-pill" style="border: 1px solid rgba(255,255,255,0.2) !important;"><i class="ti ti-building-monitor me-1"></i> SIMPA Enterprise</span>
                 </div>
             </div>
         </div>
@@ -145,9 +140,7 @@
                         <th class="py-3 border-bottom-0 text-center">Kategori</th>
                         <th class="py-3 border-bottom-0">Penanggung Jawab (PIC)</th>
                         <th class="text-center py-3 border-bottom-0">Status Sistem</th>
-                        <?php if (session()->get('role') == 'Admin') : ?>
                         <th class="text-end px-4 py-3 border-bottom-0">Tindakan</th>
-                        <?php endif; ?>
                     </tr>
                 </thead>
                 <tbody class="border-top-0">
@@ -193,14 +186,18 @@
                                 <span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 px-3 py-1 rounded-pill fw-semibold d-inline-flex gap-1 align-items-center"><span class="bg-warning rounded-circle" style="width:6px;height:6px;"></span> Maintenance</span>
                             <?php endif; ?>
                         </td>
-                        <?php if (session()->get('role') == 'Admin') : ?>
                         <td class="text-end px-4">
                             <div class="d-flex gap-1 justify-content-end">
-                                <a href="<?= !empty($a['is_app']) ? base_url('admin/app-master') : base_url('dashboard/edit/' . ($a['id'] ?? '')) ?>" class="btn btn-sm btn-light text-primary hover-primary px-2" data-bs-toggle="tooltip" title="Edit Data"><i class="ti ti-pencil fs-4"></i></a>
-                                <a href="<?= !empty($a['is_app']) ? base_url('admin/app-master/delete/' . ($a['id'] ?? '')) : base_url('dashboard/delete/' . ($a['id'] ?? '')) ?>" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini secara permanen?')" class="btn btn-sm btn-light text-danger hover-danger px-2" data-bs-toggle="tooltip" title="Hapus Data"><i class="ti ti-trash fs-4"></i></a>
+                                <?php if (!empty($a['is_app'])) : ?>
+                                    <a href="<?= base_url('notula?app_id=' . ($a['id'] ?? '') . '&quick=1') ?>" class="btn btn-sm btn-light-success text-success hover-success px-2" data-bs-toggle="tooltip" title="Quick MoM Build"><i class="ti ti-bolt fs-4"></i></a>
+                                    <a href="<?= base_url('absensi?app_id=' . ($a['id'] ?? '')) ?>" class="btn btn-sm btn-light-info text-info hover-info px-2" data-bs-toggle="tooltip" title="Buat Daftar Hadir"><i class="ti ti-users fs-4"></i></a>
+                                <?php endif; ?>
+                                <?php if (session()->get('role') == 'Admin') : ?>
+                                    <a href="<?= !empty($a['is_app']) ? base_url('admin/app-master') : base_url('dashboard/edit/' . ($a['id'] ?? '')) ?>" class="btn btn-sm btn-light text-primary hover-primary px-2" data-bs-toggle="tooltip" title="Edit Data"><i class="ti ti-pencil fs-4"></i></a>
+                                    <a href="<?= !empty($a['is_app']) ? base_url('admin/app-master/delete/' . ($a['id'] ?? '')) : base_url('dashboard/delete/' . ($a['id'] ?? '')) ?>" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini secara permanen?')" class="btn btn-sm btn-light text-danger hover-danger px-2" data-bs-toggle="tooltip" title="Hapus Data"><i class="ti ti-trash fs-4"></i></a>
+                                <?php endif; ?>
                             </div>
                         </td>
-                        <?php endif; ?>
                     </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -241,7 +238,7 @@
                 </div>
                 <!-- Mini legends for progress chart replacing default Chart.js legend for better corporat UI -->
                 <div class="mt-4 pt-2 border-top d-flex flex-wrap justify-content-center gap-3 fs-3">
-                    <?php $colors = ['#5d87ff', '#13deb9', '#ffae1f', '#fa896b', '#3dd1ff']; ?>
+                    <?php $colors = ['#004996', '#FFB800', '#059669', '#3dd1ff', '#fa896b']; ?>
                     <?php foreach ($proj_labels as $index => $label): ?>
                     <div class="d-flex align-items-center">
                         <span class="rounded-circle me-1" style="width: 10px; height: 10px; background-color: <?= $colors[$index % count($colors)] ?>;"></span>
@@ -267,8 +264,8 @@ document.addEventListener("DOMContentLoaded", function() {
     
     // Create a gradient for the bar chart
     const gradientBar = ctx1.createLinearGradient(0, 0, 0, 400);
-    gradientBar.addColorStop(0, 'rgba(93, 135, 255, 0.85)');
-    gradientBar.addColorStop(1, 'rgba(93, 135, 255, 0.2)');
+    gradientBar.addColorStop(0, 'rgba(0, 73, 150, 0.85)');
+    gradientBar.addColorStop(1, 'rgba(0, 73, 150, 0.15)');
 
     new Chart(ctx1, {
         type: 'bar',
@@ -278,10 +275,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 label: 'Jumlah Aset',
                 data: <?= json_encode($cat_counts) ?>,
                 backgroundColor: gradientBar,
-                borderColor: '#5d87ff',
-                borderWidth: 1,
-                borderRadius: 4,
-                barThickness: 30,
+                borderColor: '#004996',
+                borderWidth: 1.5,
+                borderRadius: 6,
+                barThickness: 28,
             }]
         },
         options: {
@@ -292,8 +289,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 tooltip: {
                     backgroundColor: '#1e293b',
                     padding: 12,
-                    titleFont: { size: 13, family: "'Plus Jakarta Sans', sans-serif" },
-                    bodyFont: { size: 14, family: "'Plus Jakarta Sans', sans-serif", weight: 'bold' },
+                    titleFont: { size: 13, family: "'Inter', sans-serif" },
+                    bodyFont: { size: 14, family: "'Inter', sans-serif", weight: 'bold' },
                     displayColors: false,
                     cornerRadius: 8,
                 }
@@ -301,12 +298,12 @@ document.addEventListener("DOMContentLoaded", function() {
             scales: {
                 y: { 
                     beginAtZero: true, 
-                    grid: { borderDash: [4, 4], color: '#e5eaef', drawBorder: false },
-                    ticks: { font: { family: "'Plus Jakarta Sans', sans-serif" }, color: '#7c8fac' }
+                    grid: { borderDash: [4, 4], color: '#e2e8f0', drawBorder: false },
+                    ticks: { font: { family: "'Inter', sans-serif" }, color: '#64748b' }
                 },
                 x: { 
                     grid: { display: false },
-                    ticks: { font: { family: "'Plus Jakarta Sans', sans-serif" }, color: '#7c8fac' }
+                    ticks: { font: { family: "'Inter', sans-serif" }, color: '#64748b' }
                 }
             }
         }
@@ -350,21 +347,11 @@ document.addEventListener("DOMContentLoaded", function() {
 <style>
     /* Premium Dashboard Styles */
     .tracking-wider { letter-spacing: 0.05em; }
-    .hover-primary:hover { background-color: #5d87ff !important; color: white !important; }
-    .hover-danger:hover { background-color: #fa896b !important; color: white !important; }
+    .hover-primary:hover { background-color: #003770 !important; color: white !important; }
+    .hover-danger:hover { background-color: #dc2626 !important; color: white !important; }
     .avatar-sm { font-size: 14px; }
-    .bg-light-info { background-color: #e8f7ff !important; }
-    .text-info { color: #13deb9 !important; } /* Reused modernzie colors */
-    table > thead > tr > th { text-transform: uppercase; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.5px; }
-
-    /* Floating Animation */
-    .rocket-float {
-        animation: float 3s ease-in-out infinite;
-    }
-    @keyframes float {
-        0% { transform: translateY(0px); }
-        50% { transform: translateY(-15px); }
-        100% { transform: translateY(0px); }
-    }
+    .bg-light-info { background-color: rgba(255, 184, 0, 0.08) !important; border: 1px solid rgba(255, 184, 0, 0.15) !important; }
+    .text-info { color: #d49a00 !important; }
+    table > thead > tr > th { text-transform: uppercase; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.5px; }
 </style>
 <?= $this->endSection() ?>

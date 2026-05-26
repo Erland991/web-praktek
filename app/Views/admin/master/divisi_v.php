@@ -3,13 +3,12 @@
 <?= $this->section('content') ?>
 <div class="row mb-4 mt-3">
     <div class="col-12" data-aos="fade-down">
-        <div class="card border-0 rounded-4 overflow-hidden position-relative shadow-sm" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);">
-            <div class="position-absolute top-0 end-0 bg-white opacity-10 rounded-circle" style="width: 250px; height: 250px; transform: translate(30%, -30%);"></div>
-            <div class="card-body p-4 p-xl-5 position-relative z-1 d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+        <div class="card border-0 rounded-4 overflow-hidden position-relative shadow-sm bg-white">
+            <div class="card-body p-4 position-relative z-1 d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 border-start border-4 border-primary">
                 <div>
-                    <span class="badge bg-white bg-opacity-10 text-white mb-2 fs-2 fw-medium px-3 py-2 rounded-pill border border-white border-opacity-10"><i class="ti ti-sitemap me-1"></i> SIMPA Master Data</span>
-                    <h2 class="fw-bold text-white mb-2">Manajemen Divisi</h2>
-                    <p class="mb-0 fs-4 text-white-50" style="max-width: 600px;">Konfigurasi struktur organisasi dan departemen operasional (IT/Non-IT) PT Surveyor Indonesia.</p>
+                    <span class="badge bg-primary bg-opacity-10 text-primary mb-2 fs-2 fw-medium px-3 py-1 rounded-pill"><i class="ti ti-sitemap me-1"></i> SIMPA Master Data</span>
+                    <h4 class="fw-bold text-dark mb-1">Manajemen Divisi</h4>
+                    <p class="mb-0 text-muted" style="max-width: 600px;">Konfigurasi struktur organisasi dan departemen operasional (IT/Non-IT) PT Surveyor Indonesia.</p>
                 </div>
             </div>
         </div>
@@ -53,7 +52,7 @@
                             <?php foreach($divisi as $d): ?>
                             <tr>
                                 <td class="border-bottom-0 ps-4">
-                                    <div class="badge bg-light-primary text-primary border border-primary border-opacity-25 font-monospace fs-3 px-3 py-1 rounded-pill mt-1 text-uppercase"><?= $d['kode_divisi'] ?></div>
+                                    <div class="badge bg-light-primary text-primary border border-primary border-opacity-25 font-monospace fs-3 px-3 py-1 rounded-pill mt-1 text-uppercase"><?= $d['kode_divisi'] ?? '-' ?></div>
                                 </td>
                                 <td class="border-bottom-0">
                                     <p class="mb-0 fw-bold text-dark fs-4"><?= $d['nama_divisi'] ?></p>

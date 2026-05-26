@@ -41,8 +41,18 @@ $routes->get('/notula/list/(:num)', 'NotulaController::list/$1');
 $routes->get('/notula/edit/(:num)', 'NotulaController::index/$1');
 $routes->post('/notula/save', 'NotulaController::save');
 $routes->get('/notula/approve/(:num)/(:num)', 'NotulaController::approve/$1/$2');
+$routes->get('/notula/duplicate/(:num)', 'NotulaController::duplicate/$1');
+$routes->post('/notula/revise/(:num)', 'NotulaController::revise/$1');
 $routes->get('/notula/export/(:num)', 'NotulaController::export/$1');
 $routes->get('/notula/print/(:num)', 'NotulaController::print/$1');
+
+// --- ABSENSI FEATURES ---
+$routes->get('/absensi', 'AbsensiController::index');
+$routes->get('/absensi/list', 'AbsensiController::list');
+$routes->get('/absensi/edit/(:num)', 'AbsensiController::index/$1');
+$routes->post('/absensi/save', 'AbsensiController::save');
+$routes->get('/absensi/delete/(:num)', 'AbsensiController::delete/$1');
+$routes->get('/absensi/pdf/(:num)', 'AbsensiController::pdf/$1');
 
 // --- MASTER DATA ---
 $routes->group('master', ['namespace' => 'App\Controllers\Admin'], function($routes) {

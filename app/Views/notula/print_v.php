@@ -146,6 +146,8 @@
             </tr>
             <?php endforeach; ?>
 
+            <!-- Attendance list dipindahkan ke PDF Absensi terpisah -->
+
             <!-- Signatures (One single cell to prevent vertical borders) -->
             <tr>
                 <td colspan="4" style="padding: 0;">

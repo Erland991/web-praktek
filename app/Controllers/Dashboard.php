@@ -112,7 +112,7 @@ class Dashboard extends BaseController
                 $progresFinal = ($totalBobot > 0) ? round($totalProgresTertimbang / $totalBobot, 2) : 0;
             } else {
                 // Fallback ke log terakhir jika tidak ada modul
-                $lastP = $db->table('progres_log')->where('aplikasi_id', $app['id'])->where('is_approved', 1)->orderBy('tgl_update', 'DESC')->get()->getRowArray();
+                $lastP = $db->table('progres_log')->where('aplikasi_id', $app['id'])->where('is_approved', 2)->orderBy('tgl_update', 'DESC')->get()->getRowArray();
                 $progresFinal = $lastP['persentase'] ?? 0;
             }
             
@@ -165,7 +165,13 @@ class Dashboard extends BaseController
     public function edit($id) {
         if (!session()->get('logged_in')) return redirect()->to('/');
         $model = new AssetModel();
-        $data['aset'] = $model->find($id);
+        
+        $aset = $model->find($id);
+        if (!$aset) {
+            return redirect()->to('/dashboard')->with('error', 'Data aset tidak ditemukan atau sudah dihapus (karena reset database).');
+        }
+        
+        $data['aset'] = $aset;
         $data['list_pic'] = (new \App\Models\UserModel())->findAll();
         return view('edit_asset_v', $data);
     }

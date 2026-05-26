@@ -15,7 +15,7 @@ class DocumentCenter extends BaseController
                       ->join('users', 'users.id = progres_log.user_id')
                       ->where('file_lampiran IS NOT NULL')
                       ->where('file_lampiran !=', '')
-                      ->where('is_approved', 1); // Hanya dokumen yang sudah divalidasi progress-nya
+                      ->where('is_approved', 2); // Hanya dokumen yang sudah divalidasi progress-nya
 
         if ($keyword) {
             $builder->groupStart()

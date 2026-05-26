@@ -3,12 +3,11 @@
 <?= $this->section('content') ?>
 <div class="row mb-4 mt-3">
     <div class="col-12">
-        <div class="card border-0 rounded-4 overflow-hidden position-relative shadow-sm" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);">
-            <div class="position-absolute top-0 end-0 bg-white opacity-10 rounded-circle" style="width: 250px; height: 250px; transform: translate(30%, -30%);"></div>
-            <div class="card-body p-4 p-xl-5 position-relative z-1">
-                <span class="badge bg-white bg-opacity-10 text-white mb-2 fs-2 fw-medium px-3 py-2 rounded-pill border border-white border-opacity-10"><i class="ti ti-chart-line me-1"></i> SIMPA Operation</span>
-                <h2 class="fw-bold text-white mb-2">Master Aplikasi & Progres Saya</h2>
-                <p class="mb-0 fs-4 text-white-50" style="max-width: 600px;">Daftar aplikasi yang ditugaskan kepada Anda sebagai Penanggung Jawab. Klik tombol laporan untuk melacak capaian pengerjaan.</p>
+        <div class="card border-0 rounded-4 overflow-hidden position-relative shadow-sm bg-white">
+            <div class="card-body p-4 position-relative z-1 border-start border-4 border-primary">
+                <span class="badge bg-primary bg-opacity-10 text-primary mb-2 fs-2 fw-medium px-3 py-1 rounded-pill"><i class="ti ti-chart-line me-1"></i> SIMPA Operation</span>
+                <h4 class="fw-bold text-dark mb-1">Master Aplikasi & Progres Saya</h4>
+                <p class="mb-0 text-muted" style="max-width: 600px;">Daftar aplikasi yang ditugaskan kepada Anda sebagai Penanggung Jawab. Klik tombol laporan untuk melacak capaian pengerjaan.</p>
             </div>
         </div>
     </div>
@@ -52,21 +51,31 @@
                             </div>
                         </td>
                         <td class="text-center">
-                            <?php if($app['last_status'] == 1): ?>
-                                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3 py-1 rounded-pill fw-semibold d-inline-flex gap-1 align-items-center"><span class="bg-success rounded-circle" style="width:6px;height:6px;"></span> Approved</span>
-                            <?php elseif($app['last_status'] == 2): ?>
-                                <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 px-3 py-1 rounded-pill fw-semibold d-inline-flex gap-1 align-items-center"><span class="bg-danger rounded-circle" style="width:6px;height:6px;"></span> Rejected</span>
+                            <?php if($app['last_status'] == 2): ?>
+                                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3 py-1 rounded-pill fw-semibold d-inline-flex gap-1 align-items-center"><span class="bg-success rounded-circle" style="width:6px;height:6px;"></span> Approved (Final)</span>
+                            <?php elseif($app['last_status'] == 1): ?>
+                                <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 px-3 py-1 rounded-pill fw-semibold d-inline-flex gap-1 align-items-center"><span class="bg-info rounded-circle" style="width:6px;height:6px;"></span> Approved Kadiv</span>
+                            <?php elseif($app['last_status'] == 3): ?>
+                                <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 px-3 py-1 rounded-pill fw-semibold d-inline-flex gap-1 align-items-center"><span class="bg-danger rounded-circle" style="width:6px;height:6px;"></span> Rejected Kadiv</span>
+                            <?php elseif($app['last_status'] == 4): ?>
+                                <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 px-3 py-1 rounded-pill fw-semibold d-inline-flex gap-1 align-items-center"><span class="bg-danger rounded-circle" style="width:6px;height:6px;"></span> Rejected Admin</span>
                             <?php else: ?>
-                                <span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 px-3 py-1 rounded-pill fw-semibold d-inline-flex gap-1 align-items-center"><span class="bg-warning rounded-circle" style="width:6px;height:6px;"></span> Pending Review</span>
+                                <span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 px-3 py-1 rounded-pill fw-semibold d-inline-flex gap-1 align-items-center"><span class="bg-warning rounded-circle" style="width:6px;height:6px;"></span> Pending Kadiv</span>
                             <?php endif; ?>
                         </td>
                         <td class="text-center px-4">
-                            <div class="d-flex gap-2">
+                            <div class="d-flex gap-2 flex-wrap justify-content-center">
                                 <button class="btn btn-primary btn-sm flex-fill fw-bold shadow-sm d-inline-flex align-items-center" onclick='openModalProgress(<?= json_encode($app) ?>)'>
                                     <i class="ti ti-edit me-1"></i> Update Progres
                                 </button>
                                 <a href="<?= base_url('notula/list/' . $app['id']) ?>" class="btn btn-outline-primary btn-sm fw-bold px-3">
                                     <i class="ti ti-notes me-1"></i> Memo
+                                </a>
+                                <a href="<?= base_url('notula?app_id=' . $app['id'] . '&quick=1') ?>" class="btn btn-outline-secondary btn-sm fw-bold px-3">
+                                    <i class="ti ti-rocket me-1"></i> Quick MoM
+                                </a>
+                                <a href="<?= base_url('absensi?app_id=' . $app['id']) ?>" class="btn btn-outline-info btn-sm fw-bold px-3">
+                                    <i class="ti ti-users me-1"></i> Daftar Hadir
                                 </a>
                             </div>
                         </td>

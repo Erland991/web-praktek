@@ -42,6 +42,7 @@ class Progress extends BaseController
                 // Fallback manual persentase lama
                 $lastProgress = $db->table('progres_log')
                                    ->where('aplikasi_id', $app['id'])
+                                   ->where('is_approved', 2) // Hanya progres yang sudah disetujui penuh
                                    ->orderBy('tgl_update', 'DESC')
                                    ->get()->getRowArray();
                 $app['last_percent'] = $lastProgress['persentase'] ?? 0;

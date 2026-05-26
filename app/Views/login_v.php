@@ -9,14 +9,14 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
         }
         h1, h2, h3 {
-            font-family: 'Outfit', sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
         .bg-animate {
             background-size: 400% 400%;
@@ -114,7 +114,7 @@
                             </svg>
                         </div>
                         <input type="text" name="username"
-                            class="w-full pl-11 pr-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 focus:outline-none transition-all duration-300"
+                            class="w-full pl-11 pr-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-[#004996] focus:ring-4 focus:ring-[#004996]/10 focus:outline-none transition-all duration-300"
                             placeholder="Masukkan Username" required autofocus>
                     </div>
                 </div>
@@ -131,14 +131,14 @@
                             </svg>
                         </div>
                         <input type="password" name="password"
-                            class="w-full pl-11 pr-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 focus:outline-none transition-all duration-300"
+                            class="w-full pl-11 pr-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-[#004996] focus:ring-4 focus:ring-[#004996]/10 focus:outline-none transition-all duration-300"
                             placeholder="Masukkan Password" required>
                     </div>
                 </div>
 
                 <div class="pt-2">
                     <button type="submit"
-                        class="w-full bg-gradient-to-r from-blue-700 to-blue-800 hover:from-blue-800 hover:to-blue-900 text-white font-bold py-3.5 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 flex justify-center items-center gap-2 group">
+                        class="w-full bg-gradient-to-r from-[#004996] to-[#003366] hover:from-[#003366] hover:to-[#002244] text-white font-bold py-3.5 rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 flex justify-center items-center gap-2 group">
                         <span>Masuk ke Sistem</span>
                         <svg class="w-5 h-5 group-hover:translate-x-1.5 transition-transform duration-300" fill="none"
                             stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -147,8 +147,6 @@
                         </svg>
                     </button>
                 </div>
-            </form>
-
             </form>
 
             <div class="mt-10 text-center text-slate-400 text-xs font-medium" data-aos="fade-up" data-aos-delay="600">

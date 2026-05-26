@@ -5,6 +5,19 @@
     $is_final = !empty($notula['is_final']);
     $readonly = $is_final ? 'readonly' : '';
     $disabled = $is_final ? 'disabled' : '';
+    $doc_status = $notula['doc_status'] ?? 'draft';
+    $is_revision_requested = !empty($notula['revision_notes']) && !$is_final;
+    $attendance = [];
+    if (!empty($notula['attendance_list'])) {
+        if (is_string($notula['attendance_list'])) {
+            $attendance = json_decode($notula['attendance_list'], true) ?: [];
+        } elseif (is_array($notula['attendance_list'])) {
+            $attendance = $notula['attendance_list'];
+        }
+    }
+    if (empty($attendance)) {
+        $attendance = [['name' => session()->get('nama_lengkap'), 'role' => session()->get('role'), 'status' => 'Hadir']];
+    }
 ?>
 
 <div class="container-fluid py-4">
@@ -22,10 +35,17 @@
                 <span class="badge bg-light text-dark border px-3 py-2 rounded-pill">
                     <i class="ti ti-file-text me-1 text-primary"></i> No. Dokumen: <span class="fw-bold"><?= $doc_number ?></span>
                 </span>
+                <span class="badge <?= $doc_status === 'final' ? 'bg-success bg-opacity-10 text-success border border-success border-opacity-25' : 'bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25' ?> px-3 py-2 rounded-pill ms-2">
+                    <?= strtoupper($doc_status) ?>
+                </span>
                 <span class="badge bg-light text-dark border px-3 py-2 rounded-pill ms-2">
                     Rev: <span class="fw-bold"><?= $revision ?></span>
                 </span>
-                <?php if($is_final): ?>
+                <?php if($is_revision_requested): ?>
+                    <div class="mt-2">
+                        <span class="badge bg-warning bg-opacity-10 text-warning px-3 py-2 rounded-pill shadow-sm"><i class="ti ti-alert-circle me-1"></i> Revisi Diminta</span>
+                    </div>
+                <?php elseif($is_final): ?>
                     <div class="mt-2">
                         <span class="badge bg-success px-3 py-2 rounded-pill shadow-sm"><i class="ti ti-lock me-1"></i> DOKUMEN TERKUNCI</span>
                     </div>
@@ -84,6 +104,26 @@
                         <div class="form-floating">
                             <textarea name="peserta" class="form-control border-2 bg-light rounded-3" id="peserta" style="height: 100px" placeholder="Daftar peserta" <?= $readonly ?>><?= $notula['peserta'] ?? '' ?></textarea>
                             <label for="peserta" class="fw-bold text-muted">Daftar Peserta (Pisahkan dengan koma)</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="form-floating mb-3">
+                            <select name="approval_method" id="approval_method" class="form-select border-2 bg-light rounded-3" <?= $disabled ?> onchange="toggleApprovalMode()">
+                                <option value="manual" <?= ($notula['approval_method'] ?? 'manual') === 'manual' ? 'selected' : '' ?>>Manual (TTD Manual)</option>
+                                <option value="automatic" <?= ($notula['approval_method'] ?? '') === 'automatic' ? 'selected' : '' ?>>Automatic (Dropdown User)</option>
+                            </select>
+                            <label for="approval_method" class="fw-bold text-muted">Mode Approval</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-floating mb-3">
+                            <select name="doc_status" class="form-select border-2 bg-light rounded-3" <?= $disabled ?> >
+                                <option value="draft" <?= ($notula['doc_status'] ?? 'draft') === 'draft' ? 'selected' : '' ?>>Draft</option>
+                                <option value="final" <?= ($notula['doc_status'] ?? '') === 'final' ? 'selected' : '' ?>>Final</option>
+                            </select>
+                            <label class="fw-bold text-muted">Status Dokumen</label>
                         </div>
                     </div>
                 </div>
@@ -152,16 +192,18 @@
             </div>
         </div>
 
+        <!-- Absensi Kehadiran dipindahkan ke modul terpisah -->
+
         <!-- Bagian Tanda Tangan -->
         <h5 class="fw-bold text-dark mt-5 mb-4 ms-2">Pengesahan Dokumen</h5>
         <div class="row g-4 mb-5">
             <div class="col-md-4">
-                <div class="card border border-2 border-primary border-opacity-25 shadow-sm rounded-4 h-100 position-relative overflow-hidden bg-white">
+                <div class="card border border-2 border-primary border-opacity-25 shadow-sm rounded-4 h-100 overflow-hidden bg-white">
                     <div class="position-absolute top-0 start-0 w-100 bg-primary bg-opacity-10" style="height: 5px;"></div>
-                    <div class="card-body text-center p-5">
-                        <h6 class="fw-bold text-muted mb-4 text-uppercase tracking-wider">Disiapkan Oleh:</h6>
+                    <div class="card-body text-center p-4">
+                        <h6 class="fw-bold text-muted mb-3 text-uppercase tracking-wider">Disiapkan Oleh:</h6>
                         
-                        <div class="signature-box mx-auto mb-4 d-flex align-items-center justify-content-center flex-column" style="height: 100px;">
+                        <div class="signature-box mx-auto mb-3 d-flex align-items-center justify-content-center flex-column" style="height: 90px;">
                             <div class="digital-stamp bg-success bg-opacity-10 text-success rounded-circle mb-2 shadow-sm d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
                                 <i class="ti ti-check fs-2"></i>
                             </div>
@@ -169,7 +211,7 @@
                         </div>
                         
                         <input type="text" name="nama_disiapkan" class="form-control text-center fw-bold border-0 bg-transparent fs-5 px-0 mb-1" placeholder="Nama Lengkap" value="<?= $notula['nama_disiapkan'] ?? session()->get('nama_lengkap') ?>" <?= $readonly ?>>
-                        <div class="border-top border-2 mx-5 my-2"></div>
+                        <div class="border-top border-2 mx-4 my-2"></div>
                         <input type="text" name="jabatan_disiapkan" class="form-control form-control-sm text-center text-muted border-0 bg-transparent fs-6 px-0" placeholder="Jabatan" value="<?= $notula['jabatan_disiapkan'] ?? session()->get('role') ?>" <?= $readonly ?>>
                     </div>
                 </div>
@@ -178,10 +220,10 @@
             <div class="col-md-4">
                 <div class="card border border-2 shadow-sm rounded-4 h-100 position-relative overflow-hidden bg-white">
                     <div class="position-absolute top-0 start-0 w-100 bg-secondary bg-opacity-25" style="height: 5px;"></div>
-                    <div class="card-body text-center p-5">
-                        <h6 class="fw-bold text-muted mb-4 text-uppercase tracking-wider">Disetujui Oleh (1):</h6>
+                    <div class="card-body text-center p-4">
+                        <h6 class="fw-bold text-muted mb-3 text-uppercase tracking-wider">Disetujui Oleh (1):</h6>
                         
-                        <div class="signature-box mx-auto mb-4 d-flex align-items-center justify-content-center flex-column" style="height: 100px;">
+                        <div class="signature-box mx-auto mb-3 d-flex align-items-center justify-content-center flex-column" style="height: 90px;">
                             <?php if(!empty($notula['is_approved1'])): ?>
                                 <div class="digital-stamp bg-success bg-opacity-10 text-success rounded-circle mb-2 shadow-sm d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
                                     <i class="ti ti-check fs-2"></i>
@@ -196,10 +238,17 @@
                                 </div>
                             <?php endif; ?>
                         </div>
-                        
-                        <input type="text" name="nama_setuju1" class="form-control text-center fw-bold border-0 bg-transparent fs-5 px-0 mb-1" placeholder="Nama Lengkap" value="<?= $notula['nama_setuju1'] ?? '' ?>" <?= $readonly ?>>
-                        <div class="border-top border-2 mx-5 my-2"></div>
-                        <input type="text" name="jabatan_setuju1" class="form-control form-control-sm text-center text-muted border-0 bg-transparent fs-6 px-0" placeholder="Jabatan" value="<?= $notula['jabatan_setuju1'] ?? '' ?>" <?= $readonly ?>>
+                        <div class="mb-2 text-start">
+                            <select name="approval_user1_id" id="approval_user1_id" class="form-select border-2 bg-light rounded-3" <?= $disabled ?> onchange="syncApprovalName(1)">
+                                <option value="">Pilih user terdaftar / custom</option>
+                                <?php foreach($users as $user): ?>
+                                    <option value="<?= $user['id'] ?>" <?= (!empty($notula['approval_user1_id']) && $notula['approval_user1_id'] == $user['id']) ? 'selected' : '' ?>><?= $user['nama_lengkap'] ?> (<?= $user['role'] ?>)</option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <input type="text" name="nama_setuju1" id="nama_setuju1" class="form-control text-center fw-bold border-0 bg-transparent fs-5 px-0 mb-1" placeholder="Nama Lengkap" value="<?= $notula['nama_setuju1'] ?? '' ?>" <?= $readonly ?>>
+                        <div class="border-top border-2 mx-4 my-2"></div>
+                        <input type="text" name="jabatan_setuju1" id="jabatan_setuju1" class="form-control form-control-sm text-center text-muted border-0 bg-transparent fs-6 px-0" placeholder="Jabatan" value="<?= $notula['jabatan_setuju1'] ?? '' ?>" <?= $readonly ?>>
                     </div>
                 </div>
             </div>
@@ -207,17 +256,17 @@
             <div class="col-md-4">
                 <div class="card border border-2 shadow-sm rounded-4 h-100 position-relative overflow-hidden bg-white">
                     <div class="position-absolute top-0 start-0 w-100 bg-secondary bg-opacity-25" style="height: 5px;"></div>
-                    <div class="card-body text-center p-5">
-                        <h6 class="fw-bold text-muted mb-4 text-uppercase tracking-wider">Disetujui Oleh (2):</h6>
+                    <div class="card-body text-center p-4">
+                        <h6 class="fw-bold text-muted mb-3 text-uppercase tracking-wider">Disetujui Oleh (2):</h6>
                         
-                        <div class="signature-box mx-auto mb-4 d-flex align-items-center justify-content-center flex-column" style="height: 100px;">
+                        <div class="signature-box mx-auto mb-3 d-flex align-items-center justify-content-center flex-column" style="height: 90px;">
                             <?php if(!empty($notula['is_approved2'])): ?>
                                 <div class="digital-stamp bg-success bg-opacity-10 text-success rounded-circle mb-2 shadow-sm d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
                                     <i class="ti ti-check fs-2"></i>
                                 </div>
                                 <span class="text-success small fw-bold tracking-wider">APPROVED</span>
                             <?php elseif(!empty($notula['id'])): ?>
-                                <button type="button" onclick="approveNotula(<?= $notula['id'] ?>, 2, this)" class="btn btn-outline-primary rounded-pill px-4 shadow-sm hover-elevate">Approve Sekarang</button>
+                                <button type="button" onclick="approveNotula(<?= $notula['id'] ?>, 2, this)" class="btn btn-outline-primary rounded-pill px-4 shadow-sm hover-elevate" style="position: relative; z-index: 2;">Approve Sekarang</button>
                             <?php else: ?>
                                 <div class="text-muted opacity-50 d-flex flex-column align-items-center">
                                     <i class="ti ti-clock fs-3 mb-1"></i>
@@ -225,14 +274,62 @@
                                 </div>
                             <?php endif; ?>
                         </div>
-                        
-                        <input type="text" name="nama_setuju2" class="form-control text-center fw-bold border-0 bg-transparent fs-5 px-0 mb-1" placeholder="Nama Lengkap" value="<?= $notula['nama_setuju2'] ?? '' ?>" <?= $readonly ?>>
-                        <div class="border-top border-2 mx-5 my-2"></div>
-                        <input type="text" name="jabatan_setuju2" class="form-control form-control-sm text-center text-muted border-0 bg-transparent fs-6 px-0" placeholder="Jabatan" value="<?= $notula['jabatan_setuju2'] ?? '' ?>" <?= $readonly ?>>
+                        <div class="mb-2 text-start">
+                            <select name="approval_user2_id" id="approval_user2_id" class="form-select border-2 bg-light rounded-3" <?= $disabled ?> onchange="syncApprovalName(2)">
+                                <option value="">Pilih user terdaftar / custom</option>
+                                <?php foreach($users as $user): ?>
+                                    <option value="<?= $user['id'] ?>" <?= (!empty($notula['approval_user2_id']) && $notula['approval_user2_id'] == $user['id']) ? 'selected' : '' ?>><?= $user['nama_lengkap'] ?> (<?= $user['role'] ?>)</option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <input type="text" name="nama_setuju2" id="nama_setuju2" class="form-control text-center fw-bold border-0 bg-transparent fs-5 px-0 mb-1" placeholder="Nama Lengkap" value="<?= $notula['nama_setuju2'] ?? '' ?>" <?= $readonly ?>>
+                        <div class="border-top border-2 mx-4 my-2"></div>
+                        <input type="text" name="jabatan_setuju2" id="jabatan_setuju2" class="form-control form-control-sm text-center text-muted border-0 bg-transparent fs-6 px-0" placeholder="Jabatan" value="<?= $notula['jabatan_setuju2'] ?? '' ?>" <?= $readonly ?>>
                     </div>
                 </div>
             </div>
         </div>
+
+        <?php if (!empty($notula['approval_history'])): ?>
+        <div class="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden">
+            <div class="card-header bg-white border-bottom px-5 py-4">
+                <h5 class="fw-bold text-dark mb-0">Riwayat Approval & Revisi</h5>
+            </div>
+            <div class="card-body p-5">
+                <ul class="list-group list-group-flush">
+                    <?php foreach($notula['approval_history'] as $entry): ?>
+                        <li class="list-group-item d-flex justify-content-between align-items-start border-0 px-0 py-3">
+                            <div>
+                                <strong><?= esc($entry['action']) ?></strong> oleh <?= esc($entry['user_name'] ?? 'Sistem') ?>
+                                <?php if (!empty($entry['comment'])): ?>
+                                    <div class="text-muted small">Catatan: <?= esc($entry['comment']) ?></div>
+                                <?php endif; ?>
+                            </div>
+                            <span class="badge bg-light text-muted rounded-pill fs-7"><?= date('d M Y H:i', strtotime($entry['timestamp'])) ?></span>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        </div>
+        <?php endif; ?>
+
+        <?php if (!empty($notula['id']) && ($notula['is_approved1'] || $notula['is_approved2'])): ?>
+        <div class="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden">
+            <div class="card-header bg-white border-bottom px-5 py-4">
+                <h5 class="fw-bold text-dark mb-0">Permintaan Revisi</h5>
+            </div>
+            <div class="card-body p-5">
+                <form action="<?= base_url('notula/revise/'.$notula['id']) ?>" method="POST">
+                    <?= csrf_field() ?>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Catatan Revisi</label>
+                        <textarea name="revision_comment" class="form-control border-2 bg-light rounded-3" rows="4" placeholder="Tuliskan alasan perubahan atau catatan revisi"><?= $notula['revision_notes'] ?? '' ?></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-warning rounded-pill px-5 shadow-sm">Ajukan Revisi</button>
+                </form>
+            </div>
+        </div>
+        <?php endif; ?>
 
         <!-- Action Buttons -->
         <div class="card border-0 shadow-lg rounded-4 mb-5 sticky-bottom" style="bottom: 20px; z-index: 100; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px);">
@@ -305,6 +402,13 @@
         outline: none;
         box-shadow: inset 0 0 0 2px #3b82f6;
     }
+
+    .signature-box button {
+        pointer-events: auto;
+        position: relative;
+        z-index: 2;
+        cursor: pointer;
+    }
     
     /* Glassmorphism utility */
     .backdrop-blur {
@@ -314,12 +418,15 @@
 </style>
 
 <script>
-    // Initialize tooltips
+    // Initialize tooltips and approval mode state
     document.addEventListener('DOMContentLoaded', function () {
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
         var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl)
         });
+        if (typeof toggleApprovalMode === 'function') {
+            toggleApprovalMode();
+        }
     });
 
     function addRow() {
@@ -367,6 +474,35 @@
             setTimeout(() => row.remove(), 300);
         } else {
             alert('Minimal harus ada 1 hasil pembahasan!');
+        }
+    }
+
+    // Fungsi absensi dipindah ke modul terpisah
+
+    function toggleApprovalMode() {
+        const method = document.getElementById('approval_method').value;
+        const user1 = document.getElementById('approval_user1_id');
+        const user2 = document.getElementById('approval_user2_id');
+        const name1 = document.getElementById('nama_setuju1');
+        const name2 = document.getElementById('nama_setuju2');
+        if (!user1 || !user2 || !name1 || !name2) return;
+
+        name1.placeholder = method === 'automatic' ? 'Pilih user terdaftar atau tulis manual' : 'Masukkan nama manual';
+        name2.placeholder = method === 'automatic' ? 'Pilih user terdaftar atau tulis manual' : 'Masukkan nama manual';
+        user1.closest('.mb-3').style.opacity = method === 'automatic' ? '1' : '0.9';
+        user2.closest('.mb-3').style.opacity = method === 'automatic' ? '1' : '0.9';
+    }
+
+    function syncApprovalName(side) {
+        const select = document.getElementById('approval_user' + side + '_id');
+        const name = document.getElementById('nama_setuju' + side);
+        const job = document.getElementById('jabatan_setuju' + side);
+        if (!select || !name || !job) return;
+        const selected = select.options[select.selectedIndex];
+        if (selected && selected.value) {
+            const label = selected.textContent.split(' (')[0];
+            name.value = label.trim();
+            job.value = selected.textContent.includes('(') ? selected.textContent.split('(')[1].replace(')', '').trim() : job.value;
         }
     }
 

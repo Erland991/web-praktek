@@ -27,7 +27,7 @@ class Monitoring extends BaseController
         foreach ($apps as &$app) {
             $lastProgress = $db->table('progres_log')
                                ->where('aplikasi_id', $app['id'])
-                               ->where('is_approved', 1)
+                               ->where('is_approved', 2)
                                ->orderBy('tgl_update', 'DESC')
                                ->get()->getRowArray();
             $app['real_percent'] = $lastProgress['persentase'] ?? 0;

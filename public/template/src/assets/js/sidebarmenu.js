@@ -9,28 +9,30 @@ File: js
 // ==============================================================
 $(function () {
     "use strict";
-    var url = window.location + "";
-    var path = url.replace(
-      window.location.protocol + "//" + window.location.host + "/",
-      ""
-    );
-    var element = $("ul#sidebarnav a").filter(function () {
-      return this.href === url || this.href === path; // || url.href.indexOf(this.href) === 0;
-    });
-    element.parentsUntil(".sidebar-nav").each(function (index) {
-      if ($(this).is("li") && $(this).children("a").length !== 0) {
-        $(this).children("a").addClass("active");
-        $(this).parent("ul#sidebarnav").length === 0
-          ? $(this).addClass("active")
-          : $(this).addClass("selected");
-      } else if (!$(this).is("ul") && $(this).children("a").length === 0) {
-        $(this).addClass("selected");
-      } else if ($(this).is("ul")) {
-        $(this).addClass("in");
-      }
-    });
+    // Disable automatic sidebar auto-select on page load.
+    // The initial active state is handled by server-side navigation or manual click handling.
+    // var url = window.location + "";
+    // var path = url.replace(
+    //   window.location.protocol + "//" + window.location.host + "/",
+    //   ""
+    // );
+    // var element = $("ul#sidebarnav a").filter(function () {
+    //   return this.href === url || this.href === path; // || url.href.indexOf(this.href) === 0;
+    // });
+    // element.parentsUntil(".sidebar-nav").each(function (index) {
+    //   if ($(this).is("li") && $(this).children("a").length !== 0) {
+    //     $(this).children("a").addClass("active");
+    //     $(this).parent("ul#sidebarnav").length === 0
+    //       ? $(this).addClass("active")
+    //       : $(this).addClass("selected");
+    //   } else if (!$(this).is("ul") && $(this).children("a").length === 0) {
+    //     $(this).addClass("selected");
+    //   } else if ($(this).is("ul")) {
+    //     $(this).addClass("in");
+    //   }
+    // });
   
-    element.addClass("active");
+    // element.addClass("active");
     $("#sidebarnav a").on("click", function (e) {
       if (!$(this).hasClass("active")) {
         // hide any open menus and remove all other classes

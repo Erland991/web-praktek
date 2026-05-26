@@ -49,6 +49,12 @@
                             </td>
                             <td><?= date('d M Y', strtotime($m['tanggal'])) ?></td>
                             <td>
+                                <?php $status = $m['doc_status'] ?? 'draft'; ?>
+                                <div class="mb-2">
+                                    <span class="badge <?= $status === 'final' ? 'bg-success bg-opacity-10 text-success border border-success border-opacity-25' : 'bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25' ?> px-3 py-1 rounded-pill">
+                                        <?= strtoupper($status) ?>
+                                    </span>
+                                </div>
                                 <?php if($m['is_final']): ?>
                                     <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3 py-1 rounded-pill">
                                         <i class="ti ti-circle-check me-1"></i> Final Approved
@@ -62,6 +68,9 @@
                             </td>
                             <td class="text-center px-4">
                                 <div class="d-flex gap-2 justify-content-center">
+                                    <a href="<?= base_url('notula/duplicate/'.$m['id']) ?>" class="btn btn-sm btn-light-warning text-warning border border-warning border-opacity-25 hover-elevate d-inline-flex align-items-center justify-content-center rounded-circle" style="width: 36px; height: 36px;" data-bs-toggle="tooltip" title="Duplicate Memo">
+                                        <i class="ti ti-copy fs-5"></i>
+                                    </a>
                                     <a href="<?= base_url('notula/edit/'.$m['id']) ?>" class="btn btn-sm btn-light-primary text-primary border border-primary border-opacity-25 hover-elevate d-inline-flex align-items-center justify-content-center rounded-circle" style="width: 36px; height: 36px;" data-bs-toggle="tooltip" title="Lihat/Edit">
                                         <i class="ti ti-edit fs-5"></i>
                                     </a>

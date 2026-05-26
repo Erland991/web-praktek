@@ -3,20 +3,19 @@
 <?= $this->section('content') ?>
 <div class="row mb-4 mt-3">
     <div class="col-12">
-        <div class="card border-0 rounded-4 overflow-hidden position-relative shadow-sm" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);">
-            <div class="position-absolute top-0 end-0 bg-white opacity-10 rounded-circle" style="width: 250px; height: 250px; transform: translate(30%, -30%);"></div>
-            <div class="card-body p-4 p-xl-5 position-relative z-1 d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+        <div class="card border-0 rounded-4 overflow-hidden position-relative shadow-sm bg-white">
+            <div class="card-body p-4 position-relative z-1 d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 border-start border-4 border-primary">
                 <div>
-                    <span class="badge bg-white bg-opacity-10 text-white mb-2 fs-2 fw-medium px-3 py-2 rounded-pill border border-white border-opacity-10"><i class="ti ti-users me-1"></i> SIMPA Master Data</span>
-                    <h2 class="fw-bold text-white mb-2">Manajemen Karyawan</h2>
-                    <p class="mb-0 fs-4 text-white-50" style="max-width: 600px;">Kelola daftar personil, hak akses sistem (RBAC), dan pembagian divisi secara terpusat.</p>
+                    <span class="badge bg-primary bg-opacity-10 text-primary mb-2 fs-2 fw-medium px-3 py-1 rounded-pill"><i class="ti ti-users me-1"></i> SIMPA Master Data</span>
+                    <h4 class="fw-bold text-dark mb-1">Manajemen Karyawan</h4>
+                    <p class="mb-0 text-muted" style="max-width: 600px;">Kelola daftar personil, hak akses sistem (RBAC), dan pembagian divisi secara terpusat.</p>
                 </div>
                 <div class="d-flex flex-wrap gap-2">
-                    <a href="<?= base_url('master/karyawan/export') . '?' . http_build_query(['keyword' => $keyword ?? '']) ?>" class="btn btn-outline-light text-white fw-bold d-inline-flex align-items-center shadow-sm px-4 py-2 rounded-3" target="_blank" style="background: rgba(220,53,69,0.2);">
-                        <i class="ti ti-file-type-pdf fs-5 me-2 text-danger"></i> Cetak PDF
+                    <a href="<?= base_url('master/karyawan/export') . '?' . http_build_query(['keyword' => $keyword ?? '']) ?>" class="btn btn-outline-danger fw-bold d-inline-flex align-items-center shadow-sm px-4 py-2 rounded-3" target="_blank">
+                        <i class="ti ti-file-type-pdf fs-5 me-2"></i> Cetak PDF
                     </a>
                     <?php if (session()->get('role') == 'Admin') : ?>
-                    <button type="button" class="btn btn-light text-primary fw-bold d-inline-flex align-items-center shadow-sm px-4 py-2 rounded-3" data-bs-toggle="modal" data-bs-target="#modalTambah">
+                    <button type="button" class="btn btn-primary fw-bold d-inline-flex align-items-center shadow-sm px-4 py-2 rounded-3" data-bs-toggle="modal" data-bs-target="#modalTambah">
                         <i class="ti ti-user-plus fs-5 me-2"></i> Tambah Karyawan
                     </button>
                     <?php endif; ?>

@@ -15,7 +15,7 @@ class Calendar extends BaseController
         $updates = $db->table('progres_log')
                       ->select('progres_log.*, aplikasi_master.nama_app')
                       ->join('aplikasi_master', 'aplikasi_master.id = progres_log.aplikasi_id')
-                      ->where('is_approved', 1)
+                      ->where('is_approved', 2)
                       ->get()->getResultArray();
 
         $events = [];
