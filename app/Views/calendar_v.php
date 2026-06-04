@@ -1,9 +1,6 @@
 <?= $this->extend('layout/main') ?>
 
 <?= $this->section('content') ?>
-<!-- FullCalendar CSS -->
-<link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
-<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
 
 <div class="row mb-4 mt-3">
     <div class="col-12">

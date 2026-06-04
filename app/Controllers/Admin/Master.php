@@ -97,8 +97,8 @@ class Master extends BaseController
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
         
-        return $this->response->setHeader('Content-Type', 'application/pdf')
-                              ->setBody($dompdf->output());
+        $dompdf->stream("Data_Karyawan_" . date('Ymd') . ".pdf", ["Attachment" => false]);
+        exit;
     }
 
     public function saveKaryawan()

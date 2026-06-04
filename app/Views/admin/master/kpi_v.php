@@ -31,7 +31,7 @@
                 <?php endif; ?>
 
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0 text-nowrap">
+                    <table class="table table-hover align-middle mb-0">
                         <thead class="table-light text-muted fs-3 text-uppercase fw-semibold tracking-wider">
                             <tr>
                                 <th class="ps-4 py-3 border-bottom-0 w-10">No</th>

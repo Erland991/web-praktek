@@ -17,7 +17,7 @@
 <body>
     <div class="header">
         <h2>PT SURVEYOR INDONESIA</h2>
-        <p>Laporan Monitoring Aset Digital - Unit IT</p>
+        <p>Laporan Monitoring Aplikasi Digital - Unit IT</p>
     </div>
 
     <?php if (!empty($filters['keyword']) || !empty($filters['kategori']) || !empty($filters['status'])): ?>
@@ -33,7 +33,7 @@
         <thead>
             <tr>
                 <th width="5%">No</th>
-                <th>Nama Aset</th>
+                <th>Nama Aplikasi</th>
                 <th>Kategori</th>
                 <th>Status</th>
                 <th>PIC</th>

@@ -1,31 +1,29 @@
 <?= $this->extend('layout/main') ?>
 
 <?= $this->section('content') ?>
-<div class="row mb-4 mt-3">
+<div class="row mb-4 mt-2">
     <div class="col-12">
-        <div class="card border-0 rounded-4 overflow-hidden position-relative shadow-sm bg-white">
-            <div class="card-body p-4 position-relative z-1 d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 border-start border-4 border-primary">
-                <div>
-                    <span class="badge bg-primary bg-opacity-10 text-primary mb-2 fs-2 fw-medium px-3 py-1 rounded-pill"><i class="ti ti-server me-1"></i> SIMPA Master Data</span>
-                    <h4 class="fw-bold text-dark mb-1">Master Register Aplikasi</h4>
-                    <p class="mb-0 text-muted" style="max-width: 600px;">Daftar seluruh aplikasi resmi yang dikelola dan dimonitor oleh SIMPA PT Surveyor Indonesia.</p>
-                </div>
-                <?php if (session()->get('role') == 'Admin') : ?>
-                <div>
-                    <button type="button" class="btn btn-primary fw-bold d-inline-flex align-items-center shadow-sm px-4 py-2 rounded-3" data-bs-toggle="modal" data-bs-target="#modalTambah">
-                        <i class="ti ti-plus fs-5 me-2"></i> Register Aplikasi
-                    </button>
-                </div>
-                <?php endif; ?>
+        <div class="d-flex justify-content-between align-items-end mb-4 border-bottom pb-3">
+            <div>
+                <span class="badge bg-light-primary text-primary mb-2 fs-2 fw-medium px-3 py-1 rounded-pill border border-primary border-opacity-10"><i class="ti ti-server me-1"></i> SIMPA Master Data</span>
+                <h3 class="fw-bolder text-dark mb-1">Master Register Aplikasi</h3>
+                <p class="mb-0 text-muted fs-3" style="max-width: 600px;">Daftar seluruh aplikasi resmi yang dikelola dan dimonitor oleh SIMPA PT Surveyor Indonesia.</p>
             </div>
+            <?php if (session()->get('role') == 'Admin' || session()->get('role') == 'PM') : ?>
+            <div>
+                <button type="button" class="btn btn-primary fw-bold d-inline-flex align-items-center px-4 py-2" data-bs-toggle="modal" data-bs-target="#modalTambah">
+                    <i class="ti ti-plus fs-5 me-2"></i> Register Aplikasi
+                </button>
+            </div>
+            <?php endif; ?>
         </div>
     </div>
 </div>
 
-<div class="card shadow-sm border-0 rounded-4 mb-4">
+<div class="card mb-4">
     <div class="card-body p-0">
         <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0 text-nowrap">
+            <table class="table table-hover align-middle mb-0">
                 <thead class="table-light text-muted fs-3 text-uppercase fw-semibold tracking-wider">
                     <tr>
                         <th class="border-bottom-0">Nama Aplikasi</th>
@@ -33,7 +31,7 @@
                         <th class="border-bottom-0">Divisi</th>
                         <th class="border-bottom-0 text-center">Status</th>
                         <th class="border-bottom-0 text-center">Target</th>
-                        <?php if (session()->get('role') == 'Admin') : ?>
+                        <?php if (session()->get('role') == 'Admin' || session()->get('role') == 'PM') : ?>
                         <th class="border-bottom-0 text-center">Aksi</th>
                         <?php endif; ?>
                     </tr>
@@ -77,11 +75,11 @@
                             ?>
                             <span class="badge <?= $statusClass ?> px-3 py-1 rounded-pill fw-semibold d-inline-flex gap-1 align-items-center"><span class="<?= $dotColor ?> rounded-circle" style="width:6px;height:6px;"></span> <?= $app['status'] ?></span>
                         </td>
-                        <td class="border-bottom-0 text-center">
+                        <td class="border-bottom-0 text-center text-nowrap">
                             <p class="mb-0 fs-2 fw-semibold text-muted"><i class="ti ti-calendar me-1"></i> <?= $app['tgl_target'] ? date('d M Y', strtotime($app['tgl_target'])) : '-' ?></p>
                         </td>
-                        <?php if (session()->get('role') == 'Admin') : ?>
-                        <td class="border-bottom-0 text-center px-4">
+                        <?php if (session()->get('role') == 'Admin' || session()->get('role') == 'PM') : ?>
+                        <td class="border-bottom-0 text-center px-4 text-nowrap">
                             <div class="d-flex gap-1 justify-content-center">
                                 <button type="button" class="btn btn-sm btn-light text-success hover-success px-2" data-bs-toggle="tooltip" title="Catat Go-Live" onclick="showReleaseModal(<?= $app['id'] ?>, '<?= $app['nama_app'] ?>')">
                                     <i class="ti ti-rocket fs-4"></i>
@@ -126,7 +124,7 @@
                                     <option value="<?= htmlspecialchars(json_encode($aset)) ?>"><?= esc($aset['nama_aset']) ?> (PIC: <?= esc($aset['pic']) ?>)</option>
                                 <?php endforeach; ?>
                             </select>
-                            <small class="text-muted d-block mt-1">Pilih data ini jika aplikasi sudah pernah Anda tambahkan lewat menu "Tambah Aset" di Dashboard.</small>
+                            <small class="text-muted d-block mt-1">Pilih data ini jika aplikasi sudah pernah Anda tambahkan lewat menu "Tambah Aplikasi" di Dashboard.</small>
                         </div>
                         <div class="col-12">
                             <label class="form-label fw-semibold">Nama Aplikasi</label>

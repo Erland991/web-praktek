@@ -763,20 +763,20 @@ class NotulaController extends BaseController
             $approved1Role = $notula['jabatan_setuju1'] ?: '-';
             $approved2Role = $notula['jabatan_setuju2'] ?: '-';
 
-            $qrFiles[] = $f = $generateQR('Disiapkan: ' . $preparedName);
+            $qrFiles[] = $f = $generateQR(base_url('notula/verify/' . $id . '?sign=prepared'));
             if (file_exists($f)) {
                 $pdf->Image($f, $columnXs[0] + 17, $signatureY + 14, $qrSize, $qrSize);
             }
 
             if ($notula['is_approved1']) {
-                $qrFiles[] = $f = $generateQR('Disetujui 1: ' . $approved1Name . "\nDate: " . date('Y-m-d'));
+                $qrFiles[] = $f = $generateQR(base_url('notula/verify/' . $id . '?sign=approved1'));
                 if (file_exists($f)) {
                     $pdf->Image($f, $columnXs[1] + 17, $signatureY + 14, $qrSize, $qrSize);
                 }
             }
 
             if ($notula['is_approved2']) {
-                $qrFiles[] = $f = $generateQR('Disetujui 2: ' . $approved2Name . "\nDate: " . date('Y-m-d'));
+                $qrFiles[] = $f = $generateQR(base_url('notula/verify/' . $id . '?sign=approved2'));
                 if (file_exists($f)) {
                     $pdf->Image($f, $columnXs[2] + 17, $signatureY + 14, $qrSize, $qrSize);
                 }
@@ -808,8 +808,101 @@ class NotulaController extends BaseController
 
         } catch (\Exception $e) {
             log_message('error', 'Notula FPDF Error: ' . $e->getMessage() . ' in ' . $e->getFile() . ' on line ' . $e->getLine());
-            return redirect()->back()->with('error', 'Gagal membuat PDF: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal memuat template PDF: ' . $e->getMessage());
         }
+    }
+
+    public function verify($id)
+    {
+        $db = \Config\Database::connect();
+        $notula = $db->table('notula_rapat')->where('id', $id)->get()->getRowArray();
+        
+        if (!$notula) {
+            return "<h1>Dokumen Tidak Ditemukan</h1><p>Notula rapat dengan ID tersebut tidak ada dalam sistem.</p>";
+        }
+        
+        $sign = $this->request->getGet('sign');
+        $name = "-";
+        $role = "-";
+        $status = "Menunggu Persetujuan";
+        
+        if ($sign == 'prepared') {
+            $name = $notula['nama_disiapkan'];
+            $role = $notula['jabatan_disiapkan'];
+            $status = "Telah Disiapkan secara Digital";
+        } elseif ($sign == 'approved1') {
+            if ($notula['is_approved1']) {
+                $name = $notula['nama_setuju1'];
+                $role = $notula['jabatan_setuju1'];
+                $status = "Telah Disetujui (Approved)";
+            }
+        } elseif ($sign == 'approved2') {
+            if ($notula['is_approved2']) {
+                $name = $notula['nama_setuju2'];
+                $role = $notula['jabatan_setuju2'];
+                $status = "Telah Disetujui (Approved)";
+            }
+        }
+
+        $html = '<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verifikasi Tanda Tangan Digital</title>
+    <style>
+        body { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background-color: #f3f4f6; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); max-width: 400px; width: 100%; border-top: 5px solid #2563eb; }
+        .success-icon { color: #16a34a; font-size: 48px; text-align: center; margin-bottom: 10px; }
+        h2 { text-align: center; color: #1f2937; margin-top: 0; font-size: 20px; }
+        .divider { border-bottom: 1px dashed #e5e7eb; margin: 20px 0; }
+        .row { margin-bottom: 12px; }
+        .label { font-size: 12px; color: #6b7280; text-transform: uppercase; font-weight: 600; }
+        .value { font-size: 15px; color: #111827; font-weight: 500; margin-top: 4px; }
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; background-color: #dcfce7; color: #166534; }
+        .footer { text-align: center; margin-top: 25px; font-size: 12px; color: #9ca3af; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="success-icon">✓</div>
+        <h2>Verifikasi Tanda Tangan Valid</h2>
+        
+        <div class="divider"></div>
+        
+        <div class="row">
+            <div class="label">Dokumen Terkait</div>
+            <div class="value">Notula Rapat #' . esc($id) . '</div>
+        </div>
+        <div class="row">
+            <div class="label">Agenda</div>
+            <div class="value">' . esc($notula['agenda']) . '</div>
+        </div>
+        
+        <div class="divider"></div>
+        
+        <div class="row">
+            <div class="label">Ditandatangani Oleh</div>
+            <div class="value">' . esc($name) . '</div>
+        </div>
+        <div class="row">
+            <div class="label">Peran / Jabatan</div>
+            <div class="value">' . esc($role) . '</div>
+        </div>
+        <div class="row">
+            <div class="label">Status Penandatanganan</div>
+            <div class="value"><span class="badge">' . esc($status) . '</span></div>
+        </div>
+        
+        <div class="footer">
+            Sistem Informasi PT Surveyor Indonesia<br>
+            Waktu Verifikasi: ' . date('d M Y H:i:s') . '
+        </div>
+    </div>
+</body>
+</html>';
+
+        return $this->response->setBody($html);
     }
 
     public function print($id)

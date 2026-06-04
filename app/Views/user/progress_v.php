@@ -22,7 +22,7 @@
 <div class="card w-100 shadow-sm border-0 rounded-4 mb-4">
     <div class="card-body p-0">
         <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0 text-nowrap">
+            <table class="table table-hover align-middle mb-0">
                 <thead class="table-light text-muted fs-3 text-uppercase fw-semibold tracking-wider">
                     <tr>
                         <th class="ps-4">No</th>
@@ -64,19 +64,21 @@
                             <?php endif; ?>
                         </td>
                         <td class="text-center px-4">
-                            <div class="d-flex gap-2 flex-wrap justify-content-center">
-                                <button class="btn btn-primary btn-sm flex-fill fw-bold shadow-sm d-inline-flex align-items-center" onclick='openModalProgress(<?= json_encode($app) ?>)'>
+                            <div class="d-flex gap-2 justify-content-center align-items-center">
+                                <button class="btn btn-primary btn-sm fw-bold shadow-sm d-inline-flex align-items-center px-3" onclick='openModalProgress(<?= json_encode($app) ?>)'>
                                     <i class="ti ti-edit me-1"></i> Update Progres
                                 </button>
-                                <a href="<?= base_url('notula/list/' . $app['id']) ?>" class="btn btn-outline-primary btn-sm fw-bold px-3">
-                                    <i class="ti ti-notes me-1"></i> Memo
-                                </a>
-                                <a href="<?= base_url('notula?app_id=' . $app['id'] . '&quick=1') ?>" class="btn btn-outline-secondary btn-sm fw-bold px-3">
-                                    <i class="ti ti-rocket me-1"></i> Quick MoM
-                                </a>
-                                <a href="<?= base_url('absensi?app_id=' . $app['id']) ?>" class="btn btn-outline-info btn-sm fw-bold px-3">
-                                    <i class="ti ti-users me-1"></i> Daftar Hadir
-                                </a>
+                                <div class="d-flex gap-1 border-start ps-2 ms-1">
+                                    <a href="<?= base_url('notula/list/' . $app['id']) ?>" class="btn btn-sm btn-light border px-2 text-primary shadow-sm" data-bs-toggle="tooltip" title="Memo">
+                                        <i class="ti ti-notes fs-5"></i>
+                                    </a>
+                                    <a href="<?= base_url('notula?app_id=' . $app['id'] . '&quick=1') ?>" class="btn btn-sm btn-light border px-2 text-secondary shadow-sm" data-bs-toggle="tooltip" title="Quick MoM">
+                                        <i class="ti ti-rocket fs-5"></i>
+                                    </a>
+                                    <a href="<?= base_url('absensi?app_id=' . $app['id']) ?>" class="btn btn-sm btn-light border px-2 text-info shadow-sm" data-bs-toggle="tooltip" title="Daftar Hadir">
+                                        <i class="ti ti-users fs-5"></i>
+                                    </a>
+                                </div>
                             </div>
                         </td>
                     </tr>

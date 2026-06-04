@@ -11,7 +11,7 @@
                     <p class="mb-0 text-muted" style="max-width: 600px;">Kelola daftar personil, hak akses sistem (RBAC), dan pembagian divisi secara terpusat.</p>
                 </div>
                 <div class="d-flex flex-wrap gap-2">
-                    <a href="<?= base_url('master/karyawan/export') . '?' . http_build_query(['keyword' => $keyword ?? '']) ?>" class="btn btn-outline-danger fw-bold d-inline-flex align-items-center shadow-sm px-4 py-2 rounded-3" target="_blank">
+                    <a href="<?= base_url('master/karyawan/export') . '?' . http_build_query(['keyword' => $keyword ?? '']) ?>" class="btn btn-danger fw-bold d-inline-flex align-items-center shadow-sm px-4 py-2 rounded-3" target="_blank">
                         <i class="ti ti-file-type-pdf fs-5 me-2"></i> Cetak PDF
                     </a>
                     <?php if (session()->get('role') == 'Admin') : ?>
@@ -67,7 +67,7 @@
 <div class="card shadow-sm border-0 rounded-4 mb-4">
     <div class="card-body p-0">
         <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0 text-nowrap">
+            <table class="table table-hover align-middle mb-0">
                 <thead class="table-light text-muted fs-3 text-uppercase fw-semibold tracking-wider">
                     <tr>
                         <th class="ps-4 py-3 border-bottom-0 w-10">No</th>
@@ -112,6 +112,7 @@
                             <?php 
                                 $badgeClass = 'bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25';
                                 if ($k['role'] == 'Admin') $badgeClass = 'bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25';
+                                elseif ($k['role'] == 'PM') $badgeClass = 'bg-info bg-opacity-10 text-info border border-info border-opacity-25';
                                 elseif ($k['role'] == 'Viewer') $badgeClass = 'bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25';
                             ?>
                             <span class="badge <?= $badgeClass ?> px-3 py-1 rounded-pill fw-semibold d-inline-flex gap-1 align-items-center">
@@ -176,6 +177,7 @@
                             <label class="form-label fw-semibold">Role</label>
                             <select name="role" class="form-select" required>
                                 <option value="User">User</option>
+                                <option value="PM">Project Manager (PM)</option>
                                 <option value="Admin">Admin</option>
                                 <option value="Viewer">Viewer (Read-Only)</option>
                             </select>
@@ -232,6 +234,7 @@
                             <label class="form-label fw-semibold">Role</label>
                             <select name="role" id="edit_role" class="form-select">
                                 <option value="User">User</option>
+                                <option value="PM">Project Manager (PM)</option>
                                 <option value="Admin">Admin</option>
                                 <option value="Viewer">Viewer (Read-Only)</option>
                             </select>

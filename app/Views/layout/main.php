@@ -10,78 +10,74 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
   
   <!-- Animation Libraries -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  
+  <!-- FullCalendar -->
+  <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
+  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
+  
   <style>
     :root {
-      --primary-color: #004996;
-      --secondary-color: #FFB800;
-      --primary-gradient: linear-gradient(135deg, #004996 0%, #002d5f 100%);
-      --accent-gradient: linear-gradient(135deg, #FFB800 0%, #e5a500 100%);
+      --primary-color: #3874ff;
+      --secondary-color: #f3f6f9;
+      --primary-gradient: none;
+      --accent-gradient: none;
       --surface-color: #ffffff;
-      --bg-color: #f4f6f9;
-      --text-main: #1e293b;
-      --text-muted: #64748b;
-      --border-color: #e2e8f0;
-      --shadow-sm: 0 2px 8px rgba(0, 73, 150, 0.04);
-      --shadow-md: 0 8px 20px rgba(0, 73, 150, 0.06);
-      --shadow-lg: 0 16px 32px rgba(0, 73, 150, 0.08), 0 4px 12px rgba(0,0,0,0.02);
-      --radius-md: 12px;
-      --radius-lg: 20px;
+      --bg-color: #f5f7fa;
+      --text-main: #31374a;
+      --text-muted: #8a94ad;
+      --border-color: #e3ebf6;
+      --shadow-sm: 0 .125rem .25rem rgba(116, 129, 148, 0.075);
+      --shadow-md: 0 .5rem 1rem rgba(116, 129, 148, 0.15);
+      --shadow-lg: 0 1rem 2rem rgba(116, 129, 148, 0.15);
+      --radius-md: 0.375rem;
+      --radius-lg: 0.5rem;
     }
     
     body {
-      font-family: 'Plus Jakarta Sans', sans-serif !important;
+      font-family: 'Nunito Sans', sans-serif !important;
       background-color: var(--bg-color);
       color: var(--text-main);
       overflow-x: hidden;
+      font-weight: 400;
+      font-size: 0.875rem; /* Phoenix uses 14px as base */
     }
     
     h1, h2, h3, h4, h5, h6, .hero-card h4 {
-      font-family: 'Plus Jakarta Sans', sans-serif !important;
+      font-family: 'Nunito Sans', sans-serif !important;
       font-weight: 700 !important;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.01em;
     }
     
     /* Elegant Corporate Cards */
     .card {
-      border: 1px solid rgba(226, 232, 240, 0.8) !important;
+      border: 1px solid var(--border-color) !important;
       border-radius: var(--radius-lg) !important;
-      box-shadow: var(--shadow-sm) !important;
-      transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+      box-shadow: none !important;
+      transition: all 0.2s ease-in-out;
       background: var(--surface-color);
     }
     .card:hover {
-      box-shadow: var(--shadow-lg) !important;
-      border-color: rgba(0, 73, 150, 0.15) !important;
+      box-shadow: var(--shadow-md) !important;
     }
     
     /* Hero / Header Cards */
     .hero-card {
-      background: var(--primary-gradient);
-      color: white;
+      background: var(--surface-color);
+      color: var(--text-main);
       border-radius: var(--radius-lg) !important;
       padding: 2.25rem !important;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 12px 24px rgba(0, 73, 150, 0.15) !important;
-      border: none !important;
+      box-shadow: var(--shadow-sm) !important;
+      border: 1px solid var(--border-color) !important;
     }
-    .hero-card::after {
-      content: '';
-      position: absolute;
-      top: -50%;
-      right: -10%;
-      width: 350px;
-      height: 350px;
-      background: radial-gradient(circle, rgba(255, 184, 0, 0.2) 0%, rgba(255,255,255,0) 70%);
-      border-radius: 50%;
-    }
-    .hero-card h4 { color: white !important; font-weight: 800; letter-spacing: -0.5px; }
-    .hero-card p { opacity: 0.9; font-weight: 400; }
+    .hero-card h4 { color: var(--text-main) !important; font-weight: 800; }
+    .hero-card p { font-weight: 400; color: var(--text-muted) !important; }
     
     /* Buttons */
     .btn {
@@ -95,14 +91,13 @@
     .btn-primary { 
       background: var(--primary-color) !important; 
       border-color: var(--primary-color) !important; 
-      box-shadow: 0 4px 10px rgba(0, 73, 150, 0.25) !important; 
       color: #ffffff !important;
+      box-shadow: none !important;
     }
     .btn-primary:hover { 
-      transform: translateY(-2px); 
-      box-shadow: 0 6px 16px rgba(0, 73, 150, 0.35) !important;
-      background: #003770 !important;
-      border-color: #003770 !important;
+      background: #2b5bc7 !important;
+      border-color: #2b5bc7 !important;
+      box-shadow: var(--shadow-md) !important;
     }
     .btn-outline-danger {
       border-color: #ef4444 !important;
@@ -122,13 +117,13 @@
       box-shadow: var(--shadow-sm);
     }
     .table thead th { 
-      background-color: #f8fafc !important; 
-      color: #475569 !important; 
-      font-weight: 700 !important; 
+      background-color: transparent !important; 
+      color: var(--text-muted) !important; 
+      font-weight: 800 !important; 
       text-transform: uppercase; 
       font-size: 0.75rem; 
       letter-spacing: 0.05em; 
-      border-bottom: 2px solid var(--border-color) !important; 
+      border-bottom: 1px solid var(--border-color) !important; 
       padding: 1.1rem 1rem; 
     }
     .table tbody td { 
@@ -176,6 +171,8 @@
       display: flex;
       align-items: center;
       gap: 12px;
+      white-space: normal !important;
+      line-height: 1.3;
     }
     .sidebar-link:hover { 
       background-color: rgba(0, 73, 150, 0.04) !important; 
@@ -184,12 +181,20 @@
       border-color: rgba(0, 73, 150, 0.08);
     }
     .sidebar-link.active { 
-      background: linear-gradient(90deg, rgba(0, 73, 150, 0.08) 0%, rgba(0, 73, 150, 0.02) 100%) !important; 
+      background: transparent !important; 
       color: var(--primary-color) !important; 
       font-weight: 700 !important;
-      border-left: 4px solid var(--secondary-color) !important; 
-      border-color: rgba(0, 73, 150, 0.08) rgba(0, 73, 150, 0.08) rgba(0, 73, 150, 0.08) var(--secondary-color) !important;
-      box-shadow: 0 4px 12px rgba(0, 73, 150, 0.03) !important;
+      position: relative;
+    }
+    .sidebar-link.active::before {
+      content: '';
+      position: absolute;
+      left: -1rem;
+      top: 15%;
+      height: 70%;
+      width: 4px;
+      background-color: var(--primary-color);
+      border-radius: 0 4px 4px 0;
     }
     .sidebar-link i { 
       font-size: 1.35rem; 
@@ -246,7 +251,7 @@
     ::-webkit-scrollbar-thumb:hover {
       background: #94a3b8;
     }
-    /* Automatic Enterprise Header Card Conversion */
+    /* Automatic Enterprise Header Card Conversion - Reset for Phoenix theme */
     .card:has(> .card-body.border-primary) .card-body.border-primary,
     .card:has(> .card-body.border-primary) .card-body.border-start.border-primary,
     .card:has(> .card-body.border-primary) .card-body.border-start.border-4.border-primary,
@@ -256,62 +261,54 @@
     }
     
     .card:has(> .card-body.border-primary) {
-      background: var(--primary-gradient) !important;
-      border: none !important;
-      box-shadow: 0 12px 24px rgba(0, 73, 150, 0.12) !important;
+      background: var(--surface-color) !important;
+      border: 1px solid var(--border-color) !important;
+      box-shadow: var(--shadow-sm) !important;
       position: relative !important;
       overflow: hidden !important;
       border-radius: var(--radius-lg) !important;
     }
     
     .card:has(> .card-body.border-primary)::after {
-      content: '';
-      position: absolute;
-      top: -50%;
-      right: -10%;
-      width: 350px;
-      height: 350px;
-      background: radial-gradient(circle, rgba(255, 184, 0, 0.18) 0%, rgba(255,255,255,0) 70%);
-      border-radius: 50%;
-      pointer-events: none;
+      display: none;
     }
     
     .card:has(> .card-body.border-primary) h4,
     .card:has(> .card-body.border-primary) h5,
     .card:has(> .card-body.border-primary) .card-title {
-      color: #ffffff !important;
+      color: var(--text-main) !important;
       font-weight: 800 !important;
       font-size: 1.6rem !important;
     }
     
     .card:has(> .card-body.border-primary) p,
     .card:has(> .card-body.border-primary) .text-muted {
-      color: rgba(255, 255, 255, 0.75) !important;
+      color: var(--text-muted) !important;
       font-weight: 400 !important;
       font-size: 0.95rem !important;
       line-height: 1.6;
     }
     
     .card:has(> .card-body.border-primary) .badge.bg-primary {
-      background-color: rgba(255, 255, 255, 0.2) !important;
-      color: #ffffff !important;
-      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      background-color: rgba(56, 116, 255, 0.1) !important;
+      color: var(--primary-color) !important;
+      border: none !important;
       font-weight: 700 !important;
     }
     
     .card:has(> .card-body.border-primary) .btn-primary {
-      background-color: var(--secondary-color) !important;
-      border-color: var(--secondary-color) !important;
-      color: #1e293b !important;
-      box-shadow: 0 4px 12px rgba(255, 184, 0, 0.25) !important;
-      font-weight: 700 !important;
+      background-color: var(--primary-color) !important;
+      border-color: var(--primary-color) !important;
+      color: #ffffff !important;
+      box-shadow: none !important;
+      font-weight: 600 !important;
     }
     
     .card:has(> .card-body.border-primary) .btn-primary:hover {
-      background-color: #e5a500 !important;
-      border-color: #e5a500 !important;
+      background-color: #2b5bc7 !important;
+      border-color: #2b5bc7 !important;
       transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(255, 184, 0, 0.35) !important;
+      box-shadow: var(--shadow-sm) !important;
     }
 
     /* Custom Animations */
@@ -330,7 +327,7 @@
     .hover-scale:hover { transform: scale(1.02); }
     
     .hover-elevate { transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); }
-    .hover-elevate:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg) !important; }
+    .hover-elevate:hover { transform: translateY(-4px); box-shadow: var(--shadow-md) !important; }
 
     /* Staggered Table Row Appearance (Global) */
     .table tbody tr {
@@ -385,10 +382,10 @@
               </a>
             </li>
 
-            <?php if (session()->get('role') == 'Admin') : ?>
+            <?php if (session()->get('role') == 'Admin' || session()->get('role') == 'PM') : ?>
             <li class="nav-small-cap">
               <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-              <span class="hide-menu">ADMINISTRATOR</span>
+              <span class="hide-menu">ADMINISTRATOR & MANAJEMEN</span>
             </li>
             <li class="sidebar-item">
               <a class="sidebar-link" href="<?= base_url('admin/app-master') ?>" aria-expanded="false">
@@ -398,6 +395,7 @@
                 <span class="hide-menu">Master Aplikasi</span>
               </a>
             </li>
+            <?php if (session()->get('role') == 'Admin') : ?>
             <li class="sidebar-item">
               <a class="sidebar-link" href="<?= base_url('admin/kpi') ?>" aria-expanded="false">
                 <span>
@@ -406,6 +404,7 @@
                 <span class="hide-menu">Master KPI</span>
               </a>
             </li>
+            <?php endif; ?>
             <li class="sidebar-item">
               <a class="sidebar-link" href="<?= base_url('admin/approval') ?>" aria-expanded="false">
                 <span>
@@ -414,6 +413,7 @@
                 <span class="hide-menu">Antrean Approval</span>
               </a>
             </li>
+            <?php if (session()->get('role') == 'Admin') : ?>
             <li class="sidebar-item">
               <a class="sidebar-link" href="<?= base_url('admin/cobit') ?>" aria-expanded="false">
                 <span>
@@ -423,8 +423,9 @@
               </a>
             </li>
             <?php endif; ?>
+            <?php endif; ?>
 
-            <?php if (session()->get('role') == 'User') : ?>
+            <?php if (session()->get('role') == 'User' || session()->get('role') == 'PM') : ?>
             <li class="nav-small-cap">
               <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
               <span class="hide-menu">OPERATION</span>
@@ -530,8 +531,8 @@
           <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
             <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
               <div class="d-none d-md-block text-end me-3">
-                  <p class="mb-0 fs-2 text-primary fw-bold text-uppercase"><?= session()->get('role') ?></p>
-                  <p class="mb-0 fs-3 fw-semibold text-dark"><?= session()->get('nama_lengkap') ?></p>
+                  <p class="mb-0 text-muted" style="font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;"><?= session()->get('role') ?></p>
+                  <p class="mb-0 text-dark fw-bold" style="font-size: 0.85rem;"><?= session()->get('nama_lengkap') ?></p>
               </div>
               <li class="nav-item dropdown">
                 <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"

@@ -4,13 +4,13 @@
 <div class="row pt-3">
     <div class="col-lg-8 mx-auto">
         <div class="hero-card shadow-lg mb-4 text-center" style="padding: 1.5rem !important;">
-            <h4 class="mb-0 fs-6 fw-bold">Edit Data Aset</h4>
+            <h4 class="mb-0 fs-6 fw-bold">Edit Data Aplikasi</h4>
         </div>
         <div class="card shadow-sm border-0 rounded-3">
             <div class="card-body p-4">
                 <form action="<?= base_url('dashboard/update/' . $aset['id']) ?>" method="POST">
                     <div class="mb-4">
-                        <label class="form-label fw-semibold">Nama Aset</label>
+                        <label class="form-label fw-semibold">Nama Aplikasi</label>
                         <input type="text" name="nama_aset" value="<?= $aset['nama_aset'] ?>" class="form-control" required>
                     </div>
                     
@@ -40,7 +40,7 @@
                     </div>
 
                     <div class="mb-4">
-                        <label class="form-label fw-semibold">Deskripsi Aset</label>
+                        <label class="form-label fw-semibold">Deskripsi Aplikasi</label>
                         <textarea name="deskripsi" class="form-control" rows="3"><?= $aset['deskripsi'] ?? '' ?></textarea>
                     </div>
 

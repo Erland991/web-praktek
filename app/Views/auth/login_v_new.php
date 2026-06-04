@@ -56,6 +56,7 @@
                     <label class="block text-slate-700 text-sm font-semibold mb-2">Pilih Role</label>
                     <select name="role_akses" class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-blue-600 focus:outline-none cursor-pointer text-slate-700">
                         <option value="Admin">Administrator</option>
+                        <option value="PM">Project Manager (PM)</option>
                         <option value="User">User / PIC Proyek</option>
                     </select>
                 </div>

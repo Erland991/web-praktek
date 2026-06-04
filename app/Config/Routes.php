@@ -40,6 +40,7 @@ $routes->get('/notula', 'NotulaController::index');
 $routes->get('/notula/list/(:num)', 'NotulaController::list/$1');
 $routes->get('/notula/edit/(:num)', 'NotulaController::index/$1');
 $routes->post('/notula/save', 'NotulaController::save');
+$routes->get('/notula/verify/(:num)', 'NotulaController::verify/$1');
 $routes->get('/notula/approve/(:num)/(:num)', 'NotulaController::approve/$1/$2');
 $routes->get('/notula/duplicate/(:num)', 'NotulaController::duplicate/$1');
 $routes->post('/notula/revise/(:num)', 'NotulaController::revise/$1');

@@ -326,7 +326,7 @@
                         <i class="fas fa-file-pdf"></i>
                     </div>
                     <h4 class="text-2xl font-bold mb-4 text-slate-800">Laporan PDF Instan</h4>
-                    <p class="text-slate-500 leading-relaxed">Ekspor ringkasan progres dan daftar aset ke format PDF profesional siap cetak hanya dengan satu klik untuk keperluan audit.</p>
+                    <p class="text-slate-500 leading-relaxed">Ekspor ringkasan progres dan daftar aplikasi ke format PDF profesional siap cetak hanya dengan satu klik untuk keperluan audit.</p>
                 </div>
             </div>
         </div>

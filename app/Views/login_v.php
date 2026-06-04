@@ -50,23 +50,29 @@
             style="background-image: url('<?= base_url('images/1663301594-surveyor-indonesia.png') ?>');">
             
             <!-- Overlay untuk Keterbacaan -->
-            <div class="absolute inset-0 bg-gradient-to-t from-blue-900 via-blue-900/40 to-transparent z-0"></div>
+            <div class="absolute inset-0 bg-gradient-to-tr from-[#002244] via-[#004996]/80 to-transparent mix-blend-multiply z-0"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-[#001a33] via-transparent to-transparent z-0 opacity-90"></div>
 
-            <div class="relative z-10">
-                <div class="bg-white/10 backdrop-blur-md inline-block px-4 py-2 rounded-lg border border-white/20 mb-6" data-aos="fade-right" data-aos-delay="300">
-                    <span class="text-xs font-bold tracking-[0.2em] uppercase text-yellow-400">Sistem Manajemen Proyek Aplikasi</span>
+            <div class="relative z-10 mt-4">
+                <div class="bg-white/10 backdrop-blur-xl inline-flex items-center gap-3 px-5 py-2.5 rounded-full border border-white/30 shadow-[0_8px_32px_rgba(0,0,0,0.1)] mb-8" data-aos="fade-down" data-aos-delay="300">
+                    <span class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></span>
+                    <span class="text-[0.7rem] font-bold tracking-[0.25em] uppercase text-white drop-shadow-sm">Sistem Manajemen Proyek Aplikasi</span>
                 </div>
-                <h1 class="text-5xl lg:text-6xl font-extrabold leading-tight mb-4 drop-shadow-2xl" data-aos="fade-right" data-aos-delay="500">
-                    Integrasi & <br><span class="text-blue-300">Integritas</span><br>Untuk Negeri.
+                
+                <h1 class="text-5xl lg:text-[4rem] font-black tracking-tight leading-[1.05] mb-6 drop-shadow-xl text-white" data-aos="fade-right" data-aos-delay="500">
+                    Integrasi & <br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-200 filter drop-shadow-md">Integritas</span><br>
+                    Untuk Negeri.
                 </h1>
-                <p class="text-lg text-blue-100/90 max-w-md leading-relaxed" data-aos="fade-up" data-aos-delay="700">
+                
+                <p class="text-lg font-medium text-white/90 max-w-md leading-[1.7] drop-shadow-md" data-aos="fade-up" data-aos-delay="700">
                     Menjamin kepastian melalui layanan inspeksi, pengujian, sertifikasi, konsultansi, dan verifikasi untuk masa depan Indonesia yang lebih baik.
                 </p>
             </div>
 
-            <div class="relative z-10 flex items-center gap-4" data-aos="fade-up" data-aos-delay="900">
-                <div class="w-12 h-1 bg-yellow-400 rounded-full"></div>
-                <p class="text-sm font-semibold tracking-widest uppercase opacity-90">PT Surveyor Indonesia (Persero)</p>
+            <div class="relative z-10 flex items-center gap-4 mb-4" data-aos="fade-up" data-aos-delay="900">
+                <div class="w-16 h-[3px] bg-gradient-to-r from-yellow-400 to-transparent rounded-full"></div>
+                <p class="text-xs font-bold tracking-[0.2em] uppercase text-white/80">PT Surveyor Indonesia</p>
             </div>
         </div>
 

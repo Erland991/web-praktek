@@ -19,7 +19,7 @@
             margin-bottom: 30px;
         }
         .logo-img {
-            height: 45px;
+            height: 80px;
         }
         .doc-info {
             text-align: right;

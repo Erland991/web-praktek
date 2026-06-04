@@ -9,7 +9,7 @@ class Approval extends BaseController
 {
     public function index()
     {
-        if (session()->get('role') != 'Admin') return redirect()->to('/dashboard');
+        if (session()->get('role') != 'Admin' && session()->get('role') != 'PM') return redirect()->to('/dashboard');
 
         $db = \Config\Database::connect();
         
@@ -48,7 +48,7 @@ class Approval extends BaseController
 
     public function action($id, $status)
     {
-        if (session()->get('role') != 'Admin') {
+        if (session()->get('role') != 'Admin' && session()->get('role') != 'PM') {
             return $this->response->setJSON(['status' => 'error', 'message' => 'Unauthorized']);
         }
 

@@ -20,7 +20,7 @@
 <div class="card w-100 shadow-sm border-0">
     <div class="card-body p-4">
         <div class="table-responsive">
-            <table class="table text-nowrap mb-0 align-middle table-hover">
+            <table class="table mb-0 align-middle table-hover">
                 <thead class="text-dark fs-4 bg-light">
                     <tr>
                         <th class="border-bottom-0">Waktu</th>
