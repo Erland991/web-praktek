@@ -103,27 +103,66 @@
     </div>
 </div>
 
+<div class="row g-4 mb-4">
+    <!-- Chart 1: Distribusi Aplikasi -->
+    <div class="col-lg-6" data-aos="fade-right" data-aos-delay="500">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-header bg-white border-bottom-0 pt-4 px-4 pb-0">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h4 class="fw-bold mb-1 text-dark" style="font-size: 1.25rem;">Distribusi Aplikasi Per Kategori</h4>
+                        <p class="text-muted mb-0" style="font-size: 0.85rem;">Jumlah aplikasi Aktif vs Maintenance</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-4 pt-4">
+                <div style="height: 300px; position: relative;">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Chart 2: Capaian Progres Proyek -->
+    <div class="col-lg-6" data-aos="fade-left" data-aos-delay="500">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-header bg-white border-bottom-0 pt-4 px-4 pb-0">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h4 class="fw-bold mb-1 text-dark" style="font-size: 1.25rem;">Capaian Progres Proyek</h4>
+                        <p class="text-muted mb-0" style="font-size: 0.85rem;">Perbandingan Target vs Progres Aktual Aplikasi</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-4 pt-4">
+                <div style="height: 300px; position: relative;">
+                    <canvas id="progressChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Main Inventory Table -->
 <div class="card mb-4" data-aos="fade-up" data-aos-delay="500">
-    <div class="card-header bg-white border-bottom-0 pt-4 px-4 pb-2 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+    <div class="card-header bg-white border-bottom-0 pt-4 px-4 pb-2 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
         <div>
             <h5 class="fw-bold mb-1 text-dark"><i class="ti ti-list-check text-primary me-2"></i>Database Inventaris & Aplikasi</h5>
             <p class="text-muted fs-3 mb-0">Manajemen komprehensif aplikasi IT dan aplikasi terpusat.</p>
         </div>
-        <div class="d-flex gap-2 align-items-center">
+        <div class="d-flex flex-wrap gap-2 align-items-center mt-3 mt-md-0 ms-md-auto">
             <form action="<?= base_url('dashboard') ?>" method="GET" class="d-flex gap-2">
-                <div class="input-group input-group-sm rounded-3 shadow-none border">
+                <div class="input-group input-group-sm rounded-3 shadow-none border" style="width: 220px; max-width: 100%;">
                     <span class="input-group-text bg-white border-0 text-muted"><i class="ti ti-search fs-5"></i></span>
                     <input type="text" name="keyword" class="form-control border-0 ps-0 shadow-none" placeholder="Cari aplikasi..." value="<?= $keyword ?? '' ?>">
                 </div>
                 <button type="submit" class="btn btn-sm btn-primary px-3 rounded-3 fw-medium">Filter</button>
             </form>
-            <div class="vr my-2 mx-1"></div>
-            <a href="<?= base_url('dashboard/export') . '?' . http_build_query(['keyword' => $keyword ?? '', 'kategori' => $kategori ?? '', 'status' => $status ?? '']) ?>" class="btn btn-sm btn-outline-danger shadow-sm rounded-3 d-flex align-items-center fw-medium px-3 text-nowrap" target="_blank">
+            <div class="vr my-2 mx-1 d-none d-md-block"></div>
+            <a href="<?= base_url('dashboard/export') . '?' . http_build_query(['keyword' => $keyword ?? '', 'kategori' => $kategori ?? '', 'status' => $status ?? '']) ?>" class="btn btn-sm btn-outline-danger shadow-sm rounded-3 d-flex justify-content-center align-items-center fw-medium px-3 text-nowrap" target="_blank">
                 <i class="ti ti-file-type-pdf fs-5 me-1"></i> Cetak PDF
             </a>
             <?php if (session()->get('role') == 'Admin' || session()->get('role') == 'PM') : ?>
-            <a href="<?= base_url('dashboard/add') ?>" class="btn btn-sm btn-dark px-3 rounded-3 fw-medium text-nowrap"><i class="ti ti-plus me-1"></i>Tambah Aplikasi</a>
+            <a href="<?= base_url('dashboard/add') ?>" class="btn btn-sm btn-dark px-3 rounded-3 fw-medium d-flex justify-content-center align-items-center text-nowrap"><i class="ti ti-plus me-1"></i>Tambah Aplikasi</a>
             <?php endif; ?>
         </div>
     </div>
@@ -209,45 +248,7 @@
     <?php endif; ?>
 </div>
 
-<div class="row g-4 mt-1">
-    <!-- Chart 1: Distribusi Aplikasi -->
-    <div class="col-lg-6" data-aos="fade-right" data-aos-delay="600">
-        <div class="card h-100 border-0 shadow-sm">
-            <div class="card-header bg-white border-bottom-0 pt-4 px-4 pb-0">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <h4 class="fw-bold mb-1 text-dark" style="font-size: 1.25rem;">Distribusi Aplikasi Per Kategori</h4>
-                        <p class="text-muted mb-0" style="font-size: 0.85rem;">Jumlah aplikasi Aktif vs Maintenance</p>
-                    </div>
-                </div>
-            </div>
-            <div class="card-body p-4 pt-4">
-                <div style="height: 300px; position: relative;">
-                    <canvas id="categoryChart"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Chart 2: Capaian Progres Proyek -->
-    <div class="col-lg-6" data-aos="fade-left" data-aos-delay="600">
-        <div class="card h-100 border-0 shadow-sm">
-            <div class="card-header bg-white border-bottom-0 pt-4 px-4 pb-0">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <h4 class="fw-bold mb-1 text-dark" style="font-size: 1.25rem;">Capaian Progres Proyek</h4>
-                        <p class="text-muted mb-0" style="font-size: 0.85rem;">Perbandingan Target vs Progres Aktual Aplikasi</p>
-                    </div>
-                </div>
-            </div>
-            <div class="card-body p-4 pt-4">
-                <div style="height: 300px; position: relative;">
-                    <canvas id="progressChart"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     // Enable Tooltips

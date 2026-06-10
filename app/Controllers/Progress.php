@@ -110,4 +110,37 @@ class Progress extends BaseController
 
         return redirect()->back()->with('sukses', 'Progress berhasil diajukan. Menunggu persetujuan Admin.');
     }
+
+    public function updateSdlc()
+    {
+        if (!session()->get('logged_in')) return redirect()->to('/');
+
+        $db = \Config\Database::connect();
+        
+        // Auto-add column just in case DatabaseSetup hasn't been run
+        try {
+            if (!$db->fieldExists('sdlc_checklist', 'aplikasi_master')) {
+                $db->query("ALTER TABLE aplikasi_master ADD COLUMN sdlc_checklist TEXT NULL");
+            }
+        } catch (\Exception $e) {}
+
+        $aplikasi_id = $this->request->getPost('aplikasi_id');
+        $sdlc_items = $this->request->getPost('sdlc') ?? [];
+
+        // Save checked SDLC as JSON
+        $sdlc_checklist = json_encode(array_values($sdlc_items));
+
+        $db->table('aplikasi_master')->where('id', $aplikasi_id)->update([
+            'sdlc_checklist' => $sdlc_checklist
+        ]);
+
+        if ($this->request->isAJAX()) {
+            return $this->response->setJSON([
+                'status'  => 'success',
+                'message' => 'Checklist SDLC berhasil disimpan!'
+            ]);
+        }
+
+        return redirect()->back()->with('sukses', 'Checklist SDLC berhasil disimpan!');
+    }
 }

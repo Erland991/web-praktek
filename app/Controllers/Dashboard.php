@@ -85,24 +85,46 @@ class Dashboard extends BaseController
 
         // --- DATA UNTUK GRAFIK (Menggunakan gaya template namun data asli aplikasi) ---
         // 1. Chart 1: Distribusi Aplikasi Per Kategori (Aktif vs Maintenance)
-        $data['cat_labels'] = [];
-        $data['cat_aktif']  = [];
-        $data['cat_mtn']    = [];
+        $chart1_data = [];
         
-        $categories = $db->table('aset')->select('kategori')->distinct()->get()->getResultArray();
-        foreach ($categories as $cat) {
-            $data['cat_labels'][] = $cat['kategori'];
-            $aktif = $db->table('aset')->where('kategori', $cat['kategori'])->where('status', 'Aktif')->countAllResults();
-            $mtn = $db->table('aset')->where('kategori', $cat['kategori'])->where('status !=', 'Aktif')->countAllResults();
-            $data['cat_aktif'][] = $aktif;
-            $data['cat_mtn'][] = $mtn;
+        // Data dari Aset
+        $asets = $db->table('aset')->select('kategori, status')->get()->getResultArray();
+        foreach($asets as $a) {
+            $kat = trim($a['kategori'] ?? '');
+            if(empty($kat)) $kat = 'Lainnya';
+            if(!isset($chart1_data[$kat])) $chart1_data[$kat] = ['aktif' => 0, 'mtn' => 0];
+            
+            if(isset($a['status']) && $a['status'] == 'Aktif') $chart1_data[$kat]['aktif']++;
+            else $chart1_data[$kat]['mtn']++;
         }
+
+        // Data dari Aplikasi Master
+        $apps = $db->table('aplikasi_master')
+                   ->select('divisi.nama_divisi as kategori, aplikasi_master.status')
+                   ->join('divisi', 'divisi.id = aplikasi_master.divisi_id', 'left')
+                   ->get()->getResultArray();
+        foreach($apps as $app) {
+            $kat = trim($app['kategori'] ?? '');
+            if(empty($kat)) $kat = 'Lainnya';
+            if(!isset($chart1_data[$kat])) $chart1_data[$kat] = ['aktif' => 0, 'mtn' => 0];
+            
+            if(isset($app['status']) && $app['status'] == 'Aktif') $chart1_data[$kat]['aktif']++;
+            else $chart1_data[$kat]['mtn']++;
+        }
+
+        $data['cat_labels'] = array_keys($chart1_data);
+        $data['cat_aktif']  = array_column($chart1_data, 'aktif');
+        $data['cat_mtn']    = array_column($chart1_data, 'mtn');
 
         // 2. Chart 2: Capaian Progres Proyek (Aktual vs Target)
         $data['proj_labels'] = [];
         $data['proj_aktual'] = [];
         $data['proj_target'] = [];
-        $projectApps = $db->table('aplikasi_master')->limit(7)->get()->getResultArray();
+        // Ambil 7 aplikasi terbaru
+        $projectApps = $db->table('aplikasi_master')->orderBy('id', 'DESC')->limit(7)->get()->getResultArray();
+        // Balik array agar yang paling lama di sebelah kiri grafik
+        $projectApps = array_reverse($projectApps);
+        
         foreach ($projectApps as $app) {
             $data['proj_labels'][] = $app['nama_app'];
             

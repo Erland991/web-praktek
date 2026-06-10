@@ -237,6 +237,31 @@
     }
     
     /* Elegant Glow Scrollbars */
+    html, body {
+      max-width: 100vw;
+      overflow-x: hidden;
+    }
+    
+    @media (max-width: 768px) {
+        .card-header.d-flex, .card-header .d-flex {
+            flex-wrap: wrap !important;
+        }
+        .page-wrapper {
+            overflow-x: hidden;
+            width: 100%;
+        }
+        .container-fluid {
+            padding-left: 15px !important;
+            padding-right: 15px !important;
+            overflow-x: hidden;
+        }
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+    }
+
     ::-webkit-scrollbar {
       width: 8px;
       height: 8px;
@@ -618,6 +643,57 @@
         item.classList.add('animate__animated', 'animate__fadeInLeft');
       });
 
+      // --- SPA RELOAD FUNCTION ---
+      function reloadSPA(url = window.location.href, isNewPage = false) {
+          const $mainContent = $('#main-content');
+          $.get(url, function(data) {
+              data = data.replace(/document\.addEventListener\(['"]DOMContentLoaded['"],\s*function\s*\(\)\s*\{/g, '$(function() {');
+              
+              const parser = new DOMParser();
+              const doc = parser.parseFromString(data, 'text/html');
+              const newContent = doc.querySelector('#main-content');
+              
+              if (newContent) {
+                  $mainContent.html(newContent.innerHTML);
+                  document.title = doc.title;
+                  if (isNewPage) {
+                      window.history.pushState({path: url}, '', url);
+                      window.scrollTo(0,0);
+                  }
+                  
+                  const animateElements = document.querySelectorAll('#main-content .card:not([data-aos]), #main-content .alert:not([data-aos]), #main-content form:not([data-aos]), #main-content .table-responsive:not([data-aos])');
+                  animateElements.forEach((el, index) => {
+                      el.setAttribute('data-aos', 'fade-up');
+                      let delay = ((index % 4) + 1) * 100;
+                      el.setAttribute('data-aos-delay', delay.toString());
+                      if(el.classList.contains('card') && !el.classList.contains('hover-scale')) {
+                          el.classList.add('hover-elevate');
+                      }
+                  });
+                  
+                  if (typeof AOS !== 'undefined') {
+                      try {
+                          AOS.init({ duration: 800, once: true });
+                          if (typeof AOS.refreshHard === 'function') {
+                              setTimeout(() => AOS.refreshHard(), 100);
+                          } else {
+                              setTimeout(() => AOS.refresh(), 100);
+                          }
+                      } catch(e) { console.error('AOS Error:', e); }
+                  }
+                  
+                  const newModals = doc.querySelector('#dynamic-modals');
+                  if (newModals) {
+                      $('#dynamic-modals').html(newModals.innerHTML);
+                  }
+              } else {
+                  window.location.href = url;
+              }
+          }).fail(function() {
+              window.location.href = url;
+          });
+      }
+
       // --- GLOBAL AJAX FORMS INTERCEPTOR ---
       document.addEventListener('submit', function(e) {
           const form = e.target;
@@ -653,7 +729,7 @@
               if (contentType && contentType.includes('application/json')) {
                   return res.json();
               } else {
-                  window.location.reload();
+                  reloadSPA();
                   return null;
               }
           })
@@ -679,10 +755,10 @@
                               btn.disabled = false;
                           }
                       } else {
-                          window.location.reload();
+                          reloadSPA();
                       }
                   } else {
-                      window.location.reload();
+                      reloadSPA();
                   }
               } else {
                   alert(data.message || 'Terjadi kesalahan');
@@ -732,7 +808,7 @@
               if (contentType && contentType.includes('application/json')) {
                   return res.json();
               } else {
-                  window.location.reload();
+                  reloadSPA();
                   return null;
               }
           })
@@ -756,7 +832,7 @@
                           }
                       }, 500);
                   } else {
-                      window.location.reload();
+                      reloadSPA();
                   }
               } else {
                   alert(data.message || 'Gagal menghapus data.');
@@ -785,55 +861,7 @@
           $('.sidebar-link').removeClass('active');
           $(this).addClass('active');
 
-          const $mainContent = $('#main-content');
-          $mainContent.css({'opacity': '0.5', 'pointer-events': 'none'});
-
-          $.get(url, function(data) {
-              // Hack to run scripts that wait for DOMContentLoaded, since DOM is already loaded
-              data = data.replace(/document\.addEventListener\(['"]DOMContentLoaded['"],\s*function\s*\(\)\s*\{/g, '$(function() {');
-              
-              const parser = new DOMParser();
-              const doc = parser.parseFromString(data, 'text/html');
-              const newContent = doc.querySelector('#main-content');
-              
-              if (newContent) {
-                  // Use jQuery html() to inject and automatically execute inline scripts
-                  $mainContent.html(newContent.innerHTML);
-                  document.title = doc.title;
-                  window.history.pushState({path: url}, '', url);
-                  
-                  // Re-initialize animations globally
-                  const animateElements = document.querySelectorAll('#main-content .card:not([data-aos]), #main-content .alert:not([data-aos]), #main-content form:not([data-aos]), #main-content .table-responsive:not([data-aos])');
-                  animateElements.forEach((el, index) => {
-                      el.setAttribute('data-aos', 'fade-up');
-                      let delay = ((index % 4) + 1) * 100;
-                      el.setAttribute('data-aos-delay', delay.toString());
-                      if(el.classList.contains('card') && !el.classList.contains('hover-scale')) {
-                          el.classList.add('hover-elevate');
-                      }
-                  });
-                  
-                  if (typeof AOS !== 'undefined') {
-                      AOS.init({ duration: 800, once: true });
-                      setTimeout(() => AOS.refreshHard(), 100);
-                  }
-                  
-                  // Also re-render modals section if they are part of the new page
-                  const newModals = doc.querySelector('#dynamic-modals');
-                  if (newModals) {
-                      $('#dynamic-modals').html(newModals.innerHTML);
-                  }
-                  
-                  // Scroll to top
-                  window.scrollTo(0,0);
-              } else {
-                  window.location.href = url;
-              }
-          }).fail(function() {
-              window.location.href = url;
-          }).always(function() {
-              $mainContent.css({'opacity': '1', 'pointer-events': 'auto'});
-          });
+          reloadSPA(url, true);
       });
 
       $(window).on('popstate', function() {

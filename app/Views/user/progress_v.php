@@ -69,6 +69,9 @@
                                     <i class="ti ti-edit me-1"></i> Update Progres
                                 </button>
                                 <div class="d-flex gap-1 border-start ps-2 ms-1">
+                                    <button class="btn btn-sm btn-light border px-2 text-success shadow-sm" data-bs-toggle="tooltip" title="Checklist SDLC" onclick='openModalSDLC(<?= htmlspecialchars(json_encode($app), ENT_QUOTES, "UTF-8") ?>)'>
+                                        <i class="ti ti-checklist fs-5"></i>
+                                    </button>
                                     <a href="<?= base_url('notula/list/' . $app['id']) ?>" class="btn btn-sm btn-light border px-2 text-primary shadow-sm" data-bs-toggle="tooltip" title="Memo">
                                         <i class="ti ti-notes fs-5"></i>
                                     </a>
@@ -125,16 +128,7 @@
                             <small class="text-muted d-block mt-1">Pilih modul untuk update progres. Bobot kesulitan akan otomatis diperhitungkan.</small>
                         </div>
 
-                        <div class="col-md-6 mb-4">
-                            <label class="form-label fw-bold">Tahapan SDLC (COBIT-19)</label>
-                            <select name="cobit_id" class="form-select border-2" required>
-                                <option value="">Pilih Tahapan...</option>
-                                <?php foreach($cobit as $c): ?>
-                                    <option value="<?= $c['id'] ?>"><?= $c['nama_proses'] ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <div class="col-md-6 mb-4">
+                        <div class="col-12 mb-4">
                             <label class="form-label fw-bold">Persentase (%)</label>
                             <div class="input-group border-2">
                                 <input type="number" name="persentase" id="prog_percent" class="form-control" min="0" max="100" required>
@@ -157,6 +151,78 @@
                 <div class="modal-footer p-4 border-top bg-light">
                     <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Batal</button>
                     <button type="submit" id="btn_submit_progress" class="btn btn-primary px-5 fw-bold shadow">KIRIM LAPORAN</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal SDLC Checklist -->
+<div class="modal fade" id="modalSDLC" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header bg-success text-white p-4">
+                <h5 class="modal-title fw-bold"><i class="ti ti-checklist me-2"></i>Checklist Tahapan SDLC (COBIT-19)</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="formSDLC" action="<?= base_url('progress/updateSdlc') ?>" method="POST">
+                <?= csrf_field() ?>
+                <input type="hidden" name="aplikasi_id" id="sdlc_app_id">
+                <div class="modal-body p-4 text-dark">
+                    <h5 class="fw-bold text-success mb-4 pb-2 border-bottom" id="sdlc_app_name">Aplikasi Nama</h5>
+                    
+                    <style>
+                        .cobit-check-btn {
+                            background-color: #f8fafc;
+                            border: 1px solid #e2e8f0;
+                            color: #64748b;
+                            transition: all 0.2s ease;
+                            min-width: 100px;
+                            flex: 1;
+                            cursor: pointer;
+                        }
+                        .cobit-check-btn:hover {
+                            background-color: #f1f5f9;
+                            border-color: #cbd5e1;
+                            transform: translateY(-2px);
+                        }
+                        .sdlc-check:checked + .cobit-check-btn {
+                            background-color: #ecfdf5;
+                            border-color: #10b981;
+                            color: #059669;
+                            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1) !important;
+                        }
+                        .cobit-check-btn i {
+                            transition: transform 0.2s ease;
+                        }
+                        .sdlc-check:checked + .cobit-check-btn i {
+                            transform: scale(1.15);
+                        }
+                    </style>
+                    <p class="text-muted mb-4">Pilih dan centang tahapan SDLC (COBIT-19) yang sudah diselesaikan untuk aplikasi ini.</p>
+                    <div class="d-flex flex-wrap gap-2">
+                        <?php foreach($cobit as $c): 
+                            $icon = 'ti-file-text';
+                            $namaLower = strtolower($c['nama_proses']);
+                            if(strpos($namaLower, 'plan') !== false || strpos($namaLower, 'rencana') !== false || strpos($namaLower, 'align') !== false) $icon = 'ti-clipboard-list';
+                            elseif(strpos($namaLower, 'build') !== false || strpos($namaLower, 'develop') !== false || strpos($namaLower, 'acquire') !== false) $icon = 'ti-code';
+                            elseif(strpos($namaLower, 'test') !== false || strpos($namaLower, 'uji') !== false) $icon = 'ti-bug';
+                            elseif(strpos($namaLower, 'deploy') !== false || strpos($namaLower, 'implement') !== false || strpos($namaLower, 'deliver') !== false) $icon = 'ti-rocket';
+                            elseif(strpos($namaLower, 'evaluat') !== false || strpos($namaLower, 'monitor') !== false) $icon = 'ti-chart-dots';
+                            elseif(strpos($namaLower, 'support') !== false) $icon = 'ti-headset';
+                            elseif(strpos($namaLower, 'user') !== false) $icon = 'ti-users';
+                        ?>
+                            <input type="checkbox" class="btn-check sdlc-check" name="sdlc[]" id="sdlc_chk_<?= $c['id'] ?>" value="<?= $c['id'] ?>">
+                            <label class="btn rounded-4 py-3 d-flex flex-column align-items-center justify-content-center shadow-sm cobit-check-btn" for="sdlc_chk_<?= $c['id'] ?>">
+                                <i class="ti <?= $icon ?> fs-2 mb-2"></i>
+                                <span style="font-size: 0.75rem; font-weight: 600; text-align: center; line-height: 1.2;"><?= $c['nama_proses'] ?></span>
+                            </label>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+                <div class="modal-footer p-4 border-top bg-light">
+                    <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Tutup</button>
+                    <button type="submit" id="btn_submit_sdlc" class="btn btn-success px-5 fw-bold shadow">SIMPAN CHECKLIST</button>
                 </div>
             </form>
         </div>
@@ -225,6 +291,65 @@
             if (data.status === 'success') {
                 progModal.hide();
                 alert(data.message || 'Laporan progress berhasil dikirim!');
+                window.location.reload();
+            } else {
+                alert(data.message || 'Terjadi kesalahan');
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+        })
+        .catch(err => {
+            alert('Terjadi kesalahan jaringan.');
+            btn.innerText = originalText;
+            btn.disabled = false;
+        });
+    });
+
+    let sdlcModal = null;
+    function openModalSDLC(app) {
+        document.getElementById('sdlc_app_id').value = app.id;
+        document.getElementById('sdlc_app_name').innerText = app.nama_app;
+        
+        // Reset all checkboxes
+        document.querySelectorAll('.sdlc-check').forEach(chk => chk.checked = false);
+        
+        // Check previously saved SDLCs
+        if (app.sdlc_checklist) {
+            try {
+                const checkedIds = JSON.parse(app.sdlc_checklist);
+                if (Array.isArray(checkedIds)) {
+                    checkedIds.forEach(id => {
+                        const chk = document.getElementById('sdlc_chk_' + id);
+                        if (chk) chk.checked = true;
+                    });
+                }
+            } catch(e) {}
+        }
+        
+        if(!sdlcModal) sdlcModal = new bootstrap.Modal(document.getElementById('modalSDLC'));
+        sdlcModal.show();
+    }
+
+    document.getElementById('formSDLC').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('btn_submit_sdlc');
+        const originalText = btn.innerText;
+        btn.innerHTML = '<i class="ti ti-loader ti-spin"></i> Menyimpan...';
+        btn.disabled = true;
+
+        const formData = new FormData(this);
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'success') {
+                sdlcModal.hide();
+                alert(data.message || 'Checklist berhasil disimpan!');
                 window.location.reload();
             } else {
                 alert(data.message || 'Terjadi kesalahan');

@@ -26,6 +26,7 @@ $routes->post('/dashboard/update-profile-photo', 'Dashboard::updateProfilePhoto'
 // --- PROGRESS FEATURES ---
 $routes->get('/progress', 'Progress::index');
 $routes->post('/progress/update', 'Progress::update');
+$routes->post('/progress/updateSdlc', 'Progress::updateSdlc');
 
 // --- VIEWER FEATURES ---
 $routes->get('/monitoring', 'Viewer\Monitoring::index');

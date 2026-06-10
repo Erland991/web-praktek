@@ -265,12 +265,13 @@ class DatabaseSetup extends BaseController
             echo "<li>✅ Tabel <b>aplikasi_master</b> dibuat.</li>";
         }
         $app_cols = [
-            'deskripsi'     => "TEXT NULL",
-            'tgl_mulai'     => "DATE NULL",
-            'tgl_target'    => "DATE NULL",
-            'versi_current' => "VARCHAR(50) NULL",
-            'created_at'    => "DATETIME NULL",
-            'updated_at'    => "DATETIME NULL",
+            'deskripsi'      => "TEXT NULL",
+            'tgl_mulai'      => "DATE NULL",
+            'tgl_target'     => "DATE NULL",
+            'versi_current'  => "VARCHAR(50) NULL",
+            'sdlc_checklist' => "TEXT NULL",
+            'created_at'     => "DATETIME NULL",
+            'updated_at'     => "DATETIME NULL",
         ];
         foreach ($app_cols as $col => $def) {
             $this->addCol('aplikasi_master', $col, $def);

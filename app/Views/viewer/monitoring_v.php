@@ -221,9 +221,11 @@ a.hover-white:hover {
                     </h5>
                     <p class="text-muted fs-3 mb-0 ms-4 ps-2">Visualisasi perbandingan persentase realisasi antar proyek aktif.</p>
                 </div>
-                <div class="card-body p-4">
-                    <div style="height: 380px;">
-                        <canvas id="executiveChart" width="100%" height="100%"></canvas>
+                <div class="card-body p-2 p-md-4">
+                    <div class="w-100 overflow-x-auto" style="-webkit-overflow-scrolling: touch;">
+                        <div style="height: 380px; min-width: 600px; padding-right: 15px;">
+                            <canvas id="executiveChart" width="100%" height="100%"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>

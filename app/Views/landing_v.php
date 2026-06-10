@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIMPA | PT Surveyor Indonesia (Persero)</title>
+    <meta name="description" content="Sistem Manajemen Proyek Aplikasi (SIMPA) - Platform monitoring proyek terpadu PT Surveyor Indonesia (Persero) untuk transparansi dan akurasi pelaporan.">
     <link rel="shortcut icon" type="image/png" href="<?= base_url('images/icon_simpa.png') ?>" />
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script>
         tailwind.config = {
@@ -16,23 +17,37 @@
                     colors: {
                         si: {
                             blue: '#004996',
-                            light: '#005bb5',
-                            dark: '#003366',
-                            gold: '#FFB800'
+                            light: '#0060c7',
+                            dark: '#002d5c',
+                            deeper: '#001e3e',
+                            gold: '#FFB800',
+                            gold2: '#FCD34D',
                         }
                     },
                     fontFamily: {
                         sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                        heading: ['"Plus Jakarta Sans"', 'sans-serif']
+                        inter: ['"Inter"', 'sans-serif'],
                     },
                     animation: {
-                        'float': 'float 6s ease-in-out infinite',
-                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 7s ease-in-out infinite',
+                        'float-slow': 'float 10s ease-in-out infinite',
+                        'pulse-slow': 'pulse 5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'shimmer': 'shimmer 2.5s linear infinite',
+                        'fade-in-up': 'fadeInUp 0.8s ease forwards',
+                        'counter': 'counter 2s ease-out forwards',
                     },
                     keyframes: {
                         float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-20px)' },
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-18px)' },
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-200% 0' },
+                            '100%': { backgroundPosition: '200% 0' },
+                        },
+                        fadeInUp: {
+                            from: { opacity: '0', transform: 'translateY(30px)' },
+                            to: { opacity: '1', transform: 'translateY(0)' },
                         }
                     }
                 }
@@ -40,365 +55,630 @@
         }
     </script>
     <style>
-        .hero-clip {
-            clip-path: polygon(0 0, 100% 0, 100% 90%, 0% 100%);
-        }
+        * { scroll-behavior: smooth; }
+
+        /* Glassmorphism */
+        .glass { background: rgba(255,255,255,0.08); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.15); }
+        .glass-dark { background: rgba(0,29,62,0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); }
+
+        /* Nav */
         .nav-glass {
-            background-color: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(8px);
+            background: rgba(255,255,255,0.97);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0,73,150,0.08);
         }
-        .animate-reveal {
-            animation: reveal 0.8s ease-out forwards;
+
+        /* Hero */
+        .hero-overlay {
+            background: linear-gradient(110deg, rgba(0,29,62,0.97) 0%, rgba(0,46,92,0.90) 45%, rgba(0,73,150,0.55) 80%, transparent 100%);
         }
-        @keyframes reveal {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+
+        /* Gradient text */
+        .text-gradient-white { background: linear-gradient(135deg, #ffffff 0%, #c7d9f8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .text-gradient-gold { background: linear-gradient(135deg, #FFB800 0%, #FCD34D 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .text-gradient-blue { background: linear-gradient(135deg, #004996 0%, #0060c7 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+        /* Glow effects */
+        .glow-gold { box-shadow: 0 0 30px rgba(255,184,0,0.35), 0 0 60px rgba(255,184,0,0.15); }
+        .glow-blue { box-shadow: 0 0 30px rgba(0,73,150,0.35), 0 0 60px rgba(0,73,150,0.15); }
+
+        /* Animated bg dots */
+        .dot-grid { background-image: radial-gradient(rgba(255,255,255,0.12) 1px, transparent 1px); background-size: 30px 30px; }
+
+        /* Feature card */
+        .feature-card { transition: all 0.4s cubic-bezier(0.4,0,0.2,1); }
+        .feature-card:hover { transform: translateY(-10px); }
+        .feature-card::before { content: ''; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(135deg, rgba(0,73,150,0.05), rgba(255,184,0,0.05)); opacity: 0; transition: opacity 0.4s ease; }
+        .feature-card:hover::before { opacity: 1; }
+
+        /* Progress bar animate */
+        .progress-fill { width: 0; transition: width 1.5s cubic-bezier(0.4,0,0.2,1); }
+
+        /* Divider */
+        .section-divider { width: 60px; height: 4px; border-radius: 2px; background: linear-gradient(90deg, #004996, #FFB800); }
+
+        /* CTA shimmer btn */
+        .btn-shimmer {
+            position: relative;
+            overflow: hidden;
         }
-        .si-border {
-            border-bottom: 4px solid #FFB800;
+        .btn-shimmer::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 60%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+            animation: shimmer 2.5s infinite;
         }
-        .text-gradient {
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-image: linear-gradient(to right, #ffffff, #e2e8f0);
-        }
-        .text-gradient-gold {
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-image: linear-gradient(to right, #FFB800, #FCD34D);
-        }
+        @keyframes shimmer { 0% { left: -100%; } 100% { left: 150%; } }
+
+        /* Scroll reveal */
+        [data-aos] { transition-timing-function: cubic-bezier(0.4,0,0.2,1) !important; }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #004996; border-radius: 3px; }
+
+        /* Topbar */
+        .topbar-ticker span { display: inline-flex; align-items: center; gap: 0.35rem; }
+
+        /* Nav link underline */
+        .nav-link { position: relative; }
+        .nav-link::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 2px; background: #004996; border-radius: 1px; transition: width 0.3s ease; }
+        .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+
+        /* About image */
+        .img-hover-scale { overflow: hidden; border-radius: 1rem; }
+        .img-hover-scale img { transition: transform 0.7s cubic-bezier(0.4,0,0.2,1); }
+        .img-hover-scale:hover img { transform: scale(1.06); }
+
+        /* Stat number */
+        .stat-num { font-variant-numeric: tabular-nums; }
     </style>
 </head>
-<body class="bg-white text-slate-800 antialiased">
+<body class="bg-white text-slate-800 antialiased font-sans overflow-x-hidden">
 
     <!-- Top Bar -->
-    <div class="bg-si-dark text-white py-2 hidden md:block">
+    <div class="bg-si-deeper text-white py-2 hidden md:block">
         <div class="container mx-auto px-6 flex justify-between items-center text-xs font-semibold tracking-wider">
-            <div class="flex gap-6">
-                <span><i class="fas fa-phone-alt mr-2 text-si-gold"></i> (021) 5265526</span>
-                <span><i class="fas fa-envelope mr-2 text-si-gold"></i> humas@ptsi.co.id</span>
+            <div class="flex gap-6 topbar-ticker">
+                <span><i class="fas fa-phone-alt text-si-gold"></i> (021) 5265526</span>
+                <span><i class="fas fa-envelope text-si-gold"></i> humas@ptsi.co.id</span>
+                <span><i class="fas fa-map-marker-alt text-si-gold"></i> Jl. Gatot Subroto Kav. 56, Jakarta Selatan</span>
             </div>
-            <div class="flex gap-4">
-                <a href="#" class="hover:text-si-gold transition-colors">Career</a>
-                <a href="#" class="hover:text-si-gold transition-colors">Contact</a>
-                <a href="#" class="hover:text-si-gold transition-colors">ID</a>
+            <div class="flex gap-5 items-center">
+                <a href="#" class="hover:text-si-gold transition-colors duration-200">Career</a>
+                <span class="text-white/20">|</span>
+                <a href="#" class="hover:text-si-gold transition-colors duration-200">Contact</a>
+                <span class="text-white/20">|</span>
+                <a href="#" class="hover:text-si-gold transition-colors duration-200">ID / EN</a>
             </div>
         </div>
     </div>
 
     <!-- Navigation -->
-    <nav class="nav-glass sticky top-0 z-50 border-b border-slate-100 shadow-sm">
+    <nav class="nav-glass sticky top-0 z-50 shadow-[0_2px_20px_rgba(0,73,150,0.08)]">
         <div class="container mx-auto px-6 h-20 flex justify-between items-center">
             <div class="flex items-center gap-4">
                 <img src="<?= base_url('images/logo_si.png') ?>" alt="Surveyor Indonesia" class="h-10 md:h-12 border-r pr-4 border-slate-200">
                 <img src="<?= base_url('images/logo_simpa.png') ?>" alt="SIMPA" class="h-8 md:h-10">
             </div>
             
-            <div class="hidden lg:flex items-center gap-8 text-sm font-bold uppercase tracking-wide">
-                <a href="#" class="text-si-blue hover:text-si-light transition-colors">Beranda</a>
-                <a href="#about" class="hover:text-si-blue transition-colors">Tentang SIMPA</a>
-                <a href="#solutions" class="hover:text-si-blue transition-colors">Solusi</a>
-                <a href="<?= base_url('login-page') ?>" class="bg-si-blue hover:bg-si-dark text-white px-8 py-3 rounded shadow-md transition-all">
-                    Login Sistem
+            <div class="hidden lg:flex items-center gap-8 text-sm font-bold uppercase tracking-wide text-slate-600">
+                <a href="#" class="nav-link active text-si-blue hover:text-si-blue transition-colors">Beranda</a>
+                <a href="#about" class="nav-link hover:text-si-blue transition-colors">Tentang</a>
+                <a href="#solutions" class="nav-link hover:text-si-blue transition-colors">Fitur</a>
+                <a href="#contact" class="nav-link hover:text-si-blue transition-colors">Kontak</a>
+                <a href="<?= base_url('login-page') ?>" 
+                   class="btn-shimmer ml-4 bg-gradient-to-r from-si-blue to-si-light hover:from-si-dark hover:to-si-blue text-white px-7 py-3 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2 hover:-translate-y-0.5">
+                    <i class="fas fa-sign-in-alt text-xs"></i> Login Sistem
                 </a>
             </div>
             
-            <button class="lg:hidden text-si-blue text-2xl">
+            <button class="lg:hidden text-si-blue text-2xl p-2 rounded-lg hover:bg-si-blue/5 transition-colors" id="mobileMenuBtn">
                 <i class="fas fa-bars"></i>
             </button>
         </div>
+        <!-- Mobile Menu -->
+        <div class="lg:hidden hidden bg-white border-t border-slate-100 shadow-lg" id="mobileMenu">
+            <div class="container mx-auto px-6 py-4 flex flex-col gap-4 text-sm font-bold uppercase tracking-wide text-slate-600">
+                <a href="#" class="py-2 hover:text-si-blue border-b border-slate-50">Beranda</a>
+                <a href="#about" class="py-2 hover:text-si-blue border-b border-slate-50">Tentang</a>
+                <a href="#solutions" class="py-2 hover:text-si-blue border-b border-slate-50">Fitur</a>
+                <a href="<?= base_url('login-page') ?>" class="mt-2 bg-si-blue text-white text-center py-3 rounded-xl font-bold">Login Sistem</a>
+            </div>
+        </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="relative min-h-[90vh] flex items-center overflow-hidden bg-si-dark">
+    <!-- ===== HERO SECTION ===== -->
+    <section class="relative min-h-screen flex items-center overflow-hidden">
+        <!-- Background Image -->
         <div class="absolute inset-0 z-0">
-            <img src="<?= base_url('images/landing.webp') ?>" alt="Industry Hero" class="w-full h-full object-cover opacity-40 mix-blend-overlay">
-            <div class="absolute inset-0 bg-gradient-to-r from-si-dark via-si-dark/80 to-transparent"></div>
+            <img src="<?= base_url('images/landing.webp') ?>" alt="Industry Hero" 
+                 class="w-full h-full object-cover object-center scale-105" style="transform-origin: center;">
+            <div class="absolute inset-0 hero-overlay"></div>
+            <!-- Dot grid overlay -->
+            <div class="absolute inset-0 dot-grid opacity-30"></div>
         </div>
         
-        <!-- Abstract Shapes -->
-        <div class="absolute top-20 right-20 w-96 h-96 bg-si-light rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse-slow"></div>
-        <div class="absolute bottom-10 right-1/4 w-72 h-72 bg-si-gold rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse-slow" style="animation-delay: 2s;"></div>
+        <!-- Decorative blobs -->
+        <div class="absolute top-1/4 right-0 w-[600px] h-[600px] bg-si-blue rounded-full mix-blend-screen filter blur-[120px] opacity-20 animate-pulse-slow pointer-events-none"></div>
+        <div class="absolute bottom-0 left-1/3 w-[400px] h-[400px] bg-si-gold rounded-full mix-blend-screen filter blur-[100px] opacity-15 animate-pulse-slow pointer-events-none" style="animation-delay: 3s;"></div>
         
-        <div class="container mx-auto px-6 relative z-10 flex flex-col lg:flex-row items-center justify-between mt-10 pb-24 lg:pb-40">
-            <div class="max-w-3xl animate-reveal lg:w-3/5" data-aos="fade-right" data-aos-duration="1000">
-                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 mb-6">
+        <div class="container mx-auto px-6 relative z-10 flex flex-col lg:flex-row items-center justify-between gap-12 py-24 lg:py-32">
+            <!-- Left: Text content -->
+            <div class="lg:w-[55%] animate-fade-in-up" data-aos="fade-right" data-aos-duration="1000">
+                <!-- Badge -->
+                <div class="inline-flex items-center gap-2.5 px-4 py-2 rounded-full glass border border-white/20 mb-8">
                     <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
-                    <span class="text-white text-xs font-bold tracking-widest uppercase">SIMPA</span>
+                    <span class="text-white text-xs font-bold tracking-[0.2em] uppercase">System Online — SIMPA v2.0</span>
                 </div>
                 
-                <h1 class="text-white text-5xl md:text-7xl font-outfit font-extrabold leading-[1.1] mb-6">
-                    Sistem Manajemen Proyek Aplikasi<br><span class="text-gradient-gold">(SIMPA)</span>
+                <h1 class="text-white font-extrabold leading-[1.08] mb-6 text-3xl sm:text-4xl md:text-6xl lg:text-[4.25rem] break-words">
+                    Sistem Manajemen<br>
+                    Proyek Aplikasi<br>
+                    <span class="text-gradient-gold">PT Surveyor Indonesia</span>
                 </h1>
                 
-                <p class="text-white/80 text-lg md:text-xl leading-relaxed mb-10 max-w-2xl font-light border-l-4 border-si-gold pl-6">
-                    Integrasi pemantauan progres proyek dan manajemen aplikasi untuk mendukung keunggulan operasional <strong class="text-white">PT Surveyor Indonesia (Persero)</strong>.
+                <p class="text-white/75 text-lg md:text-xl leading-relaxed mb-10 max-w-xl font-inter font-light border-l-[3px] border-si-gold pl-6">
+                    Platform monitoring proyek terpadu yang menghadirkan transparansi data real-time dan akurasi pelaporan di setiap level manajemen.
                 </p>
                 
-                <div class="flex flex-wrap gap-4">
-                    <a href="<?= base_url('login-page') ?>" class="bg-si-gold hover:bg-yellow-400 text-si-dark px-8 py-4 rounded-lg text-lg font-bold shadow-[0_0_20px_rgba(255,184,0,0.4)] hover:shadow-[0_0_30px_rgba(255,184,0,0.6)] hover:-translate-y-1 transition-all duration-300 flex items-center gap-3">
-                        Masuk Dashboard <i class="fas fa-arrow-right text-sm"></i>
+                <div class="flex flex-wrap gap-4 mb-14">
+                    <a href="<?= base_url('login-page') ?>" 
+                       class="btn-shimmer bg-gradient-to-r from-si-gold to-yellow-400 hover:from-yellow-400 hover:to-si-gold text-si-dark px-8 py-4 rounded-2xl text-base font-black shadow-[0_8px_30px_rgba(255,184,0,0.4)] hover:shadow-[0_12px_40px_rgba(255,184,0,0.6)] hover:-translate-y-1.5 transition-all duration-300 flex items-center gap-3 glow-gold">
+                        Masuk Dashboard
                     </a>
-                    <a href="#about" class="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-300 flex items-center gap-3 hover:-translate-y-1">
+                    <a href="#about" 
+                       class="glass border border-white/25 text-white px-8 py-4 rounded-2xl text-base font-bold hover:bg-white/15 hover:-translate-y-1.5 transition-all duration-300 flex items-center gap-3">
+                        <i class="fas fa-play-circle text-sm text-si-gold"></i>
                         Pelajari Lebih Lanjut
                     </a>
                 </div>
+
+                <!-- Trust badges -->
+                <div class="flex flex-wrap items-center gap-6 pt-8 border-t border-white/10">
+                    <div class="flex items-center gap-2 text-white/60 text-xs font-semibold tracking-wider uppercase">
+                        <i class="fas fa-shield-alt text-si-gold"></i> COBIT Framework
+                    </div>
+                    <div class="flex items-center gap-2 text-white/60 text-xs font-semibold tracking-wider uppercase">
+                        <i class="fas fa-lock text-si-gold"></i> Secure Access
+                    </div>
+                    <div class="flex items-center gap-2 text-white/60 text-xs font-semibold tracking-wider uppercase">
+                        <i class="fas fa-database text-si-gold"></i> Real-time Data
+                    </div>
+                </div>
             </div>
             
-            <!-- Floating Hero Card -->
-            <div class="hidden lg:block lg:w-2/5 animate-float" data-aos="fade-left" data-aos-duration="1200" data-aos-delay="300">
-                <div class="bg-white/10 backdrop-blur-xl border border-white/20 p-8 rounded-2xl shadow-2xl relative overflow-hidden">
-                    <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-si-gold/40 to-transparent rounded-bl-full"></div>
+            <!-- Right: Floating Dashboard Card -->
+            <div class="hidden lg:block lg:w-[40%] animate-float" data-aos="fade-left" data-aos-duration="1200" data-aos-delay="200">
+                <div class="glass-dark p-7 rounded-3xl shadow-[0_30px_80px_rgba(0,0,0,0.4)] relative overflow-hidden">
+                    <!-- Decorative corner -->
+                    <div class="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-si-gold/20 to-transparent rounded-bl-full pointer-events-none"></div>
+                    <div class="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-si-blue/30 to-transparent rounded-tr-full pointer-events-none"></div>
                     
-                    <div class="flex justify-between items-center mb-8 border-b border-white/10 pb-4">
-                        <h3 class="text-white font-bold text-lg"><i class="fas fa-chart-pie mr-2 text-si-gold"></i> Live Status</h3>
-                        <span class="text-xs font-mono bg-green-500/20 text-green-300 px-2 py-1 rounded">SYSTEM ONLINE</span>
+                    <!-- Card header -->
+                    <div class="flex justify-between items-center mb-7 pb-5 border-b border-white/10">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-xl bg-si-gold/20 flex items-center justify-center">
+                                <i class="fas fa-chart-line text-si-gold text-sm"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-white font-bold text-sm">Live Dashboard</h3>
+                                <p class="text-white/40 text-xs">Status Sistem</p>
+                            </div>
+                        </div>
+                        <span class="text-[10px] font-mono bg-green-500/15 text-green-300 border border-green-500/30 px-2.5 py-1.5 rounded-lg flex items-center gap-1.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span> ONLINE
+                        </span>
                     </div>
                     
-                    <div class="space-y-6">
+                    <!-- Stats grid -->
+                    <div class="grid grid-cols-2 gap-3 mb-6">
+                        <div class="bg-white/5 rounded-2xl p-4 border border-white/5">
+                            <p class="text-white/50 text-xs font-semibold uppercase tracking-wider mb-1">Total Aplikasi</p>
+                            <p class="text-white text-2xl font-black stat-num">15+</p>
+                            <p class="text-green-400 text-xs font-semibold mt-1"><i class="fas fa-arrow-trend-up mr-1"></i>+12% bulan ini</p>
+                        </div>
+                        <div class="bg-white/5 rounded-2xl p-4 border border-white/5">
+                            <p class="text-white/50 text-xs font-semibold uppercase tracking-wider mb-1">Active PIC</p>
+                            <p class="text-white text-2xl font-black stat-num">10</p>
+                            <p class="text-white/40 text-xs font-semibold mt-1"><i class="fas fa-minus mr-1"></i>Tetap stabil</p>
+                        </div>
+                    </div>
+
+                    <!-- Progress bars -->
+                    <div class="space-y-4 mb-6">
                         <div>
-                            <div class="flex justify-between text-sm text-white/80 mb-2">
-                                <span>Audit Kepatuhan</span>
-                                <span class="font-bold text-white">98%</span>
+                            <div class="flex justify-between text-xs text-white/70 mb-2 font-semibold">
+                                <span>Audit Kepatuhan COBIT</span>
+                                <span class="text-white font-bold">98%</span>
                             </div>
                             <div class="w-full bg-white/10 rounded-full h-2">
-                                <div class="bg-gradient-to-r from-si-light to-si-gold h-2 rounded-full" style="width: 98%"></div>
+                                <div class="progress-fill bg-si-gold h-2 rounded-full" style="width:0" data-width="98%"></div>
                             </div>
                         </div>
                         <div>
-                            <div class="flex justify-between text-sm text-white/80 mb-2">
-                                <span>Akurasi Pelaporan</span>
-                                <span class="font-bold text-white">100%</span>
+                            <div class="flex justify-between text-xs text-white/70 mb-2 font-semibold">
+                                <span>Akurasi Pelaporan Data</span>
+                                <span class="text-white font-bold">100%</span>
                             </div>
                             <div class="w-full bg-white/10 rounded-full h-2">
-                                <div class="bg-gradient-to-r from-si-light to-si-gold h-2 rounded-full" style="width: 100%"></div>
+                                <div class="progress-fill bg-si-gold h-2 rounded-full" style="width:0" data-width="100%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs text-white/70 mb-2 font-semibold">
+                                <span>Progress Proyek Aktif</span>
+                                <span class="text-white font-bold">76%</span>
+                            </div>
+                            <div class="w-full bg-white/10 rounded-full h-2">
+                                <div class="progress-fill bg-si-gold h-2 rounded-full" style="width:0" data-width="76%"></div>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="mt-8 flex items-center gap-4 bg-black/20 p-4 rounded-xl border border-white/5">
-                        <div class="w-12 h-12 bg-si-blue rounded-full flex items-center justify-center text-xl text-white shadow-inner">
-                            <i class="fas fa-shield-alt"></i>
+                    <!-- Security badge -->
+                    <div class="flex items-center gap-4 bg-si-blue/20 p-4 rounded-2xl border border-si-blue/20">
+                        <div class="w-10 h-10 bg-gradient-to-br from-si-blue to-si-light rounded-xl flex items-center justify-center text-white shadow-md shrink-0">
+                            <i class="fas fa-shield-halved text-sm"></i>
                         </div>
                         <div>
-                            <p class="text-white font-semibold text-sm">Protected by COBIT-19</p>
-                            <p class="text-white/50 text-xs">Standardisasi Terjamin</p>
+                            <p class="text-white font-bold text-sm">Protected by COBIT Framework</p>
+                            <p class="text-white/40 text-xs mt-0.5">Standardisasi Tata Kelola TI Terjamin</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         
-        <!-- Stats Overlay -->
-        <div class="absolute bottom-0 left-0 right-0 bg-white/10 backdrop-blur-md border-t border-white/20 py-8 hidden lg:block">
-            <div class="container mx-auto px-6 grid grid-cols-4 gap-8">
-                <div class="text-white border-r border-white/20 pr-8">
-                    <div class="text-3xl font-bold text-si-gold">50+</div>
-                    <div class="text-sm font-semibold uppercase tracking-widest opacity-80">Aktif Proyek</div>
+        <!-- Bottom Stats Bar -->
+        <div class="absolute bottom-0 left-0 right-0 hidden lg:block" style="background: rgba(0,29,62,0.7); backdrop-filter: blur(20px); border-top: 1px solid rgba(255,255,255,0.08);">
+            <div class="container mx-auto px-6 py-6 grid grid-cols-4 gap-8">
+                <div class="text-white text-center border-r border-white/10 pr-8 last:border-0">
+                    <div class="text-3xl font-black text-si-gold stat-num">50+</div>
+                    <div class="text-xs font-bold uppercase tracking-[0.15em] text-white/50 mt-1">Proyek Aktif</div>
                 </div>
-                <div class="text-white border-r border-white/20 pr-8">
-                    <div class="text-3xl font-bold text-si-gold">100%</div>
-                    <div class="text-sm font-semibold uppercase tracking-widest opacity-80">Audit Kepatuhan</div>
+                <div class="text-white text-center border-r border-white/10 pr-8 last:border-0">
+                    <div class="text-3xl font-black text-si-gold stat-num">100%</div>
+                    <div class="text-xs font-bold uppercase tracking-[0.15em] text-white/50 mt-1">Audit Kepatuhan</div>
                 </div>
-                <div class="text-white border-r border-white/20 pr-8">
-                    <div class="text-3xl font-bold text-si-gold">Real-time</div>
-                    <div class="text-sm font-semibold uppercase tracking-widest opacity-80">Pelaporan Data</div>
+                <div class="text-white text-center border-r border-white/10 pr-8 last:border-0">
+                    <div class="text-3xl font-black text-si-gold">Real-time</div>
+                    <div class="text-xs font-bold uppercase tracking-[0.15em] text-white/50 mt-1">Pelaporan Data</div>
                 </div>
-                <div class="text-white">
-                    <div class="text-3xl font-bold text-si-gold">70+</div>
-                    <div class="text-sm font-semibold uppercase tracking-widest opacity-80">Unit Kerja</div>
+                <div class="text-white text-center">
+                    <div class="text-3xl font-black text-si-gold stat-num">70+</div>
+                    <div class="text-xs font-bold uppercase tracking-[0.15em] text-white/50 mt-1">Unit Kerja</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- About Section -->
-    <section id="about" class="py-24 bg-slate-50 relative">
-        <!-- Decorative bg -->
-        <div class="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
-            <svg class="absolute right-0 top-1/2 opacity-[0.03] w-[800px] h-[800px] transform translate-x-1/2 -translate-y-1/2" fill="currentColor" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="50"/></svg>
+    <!-- ===== ABOUT SECTION ===== -->
+    <section id="about" class="py-28 bg-slate-50 relative overflow-hidden">
+        <!-- Background decoration -->
+        <div class="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
+            <div class="absolute -top-40 -right-40 w-[500px] h-[500px] bg-si-blue/5 rounded-full"></div>
+            <div class="absolute -bottom-40 -left-40 w-[400px] h-[400px] bg-si-gold/5 rounded-full"></div>
         </div>
 
         <div class="container mx-auto px-6 relative z-10">
-            <div class="grid lg:grid-cols-2 gap-16 items-center">
+            <div class="grid lg:grid-cols-2 gap-20 items-center">
+                <!-- Image Column -->
                 <div class="relative" data-aos="zoom-in-right" data-aos-duration="1000">
-                    <div class="relative rounded-2xl overflow-hidden shadow-2xl z-10 group">
-                        <div class="absolute inset-0 bg-si-blue/20 group-hover:bg-transparent transition-all duration-500 z-10"></div>
-                        <img src="<?= base_url('images/graha_si.jpg') ?>" alt="Graha Surveyor Indonesia" class="w-full h-auto transform group-hover:scale-105 transition-transform duration-700">
-                    </div>
-                    <!-- Decorative Elements -->
-                    <div class="absolute -top-6 -left-6 w-32 h-32 bg-gradient-to-br from-si-blue to-si-light rounded-2xl -z-0 shadow-lg"></div>
-                    <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-gradient-to-tl from-si-gold to-yellow-300 rounded-full -z-0 shadow-lg"></div>
+                    <!-- Decorative frames -->
+                    <div class="absolute -top-5 -left-5 w-full h-full bg-gradient-to-br from-si-blue/20 to-si-light/10 rounded-3xl -z-0"></div>
+                    <div class="absolute -bottom-5 -right-5 w-40 h-40 bg-gradient-to-tl from-si-gold/30 to-yellow-300/20 rounded-3xl -z-0"></div>
                     
-                    <!-- Floating Stat Badge -->
-                    <div class="absolute -right-10 top-1/4 bg-white p-4 rounded-xl shadow-xl z-20 flex items-center gap-4 animate-float border border-slate-100 hidden md:flex">
-                        <div class="w-12 h-12 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xl font-bold">
-                            <i class="fas fa-check"></i>
+                    <!-- Main image -->
+                    <div class="img-hover-scale relative z-10 shadow-[0_25px_60px_rgba(0,73,150,0.18)] rounded-3xl">
+                        <div class="absolute inset-0 bg-gradient-to-t from-si-dark/40 via-transparent to-transparent z-10 rounded-3xl pointer-events-none"></div>
+                        <img src="<?= base_url('images/graha_si.jpg') ?>" 
+                             alt="Graha Surveyor Indonesia" 
+                             class="w-full h-auto rounded-3xl object-cover">
+                        <!-- Caption overlay -->
+                        <div class="absolute bottom-0 left-0 right-0 p-5 z-20">
+                            <div class="glass-dark rounded-2xl px-5 py-3 inline-flex items-center gap-3">
+                                <i class="fas fa-building text-si-gold"></i>
+                                <div>
+                                    <p class="text-white text-sm font-bold">Graha Surveyor Indonesia</p>
+                                    <p class="text-white/50 text-xs">Jl. Gatot Subroto, Jakarta Selatan</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Floating badge -->
+                    <div class="absolute -right-6 top-1/3 bg-white p-4 rounded-2xl shadow-[0_10px_40px_rgba(0,73,150,0.15)] z-20 hidden md:flex items-center gap-3 border border-slate-100 animate-float" style="animation-delay: 1s;">
+                        <div class="w-12 h-12 rounded-2xl bg-green-50 text-green-500 flex items-center justify-center text-xl font-black shadow-inner">
+                            <i class="fas fa-check-double"></i>
                         </div>
                         <div>
-                            <p class="text-2xl font-black text-slate-800">100%</p>
-                            <p class="text-xs text-slate-500 font-bold uppercase tracking-wider">Akurasi Audit</p>
+                            <p class="text-2xl font-black text-slate-800 stat-num">100%</p>
+                            <p class="text-xs text-slate-400 font-bold uppercase tracking-wider">Akurasi Audit</p>
+                        </div>
+                    </div>
+
+                    <!-- Year badge -->
+                    <div class="absolute -left-6 bottom-1/4 bg-gradient-to-br from-si-blue to-si-light p-4 rounded-2xl shadow-xl z-20 hidden md:flex items-center gap-3 animate-float-slow">
+                        <div class="text-center">
+                            <p class="text-2xl font-black text-white stat-num">2026</p>
+                            <p class="text-xs text-white/70 font-semibold uppercase tracking-wider">Est.</p>
                         </div>
                     </div>
                 </div>
                 
-                <div class="space-y-6" data-aos="fade-left" data-aos-duration="1000">
-                    <div class="inline-block">
-                        <h2 class="text-si-blue font-bold tracking-widest uppercase text-sm border-b-2 border-si-gold pb-1">Tentang Solusi Digital</h2>
+                <!-- Text Column -->
+                <div class="space-y-7" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="100">
+                    <div class="inline-flex items-center gap-2">
+                        <div class="section-divider"></div>
+                        <h2 class="text-si-blue font-bold tracking-[0.15em] uppercase text-xs ml-3">Tentang Solusi Digital</h2>
                     </div>
-                    <h3 class="text-4xl md:text-5xl font-outfit font-extrabold text-slate-900 leading-tight">
-                        Integrasi Sistem untuk Efisiensi Bisnis
+                    
+                    <h3 class="text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight">
+                        Integrasi Sistem untuk<br>
+                        <span class="text-gradient-blue">Efisiensi Bisnis</span>
                     </h3>
-                    <p class="text-lg text-slate-600 leading-relaxed">
-                        SIMPA dirancang khusus untuk memenuhi kebutuhan pengawasan proyek di lingkungan PT Surveyor Indonesia (Persero). Melalui digitalisasi proses, kami memastikan transparansi data dan akurasi pelaporan di setiap level manajemen.
+                    
+                    <p class="text-lg text-slate-500 leading-relaxed font-inter">
+                        SIMPA dirancang khusus untuk memenuhi kebutuhan pengawasan proyek di lingkungan 
+                        <strong class="text-slate-700 font-bold">PT Surveyor Indonesia (Persero)</strong>. 
+                        Melalui digitalisasi proses, kami memastikan transparansi data dan akurasi pelaporan di setiap level manajemen.
                     </p>
                     
-                    <div class="pt-6">
-                        <ul class="space-y-5">
-                            <li class="flex items-start gap-4 p-4 rounded-lg hover:bg-white hover:shadow-md transition-all border border-transparent hover:border-slate-100">
-                                <div class="mt-1 w-10 h-10 rounded-full bg-si-blue/10 flex items-center justify-center text-si-blue shrink-0">
-                                    <i class="fas fa-shield-alt"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-slate-800 mb-1">Standardisasi Audit Proyek (COBIT-19)</h4>
-                                    <p class="text-sm text-slate-500">Memastikan tata kelola TI perusahaan berjalan sesuai framework internasional.</p>
-                                </div>
-                            </li>
-                            <li class="flex items-start gap-4 p-4 rounded-lg hover:bg-white hover:shadow-md transition-all border border-transparent hover:border-slate-100">
-                                <div class="mt-1 w-10 h-10 rounded-full bg-si-gold/20 flex items-center justify-center text-yellow-600 shrink-0">
-                                    <i class="fas fa-chart-pie"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-slate-800 mb-1">Executive Dashboard Monitoring</h4>
-                                    <p class="text-sm text-slate-500">Visualisasi data progres secara real-time dengan grafik interaktif.</p>
-                                </div>
-                            </li>
-                            <li class="flex items-start gap-4 p-4 rounded-lg hover:bg-white hover:shadow-md transition-all border border-transparent hover:border-slate-100">
-                                <div class="mt-1 w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 shrink-0">
-                                    <i class="fas fa-server"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-slate-800 mb-1">Pusat Data Terpusat</h4>
-                                    <p class="text-sm text-slate-500">Penyimpanan dokumen bukti pengerjaan yang tersentralisasi dan aman.</p>
-                                </div>
-                            </li>
-                        </ul>
+                    <div class="space-y-3 pt-2">
+                        <div class="flex items-start gap-4 p-5 rounded-2xl bg-white hover:shadow-[0_8px_30px_rgba(0,73,150,0.08)] transition-all duration-300 border border-slate-100 hover:border-si-blue/20 group cursor-default">
+                            <div class="mt-0.5 w-11 h-11 rounded-2xl bg-si-blue/8 flex items-center justify-center text-si-blue shrink-0 group-hover:bg-si-blue group-hover:text-white transition-all duration-300">
+                                <i class="fas fa-shield-alt text-sm"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-800 mb-1">Standardisasi Audit Proyek (COBIT Framework)</h4>
+                                <p class="text-sm text-slate-500">Memastikan tata kelola TI perusahaan berjalan sesuai framework internasional yang diakui.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 p-5 rounded-2xl bg-white hover:shadow-[0_8px_30px_rgba(255,184,0,0.08)] transition-all duration-300 border border-slate-100 hover:border-si-gold/30 group cursor-default">
+                            <div class="mt-0.5 w-11 h-11 rounded-2xl bg-si-gold/10 flex items-center justify-center text-yellow-600 shrink-0 group-hover:bg-si-gold group-hover:text-white transition-all duration-300">
+                                <i class="fas fa-chart-line text-sm"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-800 mb-1">Executive Dashboard Real-time</h4>
+                                <p class="text-sm text-slate-500">Visualisasi data progres proyek secara langsung dengan grafik interaktif yang komprehensif.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 p-5 rounded-2xl bg-white hover:shadow-[0_8px_30px_rgba(16,185,129,0.08)] transition-all duration-300 border border-slate-100 hover:border-green-200 group cursor-default">
+                            <div class="mt-0.5 w-11 h-11 rounded-2xl bg-green-50 flex items-center justify-center text-green-600 shrink-0 group-hover:bg-green-500 group-hover:text-white transition-all duration-300">
+                                <i class="fas fa-database text-sm"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-800 mb-1">Pusat Data Terpusat & Aman</h4>
+                                <p class="text-sm text-slate-500">Penyimpanan dokumen bukti pengerjaan yang tersentralisasi dengan akses berbasis peran.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Solutions -->
-    <section id="solutions" class="py-24 bg-white relative">
-        <div class="container mx-auto px-6">
+    <!-- ===== SOLUTIONS / FEATURES SECTION ===== -->
+    <section id="solutions" class="py-28 bg-white relative overflow-hidden">
+        <!-- Subtle grid bg -->
+        <div class="absolute inset-0 pointer-events-none" style="background-image: linear-gradient(rgba(0,73,150,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,73,150,0.03) 1px, transparent 1px); background-size: 50px 50px;"></div>
+        
+        <div class="container mx-auto px-6 relative z-10">
             <div class="max-w-2xl mx-auto mb-20 text-center" data-aos="fade-up">
-                <h2 class="text-si-blue font-bold tracking-widest uppercase text-sm mb-4">Fitur Utama Platform</h2>
-                <h3 class="text-4xl font-outfit font-extrabold text-slate-900 mb-6">Solusi Monitoring Terpadu</h3>
-                <div class="bg-gradient-to-r from-si-blue to-si-gold w-24 h-1.5 mx-auto rounded-full"></div>
+                <div class="inline-flex items-center gap-2 mb-5">
+                    <div class="section-divider"></div>
+                    <h2 class="text-si-blue font-bold tracking-[0.15em] uppercase text-xs mx-3">Fitur Unggulan Platform</h2>
+                    <div class="section-divider"></div>
+                </div>
+                <h3 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-5 leading-tight">Solusi Monitoring <span class="text-gradient-blue">Terpadu</span></h3>
+                <p class="text-slate-500 text-lg font-inter">Semua yang Anda butuhkan untuk mengelola proyek IT dalam satu platform yang terintegrasi.</p>
             </div>
             
             <div class="grid md:grid-cols-3 gap-8">
                 <!-- Card 1 -->
-                <div class="p-10 bg-white border border-slate-100 rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_20px_50px_-10px_rgba(0,73,150,0.15)] hover:-translate-y-2 transition-all duration-300 group relative overflow-hidden" data-aos="fade-up" data-aos-delay="100">
-                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-si-blue to-si-light transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
-                    <div class="w-16 h-16 bg-si-blue/5 rounded-2xl flex items-center justify-center text-si-blue text-3xl mb-8 group-hover:bg-gradient-to-br group-hover:from-si-blue group-hover:to-si-light group-hover:text-white group-hover:rotate-12 transition-all duration-300 shadow-sm">
-                        <i class="fas fa-tachometer-alt"></i>
+                <div class="feature-card relative p-9 bg-white border border-slate-100 rounded-3xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.07)] hover:shadow-[0_25px_60px_-10px_rgba(0,73,150,0.14)] group overflow-hidden" 
+                     data-aos="fade-up" data-aos-delay="100">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-si-blue to-si-light transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500 rounded-t-3xl"></div>
+                    <div class="absolute top-5 right-5 text-[80px] font-black text-slate-50 leading-none select-none group-hover:text-si-blue/5 transition-colors duration-500">01</div>
+                    <div class="w-16 h-16 bg-gradient-to-br from-si-blue/8 to-si-blue/5 rounded-2xl flex items-center justify-center text-si-blue text-2xl mb-8 group-hover:from-si-blue group-hover:to-si-light group-hover:text-white group-hover:shadow-lg group-hover:scale-110 transition-all duration-400 shadow-sm">
+                        <i class="fas fa-gauge-high"></i>
                     </div>
-                    <h4 class="text-2xl font-bold mb-4 text-slate-800">Pelacakan Real-time</h4>
-                    <p class="text-slate-500 leading-relaxed">Dapatkan visualisasi data progres proyek secara instan untuk pengambilan keputusan yang lebih cepat melalui Dashboard Eksekutif.</p>
+                    <h4 class="text-xl font-extrabold mb-3 text-slate-800">Pelacakan Real-time</h4>
+                    <p class="text-slate-500 leading-relaxed text-sm">Dapatkan visualisasi data progres proyek secara instan untuk pengambilan keputusan yang lebih cepat melalui Dashboard Eksekutif yang komprehensif.</p>
+                    <div class="mt-6 flex items-center gap-2 text-si-blue text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <span>Lihat Fitur</span><i class="fas fa-arrow-right text-xs"></i>
+                    </div>
                 </div>
+                
                 <!-- Card 2 -->
-                <div class="p-10 bg-white border border-slate-100 rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_20px_50px_-10px_rgba(255,184,0,0.15)] hover:-translate-y-2 transition-all duration-300 group relative overflow-hidden" data-aos="fade-up" data-aos-delay="200">
-                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-si-gold to-yellow-300 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
-                    <div class="w-16 h-16 bg-si-gold/10 rounded-2xl flex items-center justify-center text-yellow-600 text-3xl mb-8 group-hover:bg-gradient-to-br group-hover:from-si-gold group-hover:to-yellow-400 group-hover:text-white group-hover:-rotate-12 transition-all duration-300 shadow-sm">
-                        <i class="fas fa-tasks"></i>
+                <div class="feature-card relative p-9 bg-white border border-slate-100 rounded-3xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.07)] hover:shadow-[0_25px_60px_-10px_rgba(255,184,0,0.14)] group overflow-hidden" 
+                     data-aos="fade-up" data-aos-delay="200">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-si-gold to-yellow-300 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500 rounded-t-3xl"></div>
+                    <div class="absolute top-5 right-5 text-[80px] font-black text-slate-50 leading-none select-none group-hover:text-si-gold/10 transition-colors duration-500">02</div>
+                    <div class="w-16 h-16 bg-gradient-to-br from-si-gold/10 to-si-gold/5 rounded-2xl flex items-center justify-center text-yellow-600 text-2xl mb-8 group-hover:from-si-gold group-hover:to-yellow-400 group-hover:text-white group-hover:shadow-lg group-hover:scale-110 transition-all duration-400 shadow-sm">
+                        <i class="fas fa-sliders"></i>
                     </div>
-                    <h4 class="text-2xl font-bold mb-4 text-slate-800">Sistem Bobot Modul</h4>
-                    <p class="text-slate-500 leading-relaxed">Perhitungan progres yang sangat akurat menggunakan rata-rata tertimbang (Weighted Average) berdasarkan tingkat kesulitan tiap fitur.</p>
+                    <h4 class="text-xl font-extrabold mb-3 text-slate-800">Sistem Bobot Modul</h4>
+                    <p class="text-slate-500 leading-relaxed text-sm">Perhitungan progres yang sangat akurat menggunakan rata-rata tertimbang (Weighted Average) berdasarkan tingkat kesulitan tiap fitur aplikasi.</p>
+                    <div class="mt-6 flex items-center gap-2 text-si-gold text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <span>Lihat Fitur</span><i class="fas fa-arrow-right text-xs"></i>
+                    </div>
                 </div>
+                
                 <!-- Card 3 -->
-                <div class="p-10 bg-white border border-slate-100 rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:shadow-[0_20px_50px_-10px_rgba(16,185,129,0.15)] hover:-translate-y-2 transition-all duration-300 group relative overflow-hidden" data-aos="fade-up" data-aos-delay="300">
-                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-500 to-emerald-400 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
-                    <div class="w-16 h-16 bg-green-50 rounded-2xl flex items-center justify-center text-green-600 text-3xl mb-8 group-hover:bg-gradient-to-br group-hover:from-green-500 group-hover:to-emerald-400 group-hover:text-white group-hover:rotate-12 transition-all duration-300 shadow-sm">
+                <div class="feature-card relative p-9 bg-white border border-slate-100 rounded-3xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.07)] hover:shadow-[0_25px_60px_-10px_rgba(16,185,129,0.14)] group overflow-hidden" 
+                     data-aos="fade-up" data-aos-delay="300">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 to-green-400 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500 rounded-t-3xl"></div>
+                    <div class="absolute top-5 right-5 text-[80px] font-black text-slate-50 leading-none select-none group-hover:text-green-50 transition-colors duration-500">03</div>
+                    <div class="w-16 h-16 bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600 text-2xl mb-8 group-hover:from-emerald-500 group-hover:to-green-400 group-hover:text-white group-hover:shadow-lg group-hover:scale-110 transition-all duration-400 shadow-sm">
                         <i class="fas fa-file-pdf"></i>
                     </div>
-                    <h4 class="text-2xl font-bold mb-4 text-slate-800">Laporan PDF Instan</h4>
-                    <p class="text-slate-500 leading-relaxed">Ekspor ringkasan progres dan daftar aplikasi ke format PDF profesional siap cetak hanya dengan satu klik untuk keperluan audit.</p>
+                    <h4 class="text-xl font-extrabold mb-3 text-slate-800">Laporan PDF Instan</h4>
+                    <p class="text-slate-500 leading-relaxed text-sm">Ekspor ringkasan progres dan daftar aplikasi ke format PDF profesional siap cetak hanya dengan satu klik untuk keperluan audit.</p>
+                    <div class="mt-6 flex items-center gap-2 text-emerald-600 text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <span>Lihat Fitur</span><i class="fas fa-arrow-right text-xs"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional features row -->
+            <div class="grid md:grid-cols-3 gap-8 mt-8">
+                <div class="feature-card relative p-9 bg-white border border-slate-100 rounded-3xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.07)] hover:shadow-[0_25px_60px_-10px_rgba(139,92,246,0.14)] group overflow-hidden" 
+                     data-aos="fade-up" data-aos-delay="100">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-violet-500 to-purple-400 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500 rounded-t-3xl"></div>
+                    <div class="w-16 h-16 bg-violet-50 rounded-2xl flex items-center justify-center text-violet-600 text-2xl mb-8 group-hover:from-violet-500 group-hover:to-purple-400 group-hover:text-white group-hover:bg-gradient-to-br group-hover:shadow-lg transition-all duration-400">
+                        <i class="fas fa-users-gear"></i>
+                    </div>
+                    <h4 class="text-xl font-extrabold mb-3 text-slate-800">Manajemen Pengguna</h4>
+                    <p class="text-slate-500 leading-relaxed text-sm">Sistem role-based access control (RBAC) memastikan setiap pengguna hanya mengakses data sesuai wewenangnya.</p>
+                </div>
+                <div class="feature-card relative p-9 bg-white border border-slate-100 rounded-3xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.07)] hover:shadow-[0_25px_60px_-10px_rgba(6,182,212,0.14)] group overflow-hidden" 
+                     data-aos="fade-up" data-aos-delay="200">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 to-sky-400 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500 rounded-t-3xl"></div>
+                    <div class="w-16 h-16 bg-cyan-50 rounded-2xl flex items-center justify-center text-cyan-600 text-2xl mb-8 group-hover:from-cyan-500 group-hover:to-sky-400 group-hover:text-white group-hover:bg-gradient-to-br group-hover:shadow-lg transition-all duration-400">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <h4 class="text-xl font-extrabold mb-3 text-slate-800">Notulensi & Absensi</h4>
+                    <p class="text-slate-500 leading-relaxed text-sm">Pencatatan notulensi rapat dan daftar hadir yang terintegrasi langsung dengan data proyek dan aplikasi terkait.</p>
+                </div>
+                <div class="feature-card relative p-9 bg-white border border-slate-100 rounded-3xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.07)] hover:shadow-[0_25px_60px_-10px_rgba(249,115,22,0.14)] group overflow-hidden" 
+                     data-aos="fade-up" data-aos-delay="300">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange-500 to-amber-400 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500 rounded-t-3xl"></div>
+                    <div class="w-16 h-16 bg-orange-50 rounded-2xl flex items-center justify-center text-orange-600 text-2xl mb-8 group-hover:from-orange-500 group-hover:to-amber-400 group-hover:text-white group-hover:bg-gradient-to-br group-hover:shadow-lg transition-all duration-400">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <h4 class="text-xl font-extrabold mb-3 text-slate-800">Log Aktivitas</h4>
+                    <p class="text-slate-500 leading-relaxed text-sm">Rekam jejak setiap perubahan data secara otomatis untuk keperluan audit trail dan keamanan sistem yang menyeluruh.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="py-20 bg-si-blue relative overflow-hidden">
-        <div class="absolute -right-20 -top-20 w-80 h-80 bg-white/10 rounded-full blur-3xl"></div>
-        <div class="container mx-auto px-6 text-center text-white relative z-10">
-            <h2 class="text-3xl md:text-5xl font-extrabold mb-8 max-w-4xl mx-auto leading-tight">
-                Siap Meningkatkan Transparansi Monitoring Proyek Anda?
+    <!-- ===== CTA SECTION ===== -->
+    <section class="relative py-28 overflow-hidden bg-si-deeper">
+        <!-- Background image subtle -->
+        <div class="absolute inset-0 z-0">
+            <img src="<?= base_url('images/landing.webp') ?>" alt="" class="w-full h-full object-cover opacity-10 mix-blend-luminosity">
+            <div class="absolute inset-0" style="background: linear-gradient(135deg, rgba(0,29,62,0.97) 0%, rgba(0,73,150,0.90) 100%);"></div>
+        </div>
+        <div class="absolute -right-40 -top-40 w-[500px] h-[500px] bg-si-gold/10 rounded-full blur-[100px] pointer-events-none"></div>
+        <div class="absolute -left-40 -bottom-40 w-[400px] h-[400px] bg-si-blue/40 rounded-full blur-[100px] pointer-events-none"></div>
+        <div class="absolute inset-0 dot-grid opacity-10 pointer-events-none"></div>
+        
+        <div class="container mx-auto px-6 text-center text-white relative z-10" data-aos="fade-up">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-white/10 mb-8">
+                <span class="w-2 h-2 rounded-full bg-si-gold"></span>
+                <span class="text-white text-xs font-bold tracking-[0.2em] uppercase">Mulai Sekarang</span>
+            </div>
+            <h2 class="text-4xl md:text-6xl font-extrabold mb-6 max-w-3xl mx-auto leading-tight">
+                Siap Meningkatkan<br>
+                <span class="text-gradient-gold">Transparansi Monitoring</span><br>
+                Proyek Anda?
             </h2>
-            <a href="<?= base_url('login-page') ?>" class="bg-si-gold hover:bg-white text-si-dark px-12 py-5 rounded-full font-bold text-xl shadow-2xl transition-all inline-block uppercase tracking-wider">
-                Akses SIMPA Sekarang
-            </a>
+            <p class="text-white/60 text-lg mb-12 max-w-xl mx-auto font-inter">
+                Bergabunglah bersama tim PT Surveyor Indonesia dalam mengelola proyek lebih efisien dan terukur.
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="<?= base_url('login-page') ?>" 
+                   class="btn-shimmer bg-gradient-to-r from-si-gold to-yellow-400 hover:from-yellow-400 hover:to-si-gold text-si-dark px-12 py-5 rounded-2xl font-black text-lg shadow-[0_10px_40px_rgba(255,184,0,0.4)] hover:shadow-[0_15px_50px_rgba(255,184,0,0.6)] hover:-translate-y-1.5 transition-all duration-300 uppercase tracking-wider glow-gold">
+                    <i class="fas fa-sign-in-alt mr-2"></i> Akses SIMPA Sekarang
+                </a>
+                <a href="#about"
+                   class="glass border border-white/20 text-white px-10 py-5 rounded-2xl font-bold text-lg hover:bg-white/10 hover:-translate-y-1.5 transition-all duration-300">
+                    Pelajari Lebih Lanjut
+                </a>
+            </div>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-si-dark text-white pt-20 pb-10 relative border-t-4 border-si-gold">
-        <!-- Background Pattern -->
-        <div class="absolute inset-0 opacity-5" style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 20px 20px;"></div>
+    <!-- ===== FOOTER ===== -->
+    <footer id="contact" class="bg-si-deeper text-white pt-20 pb-10 relative border-t-[3px] border-si-gold overflow-hidden">
+        <div class="absolute inset-0 opacity-[0.04]" style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 20px 20px;"></div>
+        <div class="absolute top-0 right-0 w-[400px] h-[400px] bg-si-blue/20 rounded-full blur-[100px] pointer-events-none"></div>
         
         <div class="container mx-auto px-6 relative z-10">
-            <div class="grid lg:grid-cols-2 gap-12 mb-16 border-b border-white/10 pb-16">
-                <div class="border-r-0 lg:border-r border-white/10 lg:pr-12">
-                    <img src="<?= base_url('images/logo_si.png') ?>" alt="SI Logo" class="h-14 mb-8 brightness-0 invert">
-                    <p class="text-white/70 text-sm leading-relaxed mb-8 max-w-md">
-                        PT Surveyor Indonesia (Persero) adalah perusahaan pemberi jasa konsultasi nirlaba yang didirikan sebagai bentuk komitmen untuk bangsa dalam mewujudkan keunggulan dan daya saing nasional.
+            <div class="grid lg:grid-cols-3 gap-12 mb-16 pb-16 border-b border-white/8">
+                <!-- Brand -->
+                <div class="lg:col-span-1">
+                    <div class="flex items-center gap-3 mb-6">
+                        <img src="<?= base_url('images/logo_si.png') ?>" alt="SI Logo" class="h-12 brightness-0 invert">
+                    </div>
+                    <p class="text-white/55 text-sm leading-relaxed mb-8 max-w-xs font-inter">
+                        PT Surveyor Indonesia (Persero) adalah perusahaan pemberi jasa inspeksi dan konsultasi yang berkomitmen mewujudkan keunggulan dan daya saing nasional.
                     </p>
-                    <div class="flex flex-wrap gap-4">
-                        <a href="https://www.instagram.com/surveyor.indonesia/" target="_blank" class="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center hover:bg-[#E1306C] hover:border-[#E1306C] hover:-translate-y-1 transition-all shadow-lg" title="Instagram"><i class="fab fa-instagram"></i></a>
-                        <a href="https://www.linkedin.com/company/pt-surveyor-indonesia/" target="_blank" class="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center hover:bg-[#0077b5] hover:border-[#0077b5] hover:-translate-y-1 transition-all shadow-lg" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="https://www.facebook.com/surveyor.indonesia/" target="_blank" class="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center hover:bg-[#1877F2] hover:border-[#1877F2] hover:-translate-y-1 transition-all shadow-lg" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-                        <a href="https://www.youtube.com/@surveyor_ID" target="_blank" class="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center hover:bg-[#FF0000] hover:border-[#FF0000] hover:-translate-y-1 transition-all shadow-lg" title="YouTube"><i class="fab fa-youtube"></i></a>
-                        <a href="https://twitter.com/pt_surveyor" target="_blank" class="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center hover:bg-[#1DA1F2] hover:border-[#1DA1F2] hover:-translate-y-1 transition-all shadow-lg" title="Twitter"><i class="fab fa-twitter"></i></a>
+                    <div class="flex flex-wrap gap-3">
+                        <a href="https://www.instagram.com/surveyor.indonesia/" target="_blank" 
+                           class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-[#E1306C] hover:border-[#E1306C] hover:-translate-y-1 transition-all duration-200 text-sm">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/company/pt-surveyor-indonesia/" target="_blank" 
+                           class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-[#0077b5] hover:border-[#0077b5] hover:-translate-y-1 transition-all duration-200 text-sm">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="https://www.facebook.com/surveyor.indonesia/" target="_blank" 
+                           class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-[#1877F2] hover:border-[#1877F2] hover:-translate-y-1 transition-all duration-200 text-sm">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://www.youtube.com/@surveyor_ID" target="_blank" 
+                           class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-[#FF0000] hover:border-[#FF0000] hover:-translate-y-1 transition-all duration-200 text-sm">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                        <a href="https://twitter.com/pt_surveyor" target="_blank" 
+                           class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-black hover:border-black hover:-translate-y-1 transition-all duration-200" title="X (Twitter)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.738l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                        </a>
                     </div>
                 </div>
-                
-                <div class="lg:pl-8">
-                    <h5 class="font-outfit font-bold text-xl mb-8 si-border inline-block pb-2">Kontak Kami</h5>
-                    <ul class="space-y-6 text-sm text-white/70 leading-relaxed">
-                        <li class="flex items-start gap-4">
-                            <div class="w-10 h-10 rounded-full bg-si-gold/20 flex items-center justify-center text-si-gold shrink-0 mt-1">
-                                <i class="fas fa-map-marker-alt"></i>
+
+                <!-- Navigation links -->
+                <div>
+                    <h5 class="font-bold text-sm uppercase tracking-[0.15em] mb-6 text-white/70">Navigasi</h5>
+                    <ul class="space-y-3 text-sm text-white/50 font-inter">
+                        <li><a href="#" class="hover:text-si-gold transition-colors duration-200 flex items-center gap-2"><i class="fas fa-chevron-right text-[10px] text-si-gold"></i> Beranda</a></li>
+                        <li><a href="#about" class="hover:text-si-gold transition-colors duration-200 flex items-center gap-2"><i class="fas fa-chevron-right text-[10px] text-si-gold"></i> Tentang SIMPA</a></li>
+                        <li><a href="#solutions" class="hover:text-si-gold transition-colors duration-200 flex items-center gap-2"><i class="fas fa-chevron-right text-[10px] text-si-gold"></i> Fitur Platform</a></li>
+                        <li><a href="<?= base_url('login-page') ?>" class="hover:text-si-gold transition-colors duration-200 flex items-center gap-2"><i class="fas fa-chevron-right text-[10px] text-si-gold"></i> Login Sistem</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact -->
+                <div>
+                    <h5 class="font-bold text-sm uppercase tracking-[0.15em] mb-6 text-white/70">Kontak Kami</h5>
+                    <ul class="space-y-4 text-sm text-white/55 font-inter">
+                        <li class="flex items-start gap-3">
+                            <div class="w-9 h-9 rounded-xl bg-si-gold/15 flex items-center justify-center text-si-gold shrink-0 mt-0.5">
+                                <i class="fas fa-map-marker-alt text-xs"></i>
                             </div>
                             <div>
-                                <strong class="text-white block mb-1">Kantor Pusat</strong>
-                                Graha Surveyor Indonesia (Persero)<br>Jl. Gatot Subroto Kav. 56, Jakarta Selatan 12950
+                                <strong class="text-white/80 block mb-0.5">Kantor Pusat</strong>
+                                Graha Surveyor Indonesia<br>Jl. Gatot Subroto Kav. 56, Jakarta Selatan 12950
                             </div>
                         </li>
-                        <li class="flex items-center gap-4">
-                            <div class="w-10 h-10 rounded-full bg-si-gold/20 flex items-center justify-center text-si-gold shrink-0">
-                                <i class="fas fa-phone-alt"></i>
+                        <li class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-xl bg-si-gold/15 flex items-center justify-center text-si-gold shrink-0">
+                                <i class="fas fa-phone-alt text-xs"></i>
                             </div>
-                            <div><strong class="text-white mr-2">Phone:</strong> +62-21 526 5526</div>
+                            <div><strong class="text-white/80 mr-1">Phone:</strong> +62-21 526 5526</div>
                         </li>
-                        <li class="flex items-center gap-4">
-                            <div class="w-10 h-10 rounded-full bg-si-gold/20 flex items-center justify-center text-si-gold shrink-0">
-                                <i class="fas fa-envelope"></i>
+                        <li class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-xl bg-si-gold/15 flex items-center justify-center text-si-gold shrink-0">
+                                <i class="fas fa-envelope text-xs"></i>
                             </div>
-                            <div><strong class="text-white mr-2">Email:</strong> humas@ptsi.co.id</div>
+                            <div><strong class="text-white/80 mr-1">Email:</strong> humas@ptsi.co.id</div>
                         </li>
                     </ul>
                 </div>
             </div>
             
-            <div class="flex flex-col md:flex-row justify-between items-center text-xs text-white/50 tracking-wider font-semibold">
-                <p>&copy; 2026 PT SURVEYOR INDONESIA (PERSERO).</p>
-                <div class="flex gap-6 mt-4 md:mt-0">
-                    <a href="#" class="hover:text-si-gold transition-colors">PRIVACY POLICY</a>
-                    <a href="#" class="hover:text-si-gold transition-colors">DISCLAIMER</a>
+            <div class="flex flex-col md:flex-row justify-between items-center text-xs text-white/30 tracking-wider font-semibold gap-4">
+                <p>&copy; 2026 PT SURVEYOR INDONESIA (PERSERO). All rights reserved.</p>
+                <div class="flex gap-6">
+                    <a href="#" class="hover:text-si-gold transition-colors duration-200">Privacy Policy</a>
+                    <a href="#" class="hover:text-si-gold transition-colors duration-200">Disclaimer</a>
                 </div>
             </div>
         </div>
@@ -407,9 +687,63 @@
     <!-- Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        AOS.init({
-            once: true,
-            offset: 50,
+        // AOS Init
+        AOS.init({ once: true, offset: 60, duration: 800 });
+
+        // Mobile menu toggle
+        const btn = document.getElementById('mobileMenuBtn');
+        const menu = document.getElementById('mobileMenu');
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+            const icon = btn.querySelector('i');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+        });
+
+        // Animate progress bars on scroll
+        const progressBars = document.querySelectorAll('.progress-fill');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const bar = entry.target;
+                    const targetWidth = bar.getAttribute('data-width');
+                    setTimeout(() => { bar.style.width = targetWidth; }, 300);
+                    observer.unobserve(bar);
+                }
+            });
+        }, { threshold: 0.3 });
+        progressBars.forEach(bar => observer.observe(bar));
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    e.preventDefault();
+                    const offset = 80;
+                    const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+                    window.scrollTo({ top, behavior: 'smooth' });
+                    // Close mobile menu if open
+                    menu.classList.add('hidden');
+                    btn.querySelector('i').classList.add('fa-bars');
+                    btn.querySelector('i').classList.remove('fa-times');
+                }
+            });
+        });
+
+        // Nav active state on scroll
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                if (window.pageYOffset >= sectionTop) current = section.getAttribute('id');
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) link.classList.add('active');
+            });
         });
     </script>
 </body>

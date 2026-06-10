@@ -172,7 +172,15 @@
                                     <textarea name="hasil[]" class="form-control border-2 bg-light rounded-3 custom-textarea" rows="2" placeholder="Tuliskan keputusan/pembahasan disini..." <?= $readonly ?>><?= $it['hasil'] ?></textarea>
                                 </td>
                                 <td class="py-3">
-                                    <input type="text" name="pic[]" class="form-control border-2 bg-light rounded-3" placeholder="Nama PIC" value="<?= $it['pic'] ?>" <?= $readonly ?>>
+                                    <select name="pic[]" class="form-select border-2 bg-light rounded-3" <?= $readonly ?>>
+                                        <option value="">Pilih PIC</option>
+                                        <?php foreach($users as $user): ?>
+                                            <option value="<?= esc($user['nama_lengkap']) ?>" <?= $it['pic'] == $user['nama_lengkap'] ? 'selected' : '' ?>><?= esc($user['nama_lengkap']) ?></option>
+                                        <?php endforeach; ?>
+                                        <?php if(!empty($it['pic']) && !in_array($it['pic'], array_column($users, 'nama_lengkap'))): ?>
+                                            <option value="<?= esc($it['pic']) ?>" selected><?= esc($it['pic']) ?> (Custom)</option>
+                                        <?php endif; ?>
+                                    </select>
                                 </td>
                                 <td class="py-3">
                                     <input type="date" name="target[]" class="form-control border-2 bg-light rounded-3" value="<?= $it['target'] ?>" <?= $readonly ?>>
@@ -442,7 +450,12 @@
                 <textarea name="hasil[]" class="form-control border-2 bg-light rounded-3 custom-textarea" rows="2" placeholder="Tuliskan keputusan/pembahasan disini..."></textarea>
             </td>
             <td class="py-3">
-                <input type="text" name="pic[]" class="form-control border-2 bg-light rounded-3" placeholder="Nama PIC">
+                <select name="pic[]" class="form-select border-2 bg-light rounded-3">
+                    <option value="">Pilih PIC</option>
+                    <?php foreach($users as $user): ?>
+                        <option value="<?= esc($user['nama_lengkap'], 'js') ?>"><?= esc($user['nama_lengkap'], 'js') ?></option>
+                    <?php endforeach; ?>
+                </select>
             </td>
             <td class="py-3">
                 <input type="date" name="target[]" class="form-control border-2 bg-light rounded-3">

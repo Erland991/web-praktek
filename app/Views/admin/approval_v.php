@@ -31,15 +31,8 @@
             <li class="nav-item flex-fill" role="presentation">
                 <button class="nav-link w-100 rounded-3 active fw-bold py-3 position-relative d-flex align-items-center justify-content-center gap-2" id="stage1-tab" data-bs-toggle="tab" data-bs-target="#stage1" type="button" role="tab" aria-controls="stage1" aria-selected="true">
                     <i class="ti ti-shield-check fs-5"></i>
-                    <span>Tahap 1: Kepala Divisi</span>
+                    <span>Kepala Divisi</span>
                     <span class="badge bg-warning text-dark rounded-circle font-monospace ms-1" style="width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; font-size: 11px;"><?= count($pending_stage1) ?></span>
-                </button>
-            </li>
-            <li class="nav-item flex-fill" role="presentation">
-                <button class="nav-link w-100 rounded-3 fw-bold py-3 position-relative d-flex align-items-center justify-content-center gap-2" id="stage2-tab" data-bs-toggle="tab" data-bs-target="#stage2" type="button" role="tab" aria-controls="stage2" aria-selected="false">
-                    <i class="ti ti-server fs-5"></i>
-                    <span>Tahap 2: IT Admin / PMO</span>
-                    <span class="badge bg-info text-white rounded-circle font-monospace ms-1" style="width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; font-size: 11px;"><?= count($pending_stage2) ?></span>
                 </button>
             </li>
             <li class="nav-item flex-fill" role="presentation">
@@ -121,92 +114,10 @@
                                 </td>
                                 <td class="border-bottom-0 text-center px-4">
                                     <div class="d-flex gap-2 justify-content-center">
-                                        <button class="btn btn-sm btn-outline-warning border-2 shadow-sm fw-bold d-flex align-items-center" onclick="showApprovalModal(<?= $p['id'] ?>, 1)">
-                                            <i class="ti ti-check me-1 fs-4"></i> Setujui Tahap 1
+                                        <button class="btn btn-sm btn-outline-success border-2 shadow-sm fw-bold d-flex align-items-center" onclick="showApprovalModal(<?= $p['id'] ?>, 2)">
+                                            <i class="ti ti-check me-1 fs-4"></i> Setujui Progres
                                         </button>
                                         <button class="btn btn-sm btn-outline-danger border-2 shadow-sm fw-bold d-flex align-items-center" onclick="showApprovalModal(<?= $p['id'] ?>, 3)">
-                                            <i class="ti ti-x me-1 fs-4"></i> Tolak
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- TAHAP 2: IT ADMIN / PMO -->
-    <div class="tab-pane fade" id="stage2" role="tabpanel" aria-labelledby="stage2-tab">
-        <div class="card shadow-sm border-0 rounded-4">
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead class="table-light text-muted fs-3 text-uppercase fw-semibold tracking-wider">
-                            <tr>
-                                <th class="ps-4 py-3 border-bottom-0">Aplikasi & PIC</th>
-                                <th class="py-3 border-bottom-0 text-center">Tahapan & Progres</th>
-                                <th class="py-3 border-bottom-0">Keterangan / Lampiran</th>
-                                <th class="py-3 border-bottom-0 text-center">Workflow Status</th>
-                                <th class="px-4 py-3 border-bottom-0 text-center">Aksi Persetujuan</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php if(empty($pending_stage2)): ?>
-                                <tr>
-                                    <td colspan="5" class="text-center py-5 text-muted italic">Tidak ada antrean persetujuan Tahap 2 saat ini. Semua data sudah disinkronkan ke pusat.</td>
-                                </tr>
-                            <?php endif; ?>
-                            <?php foreach($pending_stage2 as $p): ?>
-                            <tr id="row-<?= $p['id'] ?>">
-                                <td class="border-bottom-0 ps-4">
-                                    <div class="d-flex align-items-center">
-                                        <div class="bg-light-info rounded-2 p-2 me-3 text-info">
-                                            <i class="ti ti-device-laptop fs-5"></i>
-                                        </div>
-                                        <div>
-                                            <h6 class="fw-bold mb-0 text-dark"><?= $p['nama_app'] ?></h6>
-                                            <small class="text-muted d-block mt-1">Diajukan: <strong class="text-primary"><?= $p['pic_name'] ?></strong> (<?= $p['pic_divisi'] ?? 'Divisi' ?>)</small>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="border-bottom-0 text-center">
-                                    <div class="d-inline-block text-start">
-                                        <span class="badge bg-light-primary text-primary border border-primary border-opacity-10 mb-1 fw-bold fs-2 px-2 py-1 rounded"><?= $p['tahapan'] ?? 'Development' ?></span>
-                                        <div class="d-flex align-items-center gap-2">
-                                            <div class="progress" style="height: 6px; width: 60px;">
-                                                <div class="progress-bar bg-info" role="progressbar" style="width: <?= $p['persentase'] ?>%"></div>
-                                            </div>
-                                            <span class="fw-bold fs-3 text-dark"><?= $p['persentase'] ?>%</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="border-bottom-0">
-                                    <p class="mb-1 fs-2 text-dark italic" style="max-width:260px; white-space: normal;"><?= $p['pesan_update'] ?></p>
-                                    <?php if($p['file_lampiran']): ?>
-                                        <a href="<?= base_url('uploads/progress/'.$p['file_lampiran']) ?>" class="btn btn-xs btn-outline-info py-0 px-2 rounded-pill fs-1" target="_blank">
-                                            <i class="ti ti-file-download me-1"></i> Bukti Lampiran
-                                        </a>
-                                    <?php endif; ?>
-                                </td>
-                                <td class="border-bottom-0 text-center">
-                                    <!-- Visual Stepper -->
-                                    <div class="d-inline-flex align-items-center stepper-flow gap-1 p-2 bg-light rounded-pill border">
-                                        <span class="badge bg-success rounded-circle p-1" data-bs-toggle="tooltip" title="PIC Mengajukan"><i class="ti ti-check text-white" style="font-size: 8px;"></i></span>
-                                        <div class="stepper-line bg-success" style="width: 15px; height: 2px;"></div>
-                                        <span class="badge bg-success rounded-circle p-1" data-bs-toggle="tooltip" title="Review Kepala Divisi"><i class="ti ti-check text-white" style="font-size: 8px;"></i></span>
-                                        <div class="stepper-line bg-info" style="width: 15px; height: 2px;"></div>
-                                        <span class="badge bg-info rounded-circle p-1 animate-pulse" data-bs-toggle="tooltip" title="IT Admin / PMO"><i class="ti ti-settings text-white" style="font-size: 8px;"></i></span>
-                                    </div>
-                                </td>
-                                <td class="border-bottom-0 text-center px-4">
-                                    <div class="d-flex gap-2 justify-content-center">
-                                        <button class="btn btn-sm btn-outline-success border-2 shadow-sm fw-bold d-flex align-items-center" onclick="showApprovalModal(<?= $p['id'] ?>, 2)">
-                                            <i class="ti ti-check me-1 fs-4"></i> Setujui Final
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-danger border-2 shadow-sm fw-bold d-flex align-items-center" onclick="showApprovalModal(<?= $p['id'] ?>, 4)">
                                             <i class="ti ti-x me-1 fs-4"></i> Tolak
                                         </button>
                                     </div>
@@ -367,30 +278,18 @@
 
         form.action = '<?= base_url('admin/approval/action') ?>/' + id + '/' + status;
         
-        if (status == 1) {
-            title.innerText = 'Setujui Progres (Tahap 1)';
-            text.innerText = 'Konfirmasi persetujuan Kepala Divisi. Progres akan dilanjutkan ke Tahap 2 (IT Admin / PMO Pusat).';
-            header.className = 'modal-header bg-warning text-white p-4';
-            btn.className = 'btn btn-warning text-dark fw-bold px-4';
-            btn.innerText = 'SETUJUI TAHAP 1';
-        } else if (status == 2) {
-            title.innerText = 'Setujui Progres (Final / Tahap 2)';
-            text.innerText = 'Konfirmasi persetujuan akhir (IT Admin). Persentase pengerjaan aplikasi di dashboard akan diperbarui secara permanen.';
+        if (status == 1 || status == 2) {
+            title.innerText = 'Setujui Progres';
+            text.innerText = 'Konfirmasi persetujuan oleh Kepala Divisi. Persentase pengerjaan aplikasi di dashboard akan diperbarui secara permanen.';
             header.className = 'modal-header bg-success text-white p-4';
             btn.className = 'btn btn-success fw-bold px-4';
-            btn.innerText = 'SETUJUI FINAL';
-        } else if (status == 3) {
-            title.innerText = 'Tolak Progres (Oleh Kepala Divisi)';
-            text.innerText = 'Pengajuan progres akan ditolak pada Tahap 1. Harap berikan alasan penolakan pada kolom komentar.';
+            btn.innerText = 'SETUJUI PROGRES';
+        } else if (status == 3 || status == 4) {
+            title.innerText = 'Tolak Progres';
+            text.innerText = 'Pengajuan progres akan ditolak. Harap berikan alasan penolakan pada kolom komentar.';
             header.className = 'modal-header bg-danger text-white p-4';
             btn.className = 'btn btn-danger fw-bold px-4';
-            btn.innerText = 'TOLAK TAHAP 1';
-        } else if (status == 4) {
-            title.innerText = 'Tolak Progres (Oleh IT Admin)';
-            text.innerText = 'Pengajuan progres akan ditolak pada Tahap 2. Harap berikan alasan penolakan pada kolom komentar.';
-            header.className = 'modal-header bg-danger text-white p-4';
-            btn.className = 'btn btn-danger fw-bold px-4';
-            btn.innerText = 'TOLAK LAPORAN';
+            btn.innerText = 'TOLAK PROGRES';
         }
 
         if(!approvalModal) approvalModal = new bootstrap.Modal(document.getElementById('modalApproval'));

@@ -36,7 +36,12 @@
 
                     <div class="mb-4">
                         <label class="form-label fw-semibold">PIC</label>
-                        <input type="text" name="pic" value="<?= $aset['pic'] ?>" class="form-control" required>
+                        <select name="pic" class="form-select" required>
+                            <option value="">-- Pilih Penanggung Jawab --</option>
+                            <?php foreach($list_pic as $p): ?>
+                                <option value="<?= esc($p['nama_lengkap']) ?>" <?= $aset['pic'] == $p['nama_lengkap'] ? 'selected' : '' ?>><?= esc($p['nama_lengkap']) ?> (<?= esc($p['divisi']) ?>)</option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
 
                     <div class="mb-4">
