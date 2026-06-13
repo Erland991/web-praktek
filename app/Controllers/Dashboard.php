@@ -248,13 +248,21 @@ class Dashboard extends BaseController
         if (!session()->get('logged_in')) return redirect()->to('/');
         
         $model = new AssetModel();
+        $db    = \Config\Database::connect();
+        $role  = session()->get('role');
+        $user_id     = session()->get('id');
+        $nama_lengkap = session()->get('nama_lengkap');
         
         // Ambil Input Filter
         $keyword  = $this->request->getGet('keyword');
         $kategori = $this->request->getGet('kategori');
         $status   = $this->request->getGet('status');
 
+        // A. Data dari tabel ASET
         $builder = $model;
+        if ($role === 'User') {
+            $builder = $builder->where('pic', $nama_lengkap);
+        }
         if ($keyword) {
             $builder = $builder->groupStart()
                                ->like('nama_aset', $keyword)
@@ -264,11 +272,40 @@ class Dashboard extends BaseController
         }
         if ($kategori) $builder = $builder->where('kategori', $kategori);
         if ($status)   $builder = $builder->where('status', $status);
+        $assets = $builder->findAll();
+        foreach ($assets as &$asset) {
+            $asset['is_app'] = false;
+        }
+
+        // B. Data dari tabel APLIKASI_MASTER
+        $appQuery = $db->table('aplikasi_master')
+                       ->select('aplikasi_master.id, aplikasi_master.nama_app as nama_aset, divisi.nama_divisi as kategori, users.nama_lengkap as pic, aplikasi_master.status, aplikasi_master.deskripsi')
+                       ->join('users', 'users.id = aplikasi_master.pic_id', 'left')
+                       ->join('divisi', 'divisi.id = aplikasi_master.divisi_id', 'left');
+        if ($role === 'User') {
+            $appQuery->where('aplikasi_master.pic_id', $user_id);
+        }
+        if ($keyword) {
+            $appQuery->groupStart()
+                     ->like('aplikasi_master.nama_app', $keyword)
+                     ->orLike('users.nama_lengkap', $keyword)
+                     ->orLike('aplikasi_master.deskripsi', $keyword)
+                     ->groupEnd();
+        }
+        if ($kategori) $appQuery->where('divisi.nama_divisi', $kategori);
+        if ($status)   $appQuery->where('aplikasi_master.status', $status);
+        $apps = $appQuery->get()->getResultArray();
+        foreach ($apps as &$app) {
+            $app['is_app'] = true;
+        }
+
+        // C. Gabungkan aset + aplikasi
+        $semua_aset = array_merge($assets, $apps);
 
         $data = [
-            'semua_aset' => $builder->findAll(),
+            'semua_aset' => $semua_aset,
             'tgl_cetak'  => date('d F Y'),
-            'user'       => session()->get('username'),
+            'user'       => session()->get('nama_lengkap') ?: session()->get('username'),
             'filters'    => [
                 'keyword'  => $keyword,
                 'kategori' => $kategori,
@@ -283,7 +320,7 @@ class Dashboard extends BaseController
         $dompdf->loadHtml($html);
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
-        $dompdf->stream("Laporan_Aset_" . date('Ymd') . ".pdf", ["Attachment" => false]);
+        $dompdf->stream("Laporan_Inventaris_" . date('Ymd') . ".pdf", ["Attachment" => false]);
         exit;
     }
     public function updateProfilePhoto()
