@@ -80,21 +80,21 @@
         <div class="md:w-6/12 p-8 md:p-14 flex flex-col justify-center bg-white/80 backdrop-blur-md relative" data-aos="fade-left" data-aos-delay="200">
 
             <!-- Deretan Logo Perusahaan -->
-            <div class="flex items-center justify-center gap-3 mb-6 pb-4 border-b border-slate-100">
+            <div class="flex items-center justify-center gap-1.5 md:gap-4 mb-8 pb-5 border-b border-slate-100 flex-nowrap">
                 <img src="<?= base_url('images/logo_danantara.png') ?>" alt="Logo Danantara"
-                    class="h-5 md:h-6 object-contain opacity-60">
+                    class="h-4 sm:h-5 md:h-7 object-contain opacity-80">
                 <img src="<?= base_url('images/logo_idsurvey.png') ?>" alt="Logo IDSurvey"
-                    class="h-5 md:h-6 object-contain opacity-60">
+                    class="h-4 sm:h-5 md:h-7 object-contain opacity-80">
                 <img src="<?= base_url('images/logo_si.png') ?>" alt="Logo Surveyor Indonesia"
-                    class="h-10 md:h-12 object-contain drop-shadow-sm px-1">
+                    class="h-7 sm:h-9 md:h-11 object-contain drop-shadow-sm">
                 <img src="<?= base_url('images/logo_simpa.png') ?>" alt="Logo SIMPA"
-                    class="h-6 md:h-8 object-contain drop-shadow-md -ml-4">
+                    class="h-5 sm:h-6 md:h-8 object-contain drop-shadow-md">
             </div>
 
             <!-- Header Form -->
             <div class="mb-8 text-center">
-                <h3 class="text-2xl font-bold text-slate-800">Selamat Datang</h3>
-                <p class="text-slate-500 text-sm mt-2">Silakan masuk menggunakan kredensial Anda</p>
+                <h3 class="text-2xl font-bold text-slate-800">Login SIMPA</h3>
+                <p class="text-slate-500 text-sm mt-2 px-2">Masukkan username dan password Anda untuk melanjutkan</p>
                 
                 <?php if (session()->getFlashdata('error')) : ?>
                     <div class="mt-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm font-medium">

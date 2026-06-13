@@ -55,7 +55,10 @@
         }
     </script>
     <style>
-        * { scroll-behavior: smooth; }
+        * { scroll-behavior: smooth; box-sizing: border-box; }
+
+        /* Prevent horizontal scroll on mobile */
+        html, body { max-width: 100vw; overflow-x: hidden; }
 
         /* Glassmorphism */
         .glass { background: rgba(255,255,255,0.08); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.15); }
@@ -96,7 +99,7 @@
         .progress-fill { width: 0; transition: width 1.5s cubic-bezier(0.4,0,0.2,1); }
 
         /* Divider */
-        .section-divider { width: 60px; height: 4px; border-radius: 2px; background: linear-gradient(90deg, #004996, #FFB800); }
+        .section-divider { width: 60px; height: 4px; border-radius: 2px; background: linear-gradient(90deg, #004996, #FFB800); flex-shrink: 0; }
 
         /* CTA shimmer btn */
         .btn-shimmer {
@@ -135,6 +138,99 @@
 
         /* Stat number */
         .stat-num { font-variant-numeric: tabular-nums; }
+
+        /* ===== MOBILE RESPONSIVE FIXES ===== */
+        @media (max-width: 640px) {
+            /* Nav height mobile */
+            .nav-glass .container { height: 64px !important; }
+
+            /* Hero section padding mobile */
+            .hero-section-container {
+                padding-top: 5rem !important;
+                padding-bottom: 7rem !important;
+            }
+
+            /* Badge System Online */
+            .system-badge {
+                font-size: 0.65rem !important;
+                padding: 0.35rem 0.75rem !important;
+            }
+
+            /* Hero title */
+            .hero-title {
+                font-size: 2rem !important;
+                line-height: 1.15 !important;
+            }
+
+            /* Hero subtitle */
+            .hero-subtitle {
+                font-size: 0.95rem !important;
+                padding-left: 1rem !important;
+            }
+
+            /* CTA buttons - stack on mobile */
+            .hero-cta {
+                flex-direction: column !important;
+                gap: 0.75rem !important;
+            }
+            .hero-cta a {
+                width: 100% !important;
+                justify-content: center !important;
+                padding: 0.9rem 1.5rem !important;
+                font-size: 0.95rem !important;
+            }
+
+            /* Trust badges wrap */
+            .trust-badges {
+                gap: 0.75rem !important;
+            }
+            .trust-badges > div {
+                font-size: 0.65rem !important;
+            }
+
+            /* About section */
+            .about-section { padding-top: 3.5rem !important; padding-bottom: 3.5rem !important; }
+            .about-grid { gap: 2.5rem !important; }
+            .about-title { font-size: 1.75rem !important; }
+
+            /* Features section */
+            .features-section { padding-top: 3.5rem !important; padding-bottom: 3.5rem !important; }
+            .features-title { font-size: 1.75rem !important; }
+            .feature-card { padding: 1.5rem !important; }
+            .feature-number { font-size: 3.5rem !important; }
+
+            /* CTA section */
+            .cta-section { padding-top: 4rem !important; padding-bottom: 4rem !important; }
+            .cta-title { font-size: 1.75rem !important; }
+            .cta-buttons {
+                flex-direction: column !important;
+                gap: 0.75rem !important;
+                align-items: stretch !important;
+            }
+            .cta-buttons a {
+                width: 100% !important;
+                justify-content: center !important;
+                padding: 1rem 1.5rem !important;
+                font-size: 0.95rem !important;
+            }
+
+            /* Footer */
+            .footer-grid { gap: 2rem !important; }
+
+            /* Mobile menu improvements */
+            #mobileMenu .container { padding-left: 1rem !important; padding-right: 1rem !important; }
+        }
+
+        @media (max-width: 768px) {
+            /* General mobile padding */
+            .container { padding-left: 1rem !important; padding-right: 1rem !important; }
+
+            /* Decorative blobs - hide on mobile to prevent overflow */
+            .decorative-blob { display: none !important; }
+
+            /* Feature cards full width on small tablets */
+            .feature-card-p { padding: 1.75rem !important; }
+        }
     </style>
 </head>
 <body class="bg-white text-slate-800 antialiased font-sans overflow-x-hidden">
@@ -202,43 +298,43 @@
             <div class="absolute inset-0 dot-grid opacity-30"></div>
         </div>
         
-        <!-- Decorative blobs -->
-        <div class="absolute top-1/4 right-0 w-[600px] h-[600px] bg-si-blue rounded-full mix-blend-screen filter blur-[120px] opacity-20 animate-pulse-slow pointer-events-none"></div>
-        <div class="absolute bottom-0 left-1/3 w-[400px] h-[400px] bg-si-gold rounded-full mix-blend-screen filter blur-[100px] opacity-15 animate-pulse-slow pointer-events-none" style="animation-delay: 3s;"></div>
+        <!-- Decorative blobs (hidden on mobile to prevent overflow) -->
+        <div class="decorative-blob absolute top-1/4 right-0 w-[600px] h-[600px] bg-si-blue rounded-full mix-blend-screen filter blur-[120px] opacity-20 animate-pulse-slow pointer-events-none"></div>
+        <div class="decorative-blob absolute bottom-0 left-1/3 w-[400px] h-[400px] bg-si-gold rounded-full mix-blend-screen filter blur-[100px] opacity-15 animate-pulse-slow pointer-events-none" style="animation-delay: 3s;"></div>
         
-        <div class="container mx-auto px-6 relative z-10 flex flex-col lg:flex-row items-center justify-between gap-12 py-24 lg:py-32">
+        <div class="hero-section-container container mx-auto px-4 sm:px-6 relative z-10 flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12 py-20 sm:py-24 lg:py-32">
             <!-- Left: Text content -->
-            <div class="lg:w-[55%] animate-fade-in-up" data-aos="fade-right" data-aos-duration="1000">
+            <div class="w-full lg:w-[55%] animate-fade-in-up" data-aos="fade-right" data-aos-duration="1000">
                 <!-- Badge -->
-                <div class="inline-flex items-center gap-2.5 px-4 py-2 rounded-full glass border border-white/20 mb-8">
-                    <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
-                    <span class="text-white text-xs font-bold tracking-[0.2em] uppercase">System Online — SIMPA v2.0</span>
+                <div class="system-badge inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full glass border border-white/20 mb-6 sm:mb-8">
+                    <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse flex-shrink-0"></span>
+                    <span class="text-white text-xs font-bold tracking-[0.15em] uppercase whitespace-nowrap">System Online — SIMPA v2.0</span>
                 </div>
                 
-                <h1 class="text-white font-extrabold leading-[1.08] mb-6 text-3xl sm:text-4xl md:text-6xl lg:text-[4.25rem] break-words">
+                <h1 class="hero-title text-white font-extrabold leading-[1.1] mb-4 sm:mb-6 text-[1.85rem] sm:text-4xl md:text-5xl lg:text-[4.25rem]">
                     Sistem Manajemen<br>
                     Proyek Aplikasi<br>
                     <span class="text-gradient-gold">PT Surveyor Indonesia</span>
                 </h1>
                 
-                <p class="text-white/75 text-lg md:text-xl leading-relaxed mb-10 max-w-xl font-inter font-light border-l-[3px] border-si-gold pl-6">
+                <p class="hero-subtitle text-white/75 text-base sm:text-lg md:text-xl leading-relaxed mb-8 sm:mb-10 max-w-xl font-inter font-light border-l-[3px] border-si-gold pl-4 sm:pl-6">
                     Platform monitoring proyek terpadu yang menghadirkan transparansi data real-time dan akurasi pelaporan di setiap level manajemen.
                 </p>
                 
-                <div class="flex flex-wrap gap-4 mb-14">
+                <div class="hero-cta flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 mb-10 sm:mb-14">
                     <a href="<?= base_url('login-page') ?>" 
-                       class="btn-shimmer bg-gradient-to-r from-si-gold to-yellow-400 hover:from-yellow-400 hover:to-si-gold text-si-dark px-8 py-4 rounded-2xl text-base font-black shadow-[0_8px_30px_rgba(255,184,0,0.4)] hover:shadow-[0_12px_40px_rgba(255,184,0,0.6)] hover:-translate-y-1.5 transition-all duration-300 flex items-center gap-3 glow-gold">
-                        Masuk Dashboard
+                       class="btn-shimmer bg-gradient-to-r from-si-gold to-yellow-400 hover:from-yellow-400 hover:to-si-gold text-si-dark px-6 sm:px-8 py-3.5 sm:py-4 rounded-2xl text-sm sm:text-base font-black shadow-[0_8px_30px_rgba(255,184,0,0.4)] hover:shadow-[0_12px_40px_rgba(255,184,0,0.6)] hover:-translate-y-1.5 transition-all duration-300 flex items-center justify-center gap-3 glow-gold">
+                        <i class="fas fa-sign-in-alt text-sm"></i> Masuk Dashboard
                     </a>
                     <a href="#about" 
-                       class="glass border border-white/25 text-white px-8 py-4 rounded-2xl text-base font-bold hover:bg-white/15 hover:-translate-y-1.5 transition-all duration-300 flex items-center gap-3">
+                       class="glass border border-white/25 text-white px-6 sm:px-8 py-3.5 sm:py-4 rounded-2xl text-sm sm:text-base font-bold hover:bg-white/15 hover:-translate-y-1.5 transition-all duration-300 flex items-center justify-center gap-3">
                         <i class="fas fa-play-circle text-sm text-si-gold"></i>
-                        Pelajari Lebih Lanjut
+                        Pelajari Lebih
                     </a>
                 </div>
 
                 <!-- Trust badges -->
-                <div class="flex flex-wrap items-center gap-6 pt-8 border-t border-white/10">
+                <div class="trust-badges flex flex-wrap items-center gap-4 sm:gap-6 pt-6 sm:pt-8 border-t border-white/10">
                     <div class="flex items-center gap-2 text-white/60 text-xs font-semibold tracking-wider uppercase">
                         <i class="fas fa-shield-alt text-si-gold"></i> COBIT Framework
                     </div>
@@ -333,39 +429,39 @@
             </div>
         </div>
         
-        <!-- Bottom Stats Bar -->
-        <div class="absolute bottom-0 left-0 right-0 hidden lg:block" style="background: rgba(0,29,62,0.7); backdrop-filter: blur(20px); border-top: 1px solid rgba(255,255,255,0.08);">
-            <div class="container mx-auto px-6 py-6 grid grid-cols-4 gap-8">
-                <div class="text-white text-center border-r border-white/10 pr-8 last:border-0">
-                    <div class="text-3xl font-black text-si-gold stat-num">50+</div>
-                    <div class="text-xs font-bold uppercase tracking-[0.15em] text-white/50 mt-1">Proyek Aktif</div>
-                </div>
-                <div class="text-white text-center border-r border-white/10 pr-8 last:border-0">
-                    <div class="text-3xl font-black text-si-gold stat-num">100%</div>
-                    <div class="text-xs font-bold uppercase tracking-[0.15em] text-white/50 mt-1">Audit Kepatuhan</div>
-                </div>
-                <div class="text-white text-center border-r border-white/10 pr-8 last:border-0">
-                    <div class="text-3xl font-black text-si-gold">Real-time</div>
-                    <div class="text-xs font-bold uppercase tracking-[0.15em] text-white/50 mt-1">Pelaporan Data</div>
+        <!-- Bottom Stats Bar - visible on md+ screens, compact grid on mobile -->
+        <div class="absolute bottom-0 left-0 right-0" style="background: rgba(0,29,62,0.75); backdrop-filter: blur(20px); border-top: 1px solid rgba(255,255,255,0.08);">
+            <div class="container mx-auto px-4 sm:px-6 py-4 sm:py-6 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-8">
+                <div class="text-white text-center">
+                    <div class="text-2xl sm:text-3xl font-black text-si-gold stat-num">50+</div>
+                    <div class="text-[10px] sm:text-xs font-bold uppercase tracking-[0.1em] sm:tracking-[0.15em] text-white/50 mt-1">Proyek Aktif</div>
                 </div>
                 <div class="text-white text-center">
-                    <div class="text-3xl font-black text-si-gold stat-num">70+</div>
-                    <div class="text-xs font-bold uppercase tracking-[0.15em] text-white/50 mt-1">Unit Kerja</div>
+                    <div class="text-2xl sm:text-3xl font-black text-si-gold stat-num">100%</div>
+                    <div class="text-[10px] sm:text-xs font-bold uppercase tracking-[0.1em] sm:tracking-[0.15em] text-white/50 mt-1">Audit Kepatuhan</div>
+                </div>
+                <div class="text-white text-center">
+                    <div class="text-xl sm:text-3xl font-black text-si-gold">Real-time</div>
+                    <div class="text-[10px] sm:text-xs font-bold uppercase tracking-[0.1em] sm:tracking-[0.15em] text-white/50 mt-1">Pelaporan Data</div>
+                </div>
+                <div class="text-white text-center">
+                    <div class="text-2xl sm:text-3xl font-black text-si-gold stat-num">70+</div>
+                    <div class="text-[10px] sm:text-xs font-bold uppercase tracking-[0.1em] sm:tracking-[0.15em] text-white/50 mt-1">Unit Kerja</div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- ===== ABOUT SECTION ===== -->
-    <section id="about" class="py-28 bg-slate-50 relative overflow-hidden">
+    <section id="about" class="about-section py-16 sm:py-20 md:py-28 bg-slate-50 relative overflow-hidden">
         <!-- Background decoration -->
         <div class="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
-            <div class="absolute -top-40 -right-40 w-[500px] h-[500px] bg-si-blue/5 rounded-full"></div>
-            <div class="absolute -bottom-40 -left-40 w-[400px] h-[400px] bg-si-gold/5 rounded-full"></div>
+            <div class="decorative-blob absolute -top-40 -right-40 w-[500px] h-[500px] bg-si-blue/5 rounded-full"></div>
+            <div class="decorative-blob absolute -bottom-40 -left-40 w-[400px] h-[400px] bg-si-gold/5 rounded-full"></div>
         </div>
 
-        <div class="container mx-auto px-6 relative z-10">
-            <div class="grid lg:grid-cols-2 gap-20 items-center">
+        <div class="container mx-auto px-4 sm:px-6 relative z-10">
+            <div class="about-grid grid lg:grid-cols-2 gap-10 sm:gap-16 lg:gap-20 items-center">
                 <!-- Image Column -->
                 <div class="relative" data-aos="zoom-in-right" data-aos-duration="1000">
                     <!-- Decorative frames -->
@@ -417,7 +513,7 @@
                         <h2 class="text-si-blue font-bold tracking-[0.15em] uppercase text-xs ml-3">Tentang Solusi Digital</h2>
                     </div>
                     
-                    <h3 class="text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight">
+                    <h3 class="about-title text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-slate-900 leading-tight">
                         Integrasi Sistem untuk<br>
                         <span class="text-gradient-blue">Efisiensi Bisnis</span>
                     </h3>
@@ -463,31 +559,31 @@
     </section>
 
     <!-- ===== SOLUTIONS / FEATURES SECTION ===== -->
-    <section id="solutions" class="py-28 bg-white relative overflow-hidden">
+    <section id="solutions" class="features-section py-16 sm:py-20 md:py-28 bg-white relative overflow-hidden">
         <!-- Subtle grid bg -->
         <div class="absolute inset-0 pointer-events-none" style="background-image: linear-gradient(rgba(0,73,150,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,73,150,0.03) 1px, transparent 1px); background-size: 50px 50px;"></div>
         
-        <div class="container mx-auto px-6 relative z-10">
+        <div class="container mx-auto px-4 sm:px-6 relative z-10">
             <div class="max-w-2xl mx-auto mb-20 text-center" data-aos="fade-up">
                 <div class="inline-flex items-center gap-2 mb-5">
                     <div class="section-divider"></div>
                     <h2 class="text-si-blue font-bold tracking-[0.15em] uppercase text-xs mx-3">Fitur Unggulan Platform</h2>
                     <div class="section-divider"></div>
                 </div>
-                <h3 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-5 leading-tight">Solusi Monitoring <span class="text-gradient-blue">Terpadu</span></h3>
+                <h3 class="features-title text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-slate-900 mb-5 leading-tight">Solusi Monitoring <span class="text-gradient-blue">Terpadu</span></h3>
                 <p class="text-slate-500 text-lg font-inter">Semua yang Anda butuhkan untuk mengelola proyek IT dalam satu platform yang terintegrasi.</p>
             </div>
             
-            <div class="grid md:grid-cols-3 gap-8">
+            <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-5 sm:gap-8">
                 <!-- Card 1 -->
-                <div class="feature-card relative p-9 bg-white border border-slate-100 rounded-3xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.07)] hover:shadow-[0_25px_60px_-10px_rgba(0,73,150,0.14)] group overflow-hidden" 
+                <div class="feature-card feature-card-p relative p-6 sm:p-9 bg-white border border-slate-100 rounded-3xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.07)] hover:shadow-[0_25px_60px_-10px_rgba(0,73,150,0.14)] group overflow-hidden" 
                      data-aos="fade-up" data-aos-delay="100">
                     <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-si-blue to-si-light transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500 rounded-t-3xl"></div>
-                    <div class="absolute top-5 right-5 text-[80px] font-black text-slate-50 leading-none select-none group-hover:text-si-blue/5 transition-colors duration-500">01</div>
-                    <div class="w-16 h-16 bg-gradient-to-br from-si-blue/8 to-si-blue/5 rounded-2xl flex items-center justify-center text-si-blue text-2xl mb-8 group-hover:from-si-blue group-hover:to-si-light group-hover:text-white group-hover:shadow-lg group-hover:scale-110 transition-all duration-400 shadow-sm">
+                    <div class="feature-number absolute top-5 right-5 text-[60px] sm:text-[80px] font-black text-slate-50 leading-none select-none group-hover:text-si-blue/5 transition-colors duration-500">01</div>
+                    <div class="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-si-blue/8 to-si-blue/5 rounded-2xl flex items-center justify-center text-si-blue text-xl sm:text-2xl mb-5 sm:mb-8 group-hover:from-si-blue group-hover:to-si-light group-hover:text-white group-hover:shadow-lg group-hover:scale-110 transition-all duration-400 shadow-sm">
                         <i class="fas fa-gauge-high"></i>
                     </div>
-                    <h4 class="text-xl font-extrabold mb-3 text-slate-800">Pelacakan Real-time</h4>
+                    <h4 class="text-lg sm:text-xl font-extrabold mb-3 text-slate-800">Pelacakan Real-time</h4>
                     <p class="text-slate-500 leading-relaxed text-sm">Dapatkan visualisasi data progres proyek secara instan untuk pengambilan keputusan yang lebih cepat melalui Dashboard Eksekutif yang komprehensif.</p>
                     <div class="mt-6 flex items-center gap-2 text-si-blue text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <span>Lihat Fitur</span><i class="fas fa-arrow-right text-xs"></i>
@@ -495,14 +591,14 @@
                 </div>
                 
                 <!-- Card 2 -->
-                <div class="feature-card relative p-9 bg-white border border-slate-100 rounded-3xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.07)] hover:shadow-[0_25px_60px_-10px_rgba(255,184,0,0.14)] group overflow-hidden" 
+                <div class="feature-card feature-card-p relative p-6 sm:p-9 bg-white border border-slate-100 rounded-3xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.07)] hover:shadow-[0_25px_60px_-10px_rgba(255,184,0,0.14)] group overflow-hidden" 
                      data-aos="fade-up" data-aos-delay="200">
                     <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-si-gold to-yellow-300 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500 rounded-t-3xl"></div>
-                    <div class="absolute top-5 right-5 text-[80px] font-black text-slate-50 leading-none select-none group-hover:text-si-gold/10 transition-colors duration-500">02</div>
-                    <div class="w-16 h-16 bg-gradient-to-br from-si-gold/10 to-si-gold/5 rounded-2xl flex items-center justify-center text-yellow-600 text-2xl mb-8 group-hover:from-si-gold group-hover:to-yellow-400 group-hover:text-white group-hover:shadow-lg group-hover:scale-110 transition-all duration-400 shadow-sm">
+                    <div class="feature-number absolute top-5 right-5 text-[60px] sm:text-[80px] font-black text-slate-50 leading-none select-none group-hover:text-si-gold/10 transition-colors duration-500">02</div>
+                    <div class="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-si-gold/10 to-si-gold/5 rounded-2xl flex items-center justify-center text-yellow-600 text-xl sm:text-2xl mb-5 sm:mb-8 group-hover:from-si-gold group-hover:to-yellow-400 group-hover:text-white group-hover:shadow-lg group-hover:scale-110 transition-all duration-400 shadow-sm">
                         <i class="fas fa-sliders"></i>
                     </div>
-                    <h4 class="text-xl font-extrabold mb-3 text-slate-800">Sistem Bobot Modul</h4>
+                    <h4 class="text-lg sm:text-xl font-extrabold mb-3 text-slate-800">Sistem Bobot Modul</h4>
                     <p class="text-slate-500 leading-relaxed text-sm">Perhitungan progres yang sangat akurat menggunakan rata-rata tertimbang (Weighted Average) berdasarkan tingkat kesulitan tiap fitur aplikasi.</p>
                     <div class="mt-6 flex items-center gap-2 text-si-gold text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <span>Lihat Fitur</span><i class="fas fa-arrow-right text-xs"></i>
@@ -510,14 +606,14 @@
                 </div>
                 
                 <!-- Card 3 -->
-                <div class="feature-card relative p-9 bg-white border border-slate-100 rounded-3xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.07)] hover:shadow-[0_25px_60px_-10px_rgba(16,185,129,0.14)] group overflow-hidden" 
+                <div class="feature-card feature-card-p relative p-6 sm:p-9 bg-white border border-slate-100 rounded-3xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.07)] hover:shadow-[0_25px_60px_-10px_rgba(16,185,129,0.14)] group overflow-hidden" 
                      data-aos="fade-up" data-aos-delay="300">
                     <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 to-green-400 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500 rounded-t-3xl"></div>
-                    <div class="absolute top-5 right-5 text-[80px] font-black text-slate-50 leading-none select-none group-hover:text-green-50 transition-colors duration-500">03</div>
-                    <div class="w-16 h-16 bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600 text-2xl mb-8 group-hover:from-emerald-500 group-hover:to-green-400 group-hover:text-white group-hover:shadow-lg group-hover:scale-110 transition-all duration-400 shadow-sm">
+                    <div class="feature-number absolute top-5 right-5 text-[60px] sm:text-[80px] font-black text-slate-50 leading-none select-none group-hover:text-green-50 transition-colors duration-500">03</div>
+                    <div class="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600 text-xl sm:text-2xl mb-5 sm:mb-8 group-hover:from-emerald-500 group-hover:to-green-400 group-hover:text-white group-hover:shadow-lg group-hover:scale-110 transition-all duration-400 shadow-sm">
                         <i class="fas fa-file-pdf"></i>
                     </div>
-                    <h4 class="text-xl font-extrabold mb-3 text-slate-800">Laporan PDF Instan</h4>
+                    <h4 class="text-lg sm:text-xl font-extrabold mb-3 text-slate-800">Laporan PDF Instan</h4>
                     <p class="text-slate-500 leading-relaxed text-sm">Ekspor ringkasan progres dan daftar aplikasi ke format PDF profesional siap cetak hanya dengan satu klik untuk keperluan audit.</p>
                     <div class="mt-6 flex items-center gap-2 text-emerald-600 text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <span>Lihat Fitur</span><i class="fas fa-arrow-right text-xs"></i>
@@ -526,7 +622,7 @@
             </div>
 
             <!-- Additional features row -->
-            <div class="grid md:grid-cols-3 gap-8 mt-8">
+            <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-5 sm:gap-8 mt-5 sm:mt-8">
                 <div class="feature-card relative p-9 bg-white border border-slate-100 rounded-3xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.07)] hover:shadow-[0_25px_60px_-10px_rgba(139,92,246,0.14)] group overflow-hidden" 
                      data-aos="fade-up" data-aos-delay="100">
                     <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-violet-500 to-purple-400 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500 rounded-t-3xl"></div>
@@ -559,36 +655,36 @@
     </section>
 
     <!-- ===== CTA SECTION ===== -->
-    <section class="relative py-28 overflow-hidden bg-si-deeper">
+    <section class="cta-section relative py-16 sm:py-20 md:py-28 overflow-hidden bg-si-deeper">
         <!-- Background image subtle -->
         <div class="absolute inset-0 z-0">
             <img src="<?= base_url('images/landing.webp') ?>" alt="" class="w-full h-full object-cover opacity-10 mix-blend-luminosity">
             <div class="absolute inset-0" style="background: linear-gradient(135deg, rgba(0,29,62,0.97) 0%, rgba(0,73,150,0.90) 100%);"></div>
         </div>
-        <div class="absolute -right-40 -top-40 w-[500px] h-[500px] bg-si-gold/10 rounded-full blur-[100px] pointer-events-none"></div>
-        <div class="absolute -left-40 -bottom-40 w-[400px] h-[400px] bg-si-blue/40 rounded-full blur-[100px] pointer-events-none"></div>
+        <div class="decorative-blob absolute -right-40 -top-40 w-[500px] h-[500px] bg-si-gold/10 rounded-full blur-[100px] pointer-events-none"></div>
+        <div class="decorative-blob absolute -left-40 -bottom-40 w-[400px] h-[400px] bg-si-blue/40 rounded-full blur-[100px] pointer-events-none"></div>
         <div class="absolute inset-0 dot-grid opacity-10 pointer-events-none"></div>
         
-        <div class="container mx-auto px-6 text-center text-white relative z-10" data-aos="fade-up">
-            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-white/10 mb-8">
-                <span class="w-2 h-2 rounded-full bg-si-gold"></span>
-                <span class="text-white text-xs font-bold tracking-[0.2em] uppercase">Mulai Sekarang</span>
+        <div class="container mx-auto px-4 sm:px-6 text-center text-white relative z-10" data-aos="fade-up">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full glass border border-white/10 mb-6 sm:mb-8">
+                <span class="w-2 h-2 rounded-full bg-si-gold flex-shrink-0"></span>
+                <span class="text-white text-xs font-bold tracking-[0.15em] uppercase">Mulai Sekarang</span>
             </div>
-            <h2 class="text-4xl md:text-6xl font-extrabold mb-6 max-w-3xl mx-auto leading-tight">
+            <h2 class="cta-title text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-extrabold mb-4 sm:mb-6 max-w-3xl mx-auto leading-tight">
                 Siap Meningkatkan<br>
                 <span class="text-gradient-gold">Transparansi Monitoring</span><br>
                 Proyek Anda?
             </h2>
-            <p class="text-white/60 text-lg mb-12 max-w-xl mx-auto font-inter">
+            <p class="text-white/60 text-base sm:text-lg mb-8 sm:mb-12 max-w-xl mx-auto font-inter">
                 Bergabunglah bersama tim PT Surveyor Indonesia dalam mengelola proyek lebih efisien dan terukur.
             </p>
-            <div class="flex flex-wrap justify-center gap-4">
+            <div class="cta-buttons flex flex-col sm:flex-row flex-wrap justify-center gap-3 sm:gap-4">
                 <a href="<?= base_url('login-page') ?>" 
-                   class="btn-shimmer bg-gradient-to-r from-si-gold to-yellow-400 hover:from-yellow-400 hover:to-si-gold text-si-dark px-12 py-5 rounded-2xl font-black text-lg shadow-[0_10px_40px_rgba(255,184,0,0.4)] hover:shadow-[0_15px_50px_rgba(255,184,0,0.6)] hover:-translate-y-1.5 transition-all duration-300 uppercase tracking-wider glow-gold">
+                   class="btn-shimmer bg-gradient-to-r from-si-gold to-yellow-400 hover:from-yellow-400 hover:to-si-gold text-si-dark px-8 sm:px-12 py-4 sm:py-5 rounded-2xl font-black text-base sm:text-lg shadow-[0_10px_40px_rgba(255,184,0,0.4)] hover:shadow-[0_15px_50px_rgba(255,184,0,0.6)] hover:-translate-y-1.5 transition-all duration-300 uppercase tracking-wider glow-gold flex items-center justify-center">
                     <i class="fas fa-sign-in-alt mr-2"></i> Akses SIMPA Sekarang
                 </a>
                 <a href="#about"
-                   class="glass border border-white/20 text-white px-10 py-5 rounded-2xl font-bold text-lg hover:bg-white/10 hover:-translate-y-1.5 transition-all duration-300">
+                   class="glass border border-white/20 text-white px-8 sm:px-10 py-4 sm:py-5 rounded-2xl font-bold text-base sm:text-lg hover:bg-white/10 hover:-translate-y-1.5 transition-all duration-300 flex items-center justify-center">
                     Pelajari Lebih Lanjut
                 </a>
             </div>
@@ -596,12 +692,12 @@
     </section>
 
     <!-- ===== FOOTER ===== -->
-    <footer id="contact" class="bg-si-deeper text-white pt-20 pb-10 relative border-t-[3px] border-si-gold overflow-hidden">
+    <footer id="contact" class="bg-si-deeper text-white pt-12 sm:pt-16 md:pt-20 pb-8 sm:pb-10 relative border-t-[3px] border-si-gold overflow-hidden">
         <div class="absolute inset-0 opacity-[0.04]" style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 20px 20px;"></div>
-        <div class="absolute top-0 right-0 w-[400px] h-[400px] bg-si-blue/20 rounded-full blur-[100px] pointer-events-none"></div>
+        <div class="decorative-blob absolute top-0 right-0 w-[400px] h-[400px] bg-si-blue/20 rounded-full blur-[100px] pointer-events-none"></div>
         
-        <div class="container mx-auto px-6 relative z-10">
-            <div class="grid lg:grid-cols-3 gap-12 mb-16 pb-16 border-b border-white/8">
+        <div class="container mx-auto px-4 sm:px-6 relative z-10">
+            <div class="footer-grid grid sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10 lg:gap-12 mb-10 sm:mb-16 pb-10 sm:pb-16 border-b border-white/8">
                 <!-- Brand -->
                 <div class="lg:col-span-1">
                     <div class="flex items-center gap-3 mb-6">

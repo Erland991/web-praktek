@@ -251,14 +251,80 @@
             width: 100%;
         }
         .container-fluid {
-            padding-left: 15px !important;
-            padding-right: 15px !important;
+            padding-left: 12px !important;
+            padding-right: 12px !important;
             overflow-x: hidden;
         }
         .table-responsive {
             width: 100%;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
+        }
+        /* Hero section on mobile */
+        .hero-gradient {
+            flex-direction: column !important;
+            padding: 1.5rem !important;
+        }
+        .hero-gradient .d-none.d-md-block {
+            display: none !important;
+        }
+        .hero-gradient h2.display-6 {
+            font-size: 1.4rem !important;
+        }
+        .hero-gradient p.fs-5 {
+            font-size: 0.9rem !important;
+        }
+        /* Stat cards on mobile */
+        .stat-card .display-5 {
+            font-size: 1.75rem !important;
+        }
+        /* Card body padding */
+        .card-body {
+            padding: 1rem !important;
+        }
+        /* Badge font sizes */
+        .badge.fs-2 { font-size: 0.7rem !important; }
+        .badge.fs-3 { font-size: 0.75rem !important; }
+        /* Responsive buttons in card header */
+        .card-header .btn {
+            font-size: 0.8rem !important;
+            padding: 0.4rem 0.8rem !important;
+        }
+        /* Nav items on mobile */
+        .app-header .navbar {
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+        }
+        /* Glass cards on mobile */
+        .glass-card {
+            border-radius: 0.875rem !important;
+        }
+        /* Hide overflow on body wrapper */
+        .body-wrapper {
+            overflow-x: hidden;
+        }
+    }
+
+    @media (max-width: 576px) {
+        /* Extra small screens */
+        .container-fluid {
+            padding-left: 10px !important;
+            padding-right: 10px !important;
+        }
+        .card {
+            margin-bottom: 0.75rem !important;
+        }
+        /* Row gap reduction */
+        .row.g-4 { --bs-gutter-x: 0.75rem; --bs-gutter-y: 0.75rem; }
+        .row.g-3 { --bs-gutter-x: 0.5rem; --bs-gutter-y: 0.5rem; }
+        /* Table cell font */
+        .table thead th, .table tbody td {
+            font-size: 0.78rem !important;
+            padding: 0.75rem 0.5rem !important;
+        }
+        /* Progress text */
+        .d-flex.justify-content-between.align-items-end .fs-4 {
+            font-size: 0.85rem !important;
         }
     }
 

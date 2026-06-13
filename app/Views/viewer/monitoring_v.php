@@ -109,19 +109,47 @@ a.hover-white:hover {
     background-color: #fff !important;
     border-color: #d1d5db !important;
 }
+
+/* Mobile responsive tweaks for monitoring */
+@media (max-width: 767px) {
+    /* Hero on small screens */
+    .hero-gradient {
+        padding: 1.25rem !important;
+    }
+    .hero-gradient h2 {
+        font-size: 1.25rem !important;
+        margin-bottom: 0.35rem !important;
+    }
+    .hero-gradient p {
+        font-size: 0.825rem !important;
+    }
+    /* Chart area - allow horizontal scroll on mobile */
+    .chart-scroll-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    /* Project cards full width on small screens */
+    .col-md-6.col-xl-4 {
+        width: 100%;
+    }
+    /* Reduce PIC name width */
+    small.fw-bold.text-dark[style*="max-width"] {
+        max-width: 90px !important;
+    }
+}
 </style>
 
 <div class="container-fluid px-0">
     <!-- Hero Section -->
     <div class="row mb-4">
         <div class="col-12">
-            <div class="hero-gradient p-5 shadow-sm d-flex justify-content-between align-items-center">
+            <div class="hero-gradient p-4 p-md-5 shadow-sm d-flex justify-content-between align-items-center flex-wrap gap-3">
                 <div class="position-relative z-1">
                     <span class="badge bg-white text-primary fw-bold px-3 py-2 rounded-pill mb-3 shadow-sm" style="font-size: 0.8rem; letter-spacing: 1px;">
                         <i class="ti ti-chart-pie me-1"></i> SIMPA ENTERPRISE
                     </span>
-                    <h2 class="fw-bolder mb-2 text-white display-6" style="letter-spacing: -0.5px;">Executive Monitoring</h2>
-                    <p class="mb-0 fs-5 text-white-50 opacity-100" style="max-width: 650px;">
+                    <h2 class="fw-bolder mb-2 text-white" style="letter-spacing: -0.5px; font-size: clamp(1.2rem, 4vw, 2rem);">Executive Monitoring</h2>
+                    <p class="mb-0 text-white-50 opacity-100" style="max-width: 650px; font-size: clamp(0.8rem, 2.5vw, 1rem);">
                         Oversight terpusat memantau performa dan pengerjaan aplikasi seluruh divisi dengan visualisasi interaktif secara real-time.
                     </p>
                 </div>
@@ -133,22 +161,22 @@ a.hover-white:hover {
     </div>
 
     <!-- Stats & Filters -->
-    <div class="row mb-5 g-4">
+    <div class="row mb-4 mb-md-5 g-3 g-md-4">
         <!-- Filter Card -->
-        <div class="col-lg-7">
+        <div class="col-12 col-lg-7">
             <div class="card glass-card h-100 border-0">
-                <div class="card-body p-4 d-flex flex-column justify-content-center">
-                    <div class="d-flex align-items-center justify-content-between mb-4">
-                        <h5 class="fw-bold text-dark mb-0 d-flex align-items-center">
-                            <div class="bg-light-primary text-primary rounded d-flex align-items-center justify-content-center p-2 me-3" style="width: 40px; height: 40px;">
+                <div class="card-body p-3 p-md-4 d-flex flex-column justify-content-center">
+                    <div class="d-flex align-items-center justify-content-between mb-3 mb-md-4">
+                        <h5 class="fw-bold text-dark mb-0 d-flex align-items-center" style="font-size: clamp(0.9rem, 2.5vw, 1.1rem);">
+                            <div class="bg-light-primary text-primary rounded d-flex align-items-center justify-content-center p-2 me-3" style="width: 40px; height: 40px; flex-shrink: 0;">
                                 <i class="ti ti-filter fs-6"></i>
                             </div>
                             Oversight Filter
                         </h5>
                     </div>
-                    <form action="" method="GET" class="row g-3 custom-select-wrapper mt-auto">
-                        <div class="col-md-8">
-                            <select name="apps[]" class="form-select w-100" multiple data-placeholder="Pilih aplikasi..." style="min-height: 120px;">
+                    <form action="" method="GET" class="row g-2 g-md-3 custom-select-wrapper mt-auto">
+                        <div class="col-12 col-md-8">
+                            <select name="apps[]" class="form-select w-100" multiple data-placeholder="Pilih aplikasi..." style="min-height: 100px;">
                                 <?php foreach($all_apps as $aa): ?>
                                     <option value="<?= $aa['id'] ?>" <?= in_array($aa['id'], $selected) ? 'selected' : '' ?>>
                                         <?= $aa['nama_app'] ?> (PIC: <?= $aa['pic_name'] ?? $aa['pic_id'] ?>)
@@ -160,11 +188,11 @@ a.hover-white:hover {
                                 Tahan <b>Ctrl</b> atau <b>Cmd</b> untuk multi-pilihan
                             </small>
                         </div>
-                        <div class="col-md-4 d-flex flex-column gap-2 justify-content-start pt-1">
-                            <button type="submit" class="btn btn-primary rounded-3 fw-bold shadow-sm py-2 d-flex align-items-center justify-content-center">
+                        <div class="col-12 col-md-4 d-flex flex-row flex-md-column gap-2 justify-content-start pt-1">
+                            <button type="submit" class="btn btn-primary rounded-3 fw-bold shadow-sm py-2 d-flex align-items-center justify-content-center flex-fill flex-md-grow-0">
                                 <i class="ti ti-search me-2"></i> Terapkan
                             </button>
-                            <a href="<?= base_url('monitoring') ?>" class="btn btn-light rounded-3 fw-bold border py-2 text-dark hover-white text-center text-decoration-none d-flex align-items-center justify-content-center">
+                            <a href="<?= base_url('monitoring') ?>" class="btn btn-light rounded-3 fw-bold border py-2 text-dark hover-white text-center text-decoration-none d-flex align-items-center justify-content-center flex-fill flex-md-grow-0">
                                 <i class="ti ti-refresh me-2"></i> Reset
                             </a>
                         </div>
@@ -174,8 +202,8 @@ a.hover-white:hover {
         </div>
 
         <!-- Quick Stats -->
-        <div class="col-lg-5">
-            <div class="row g-4 h-100">
+        <div class="col-12 col-lg-5">
+            <div class="row g-3 g-md-4 h-100">
                 <div class="col-12 h-50">
                     <div class="card stat-card text-white h-100" style="background: linear-gradient(135deg, #1e40af, #3b82f6) !important;">
                         <div class="card-body p-4 d-flex align-items-center justify-content-between z-1 h-100">
@@ -212,18 +240,18 @@ a.hover-white:hover {
     </div>
 
     <!-- Chart Section -->
-    <div class="row mb-5">
+    <div class="row mb-4 mb-md-5">
         <div class="col-12">
             <div class="card glass-card border-0">
-                <div class="card-header bg-transparent border-0 pt-4 pb-0 px-4">
-                    <h5 class="fw-bolder text-dark mb-1 d-flex align-items-center">
+                <div class="card-header bg-transparent border-0 pt-4 pb-0 px-3 px-md-4">
+                    <h5 class="fw-bolder text-dark mb-1 d-flex align-items-center" style="font-size: clamp(0.9rem, 2.5vw, 1.1rem);">
                         <i class="ti ti-chart-bar text-primary me-2 fs-5"></i> Benchmarking Capaian Proyek
                     </h5>
                     <p class="text-muted fs-3 mb-0 ms-4 ps-2">Visualisasi perbandingan persentase realisasi antar proyek aktif.</p>
                 </div>
                 <div class="card-body p-2 p-md-4">
                     <div class="w-100 overflow-x-auto" style="-webkit-overflow-scrolling: touch;">
-                        <div style="height: 380px; min-width: 600px; padding-right: 15px;">
+                        <div style="height: 340px; min-width: 480px; padding-right: 15px;">
                             <canvas id="executiveChart" width="100%" height="100%"></canvas>
                         </div>
                     </div>
