@@ -11,6 +11,11 @@ $routes->get('/', 'Home::index');
 $routes->get('/login-page', 'Home::loginPage');
 $routes->post('/login', 'Home::login');
 $routes->get('/logout', 'Home::logout');
+$routes->get('/test_db', 'Home::test_db');
+$routes->get('/test_c', 'TestController::index');
+$routes->get('/test_d', 'TestController::data');
+$routes->get('/test_insert', 'TestController::insert_data');
+$routes->get('/test_master', 'TestController::test_master');
 $routes->get('/setup-database', 'DatabaseSetup::index');
 
 // --- DASHBOARD ---
@@ -47,6 +52,16 @@ $routes->get('/notula/duplicate/(:num)', 'NotulaController::duplicate/$1');
 $routes->post('/notula/revise/(:num)', 'NotulaController::revise/$1');
 $routes->get('/notula/export/(:num)', 'NotulaController::export/$1');
 $routes->get('/notula/print/(:num)', 'NotulaController::print/$1');
+
+// --- PERMINTAAN APLIKASI ---
+$routes->get('/permintaan', 'PermintaanController::index');
+$routes->get('/permintaan/list', 'PermintaanController::list');
+$routes->get('/permintaan/edit/(:num)', 'PermintaanController::index/$1');
+$routes->post('/permintaan/save', 'PermintaanController::save');
+$routes->get('/permintaan/approve/(:num)', 'PermintaanController::approve/$1');
+$routes->get('/permintaan/verify/(:num)', 'PermintaanController::verify/$1');
+$routes->get('/permintaan/export/(:num)', 'PermintaanController::export/$1');
+
 
 // --- ABSENSI FEATURES ---
 $routes->get('/absensi', 'AbsensiController::index');
@@ -106,4 +121,13 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin'], function($rout
     // Approval Progress
     $routes->get('approval', 'Approval::index');
     $routes->post('approval/action/(:num)/(:num)', 'Approval::action/$1/$2');
+
+    // Approval Notula/Memo
+    $routes->get('approval/approve-notula/(:num)/(:num)', 'Approval::approve_notula/$1/$2');
+
+    // Persetujuan Memo (halaman khusus, akses semua user)
+    $routes->get('approval/memo', 'Approval::memo_persetujuan');
 });
+
+// --- MEMO PERSETUJUAN (shortcut, akses semua user) ---
+$routes->get('memo/persetujuan', 'Admin\Approval::memo_persetujuan');

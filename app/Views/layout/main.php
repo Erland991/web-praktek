@@ -516,11 +516,11 @@
             <?php endif; ?>
             <?php endif; ?>
 
-            <?php if (session()->get('role') == 'User' || session()->get('role') == 'PM') : ?>
             <li class="nav-small-cap">
               <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
               <span class="hide-menu">OPERATION</span>
             </li>
+            <?php if (session()->get('role') == 'User' || session()->get('role') == 'PM') : ?>
             <li class="sidebar-item">
               <a class="sidebar-link" href="<?= base_url('progress') ?>" aria-expanded="false">
                 <span>
@@ -530,6 +530,22 @@
               </a>
             </li>
             <?php endif; ?>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="<?= base_url('memo/persetujuan') ?>" aria-expanded="false">
+                <span>
+                  <i class="ti ti-file-check"></i>
+                </span>
+                <span class="hide-menu">Persetujuan Memo</span>
+              </a>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="<?= base_url('permintaan/list') ?>" aria-expanded="false">
+                <span>
+                  <i class="ti ti-file-plus"></i>
+                </span>
+                <span class="hide-menu">Permintaan Aplikasi</span>
+              </a>
+            </li>
 
             <li class="nav-small-cap">
               <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
@@ -567,6 +583,7 @@
                 <span class="hide-menu">Kalender Progres</span>
               </a>
             </li>
+
 
             <?php if (session()->get('role') == 'Admin') : ?>
             <li class="nav-small-cap">

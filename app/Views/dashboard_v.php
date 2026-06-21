@@ -223,7 +223,7 @@
                             <?php endif; ?>
                         </td>
                         <td class="text-end px-4">
-                            <div class="d-flex gap-1 justify-content-end">
+                            <div class="d-flex flex-wrap gap-1 justify-content-end">
                                 <?php if (!empty($a['is_app'])) : ?>
                                     <a href="<?= base_url('notula?app_id=' . ($a['id'] ?? '') . '&quick=1') ?>" class="btn btn-sm btn-light-success text-success hover-success px-2" data-bs-toggle="tooltip" title="Quick MoM Build"><i class="ti ti-bolt fs-4"></i></a>
                                     <a href="<?= base_url('absensi?app_id=' . ($a['id'] ?? '')) ?>" class="btn btn-sm btn-light-info text-info hover-info px-2" data-bs-toggle="tooltip" title="Buat Daftar Hadir"><i class="ti ti-users fs-4"></i></a>

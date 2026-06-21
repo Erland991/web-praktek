@@ -32,6 +32,42 @@
     .fc-event { border-radius: 6px !important; padding: 2px 5px; cursor: pointer; transition: transform 0.2s; }
     .fc-event:hover { transform: scale(1.02); }
     .fc-daygrid-event { white-space: normal !important; }
+    
+    /* Mobile responsive untuk header kalender */
+    @media (max-width: 768px) {
+        .fc-header-toolbar {
+            flex-direction: column;
+            gap: 12px;
+        }
+        .fc-toolbar-chunk {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        .fc-toolbar-title {
+            font-size: 1.2rem !important;
+            text-align: center;
+        }
+        .fc-button {
+            padding: 0.3rem 0.6rem !important;
+            font-size: 0.8rem !important;
+        }
+        /* Membuat kalender bisa digeser (scroll) ke samping agar tidak terjepit */
+        /* Terapkan overflow hanya pada area grid (harness), BUKAN seluruh kalender termasuk header */
+        .fc-view-harness {
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+        }
+        .fc-view {
+            min-width: 500px;
+        }
+        /* Hapus min-width dari #calendar agar headernya tetap seukuran layar */
+        #calendar {
+            min-width: 0 !important;
+        }
+    }
 </style>
 
 <script>
@@ -39,7 +75,7 @@
     var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
       initialView: 'dayGridMonth',
-      themeSystem: 'bootstrap5',
+      themeSystem: 'standard',
       headerToolbar: {
         left: 'prev,next today',
         center: 'title',

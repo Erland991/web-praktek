@@ -44,8 +44,8 @@
                         <?php foreach($absensi as $a): ?>
                         <tr>
                             <td class="border-bottom-0 ps-4">
-                                <h6 class="fw-bold mb-1 text-dark"><?= $a['acara'] ?></h6>
-                                <small class="text-primary fw-bold d-block"><i class="ti ti-device-laptop me-1"></i> <?= $a['nama_app'] ?? 'Non-Aplikasi' ?></small>
+                                <h6 class="fw-bold mb-1 text-dark text-wrap" style="word-break: break-word; max-width: 250px;"><?= esc($a['acara']) ?></h6>
+                                <small class="text-primary fw-bold d-block text-wrap" style="word-break: break-word; max-width: 250px;"><i class="ti ti-device-laptop me-1"></i> <?= esc($a['nama_app'] ?? 'Non-Aplikasi') ?></small>
                             </td>
                             <td class="border-bottom-0">
                                 <div class="d-flex align-items-center mb-1">
@@ -54,7 +54,7 @@
                                 </div>
                                 <div class="d-flex align-items-center">
                                     <i class="ti ti-map-pin text-muted me-2"></i>
-                                    <span class="text-muted fs-2"><?= $a['tempat'] ?> (<?= $a['waktu'] ?>)</span>
+                                    <span class="text-muted fs-2 text-wrap" style="word-break: break-word; max-width: 200px;"><?= esc($a['tempat']) ?> (<?= esc($a['waktu']) ?>)</span>
                                 </div>
                             </td>
                             <td class="border-bottom-0 text-center">

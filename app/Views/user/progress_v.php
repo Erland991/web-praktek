@@ -4,10 +4,17 @@
 <div class="row mb-4 mt-3">
     <div class="col-12">
         <div class="card border-0 rounded-4 overflow-hidden position-relative shadow-sm bg-white">
-            <div class="card-body p-4 position-relative z-1 border-start border-4 border-primary">
-                <span class="badge bg-primary bg-opacity-10 text-primary mb-2 fs-2 fw-medium px-3 py-1 rounded-pill"><i class="ti ti-chart-line me-1"></i> SIMPA Operation</span>
-                <h4 class="fw-bold text-dark mb-1">Master Aplikasi & Progres Saya</h4>
-                <p class="mb-0 text-muted" style="max-width: 600px;">Daftar aplikasi yang ditugaskan kepada Anda sebagai Penanggung Jawab. Klik tombol laporan untuk melacak capaian pengerjaan.</p>
+            <div class="card-body p-4 position-relative z-1 border-start border-4 border-primary d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="badge bg-primary bg-opacity-10 text-primary mb-2 fs-2 fw-medium px-3 py-1 rounded-pill"><i class="ti ti-chart-line me-1"></i> SIMPA Operation</span>
+                    <h4 class="fw-bold text-dark mb-1">Master Aplikasi & Progres Saya</h4>
+                    <p class="mb-0 text-muted" style="max-width: 600px;">Daftar aplikasi yang ditugaskan kepada Anda sebagai Penanggung Jawab. Klik tombol laporan untuk melacak capaian pengerjaan.</p>
+                </div>
+                <div>
+                    <a href="<?= base_url('permintaan/list') ?>" class="btn btn-primary rounded-pill px-4 shadow-sm hover-elevate">
+                        <i class="ti ti-file-plus me-1"></i> Form Permintaan Aplikasi
+                    </a>
+                </div>
             </div>
         </div>
     </div>

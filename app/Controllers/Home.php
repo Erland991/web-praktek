@@ -58,4 +58,11 @@ class Home extends BaseController
         session()->destroy();
         return redirect()->to('/');
     }
+
+    public function test_db()
+    {
+        $db = \Config\Database::connect();
+        $q = $db->table("aset")->get();
+        echo json_encode($q->getResultArray());
+    }
 }

@@ -278,6 +278,57 @@ class DatabaseSetup extends BaseController
         }
 
         // ================================================================
+        // 1.5. Tabel permintaan_aplikasi
+        // ================================================================
+        if (!$this->tableOk('permintaan_aplikasi')) {
+            $this->run("CREATE TABLE permintaan_aplikasi (
+                id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                nama_app VARCHAR(255) NULL,
+                deskripsi TEXT NULL,
+                latar_belakang TEXT NULL,
+                tgl_target DATE NULL,
+                user_id INT(11) UNSIGNED NOT NULL,
+                nama_disiapkan VARCHAR(100) NULL,
+                jabatan_disiapkan VARCHAR(100) NULL,
+                tgl_disiapkan DATETIME NULL,
+                approval_user_id INT(11) UNSIGNED NULL,
+                nama_setuju VARCHAR(100) NULL,
+                jabatan_setuju VARCHAR(100) NULL,
+                tgl_setuju DATETIME NULL,
+                is_approved TINYINT(1) DEFAULT 0,
+                doc_status VARCHAR(20) DEFAULT 'draft',
+                tgl_mulai_pengembangan DATE NULL,
+                aplikasi_id INT(11) NULL,
+                created_at DATETIME NULL,
+                updated_at DATETIME NULL
+            ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4", "Create permintaan_aplikasi");
+            echo "<li>✅ Tabel <b>permintaan_aplikasi</b> dibuat.</li>";
+        }
+        $permintaan_cols = [
+            'nama_app'               => "VARCHAR(255) NULL",
+            'deskripsi'              => "TEXT NULL",
+            'latar_belakang'         => "TEXT NULL",
+            'tgl_target'             => "DATE NULL",
+            'user_id'                => "INT(11) UNSIGNED NOT NULL",
+            'nama_disiapkan'         => "VARCHAR(100) NULL",
+            'jabatan_disiapkan'      => "VARCHAR(100) NULL",
+            'tgl_disiapkan'          => "DATETIME NULL",
+            'approval_user_id'       => "INT(11) UNSIGNED NULL",
+            'nama_setuju'            => "VARCHAR(100) NULL",
+            'jabatan_setuju'         => "VARCHAR(100) NULL",
+            'tgl_setuju'             => "DATETIME NULL",
+            'is_approved'            => "TINYINT(1) DEFAULT 0",
+            'doc_status'             => "VARCHAR(20) DEFAULT 'draft'",
+            'tgl_mulai_pengembangan' => "DATE NULL",
+            'aplikasi_id'            => "INT(11) NULL",
+            'created_at'             => "DATETIME NULL",
+            'updated_at'             => "DATETIME NULL",
+        ];
+        foreach ($permintaan_cols as $col => $def) {
+            $this->addCol('permintaan_aplikasi', $col, $def);
+        }
+
+        // ================================================================
         // 2. Tabel master_cobit_19
         // ================================================================
         if (!$this->tableOk('master_cobit_19')) {

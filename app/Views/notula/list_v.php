@@ -44,8 +44,8 @@
                         <tr>
                             <td class="ps-4 fw-bold"><?= $no++ ?></td>
                             <td>
-                                <span class="fw-bold d-block text-dark"><?= $m['agenda'] ?></span>
-                                <small class="text-muted"><i class="ti ti-map-pin me-1"></i> <?= $m['tempat'] ?></small>
+                                <span class="fw-bold d-block text-dark text-wrap" style="word-break: break-word; max-width: 250px;"><?= esc($m['agenda']) ?></span>
+                                <small class="text-muted text-wrap d-block mt-1" style="word-break: break-word; max-width: 250px;"><i class="ti ti-map-pin me-1"></i> <?= esc($m['tempat']) ?></small>
                             </td>
                             <td><?= date('d M Y', strtotime($m['tanggal'])) ?></td>
                             <td>

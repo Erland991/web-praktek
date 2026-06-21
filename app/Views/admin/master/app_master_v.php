@@ -80,7 +80,7 @@
                         </td>
                         <?php if (session()->get('role') == 'Admin' || session()->get('role') == 'PM') : ?>
                         <td class="border-bottom-0 text-center px-4 text-nowrap">
-                            <div class="d-flex gap-1 justify-content-center">
+                            <div class="d-flex flex-wrap gap-1 justify-content-center">
                                 <button type="button" class="btn btn-sm btn-light text-success hover-success px-2" data-bs-toggle="tooltip" title="Catat Go-Live" onclick="showReleaseModal(<?= $app['id'] ?>, '<?= $app['nama_app'] ?>')">
                                     <i class="ti ti-rocket fs-4"></i>
                                 </button>

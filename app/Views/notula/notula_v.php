@@ -232,12 +232,17 @@
                         <h6 class="fw-bold text-muted mb-3 text-uppercase tracking-wider">Disetujui Oleh (1):</h6>
                         
                         <div class="signature-box mx-auto mb-3 d-flex align-items-center justify-content-center flex-column" style="height: 90px;">
+                            <?php 
+                                $currentUserId = session()->get('id');
+                                $currentRole = session()->get('role');
+                                $canApprove1 = !empty($notula['id']) && empty($notula['is_approved1']) && ($currentUserId == $notula['approval_user1_id'] || $currentRole === 'Admin');
+                            ?>
                             <?php if(!empty($notula['is_approved1'])): ?>
                                 <div class="digital-stamp bg-success bg-opacity-10 text-success rounded-circle mb-2 shadow-sm d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
                                     <i class="ti ti-check fs-2"></i>
                                 </div>
                                 <span class="text-success small fw-bold tracking-wider">APPROVED</span>
-                            <?php elseif(!empty($notula['id'])): ?>
+                            <?php elseif($canApprove1): ?>
                                 <button type="button" onclick="approveNotula(<?= $notula['id'] ?>, 1, this)" class="btn btn-outline-primary rounded-pill px-4 shadow-sm hover-elevate">Approve Sekarang</button>
                             <?php else: ?>
                                 <div class="text-muted opacity-50 d-flex flex-column align-items-center">
@@ -268,17 +273,20 @@
                         <h6 class="fw-bold text-muted mb-3 text-uppercase tracking-wider">Disetujui Oleh (2):</h6>
                         
                         <div class="signature-box mx-auto mb-3 d-flex align-items-center justify-content-center flex-column" style="height: 90px;">
+                            <?php 
+                                $canApprove2 = !empty($notula['id']) && empty($notula['is_approved2']) && ($currentUserId == $notula['approval_user2_id'] || $currentRole === 'Admin');
+                            ?>
                             <?php if(!empty($notula['is_approved2'])): ?>
                                 <div class="digital-stamp bg-success bg-opacity-10 text-success rounded-circle mb-2 shadow-sm d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
                                     <i class="ti ti-check fs-2"></i>
                                 </div>
                                 <span class="text-success small fw-bold tracking-wider">APPROVED</span>
-                            <?php elseif(!empty($notula['id'])): ?>
+                            <?php elseif($canApprove2): ?>
                                 <button type="button" onclick="approveNotula(<?= $notula['id'] ?>, 2, this)" class="btn btn-outline-primary rounded-pill px-4 shadow-sm hover-elevate" style="position: relative; z-index: 2;">Approve Sekarang</button>
                             <?php else: ?>
                                 <div class="text-muted opacity-50 d-flex flex-column align-items-center">
                                     <i class="ti ti-clock fs-3 mb-1"></i>
-                                    <span class="small tracking-wider">Menunggu Simpan</span>
+                                    <span class="small tracking-wider">Menunggu Persetujuan</span>
                                 </div>
                             <?php endif; ?>
                         </div>

@@ -31,7 +31,7 @@
             <li class="nav-item flex-fill" role="presentation">
                 <button class="nav-link w-100 rounded-3 active fw-bold py-3 position-relative d-flex align-items-center justify-content-center gap-2" id="stage1-tab" data-bs-toggle="tab" data-bs-target="#stage1" type="button" role="tab" aria-controls="stage1" aria-selected="true">
                     <i class="ti ti-shield-check fs-5"></i>
-                    <span>Kepala Divisi</span>
+                    <span>Laporan Progres</span>
                     <span class="badge bg-warning text-dark rounded-circle font-monospace ms-1" style="width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; font-size: 11px;"><?= count($pending_stage1) ?></span>
                 </button>
             </li>
@@ -78,8 +78,8 @@
                                             <i class="ti ti-device-laptop fs-5"></i>
                                         </div>
                                         <div>
-                                            <h6 class="fw-bold mb-0 text-dark"><?= $p['nama_app'] ?></h6>
-                                            <small class="text-muted d-block mt-1">Diajukan: <strong class="text-primary"><?= $p['pic_name'] ?></strong> (<?= $p['pic_divisi'] ?? 'Divisi' ?>)</small>
+                                            <h6 class="fw-bold mb-0 text-dark text-wrap" style="word-break: break-word; max-width: 200px;"><?= esc($p['nama_app']) ?></h6>
+                                            <small class="text-muted d-block mt-1 text-wrap" style="word-break: break-word; max-width: 200px;">Diajukan: <strong class="text-primary"><?= esc($p['pic_name']) ?></strong> (<?= esc($p['pic_divisi'] ?? 'Divisi') ?>)</small>
                                         </div>
                                     </div>
                                 </td>
@@ -113,7 +113,7 @@
                                     </div>
                                 </td>
                                 <td class="border-bottom-0 text-center px-4">
-                                    <div class="d-flex gap-2 justify-content-center">
+                                    <div class="d-flex flex-wrap gap-2 justify-content-center">
                                         <button class="btn btn-sm btn-outline-success border-2 shadow-sm fw-bold d-flex align-items-center" onclick="showApprovalModal(<?= $p['id'] ?>, 2)">
                                             <i class="ti ti-check me-1 fs-4"></i> Setujui Progres
                                         </button>
@@ -160,8 +160,8 @@
                                             <i class="ti ti-device-laptop fs-5"></i>
                                         </div>
                                         <div>
-                                            <h6 class="fw-bold mb-0 text-dark"><?= $h['nama_app'] ?></h6>
-                                            <small class="text-muted d-block mt-1">Oleh: <strong class="text-primary"><?= $h['pic_name'] ?></strong> (<?= $h['pic_divisi'] ?? 'Divisi' ?>)</small>
+                                            <h6 class="fw-bold mb-0 text-dark text-wrap" style="word-break: break-word; max-width: 200px;"><?= esc($h['nama_app']) ?></h6>
+                                            <small class="text-muted d-block mt-1 text-wrap" style="word-break: break-word; max-width: 200px;">Oleh: <strong class="text-primary"><?= esc($h['pic_name']) ?></strong> (<?= esc($h['pic_divisi'] ?? 'Divisi') ?>)</small>
                                         </div>
                                     </div>
                                 </td>
@@ -336,6 +336,42 @@
         var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl)
         })
+
+        // Jika ada notula pending, auto-buka tab Notula
+        <?php if(!empty($pending_notula)): ?>
+        const notulaTab = document.getElementById('notula-tab');
+        if (notulaTab) { new bootstrap.Tab(notulaTab).show(); }
+        <?php endif; ?>
     });
+
+    function approveNotula(id, slot, btn) {
+        if (!confirm('Konfirmasi: Setujui Notula/Memo ini (Tanda Tangan ' + slot + ')?')) return;
+        btn.innerHTML = '<i class="ti ti-loader ti-spin me-1"></i> Memproses...';
+        btn.disabled = true;
+
+        fetch(`<?= base_url('admin/approval/approve-notula/') ?>${id}/${slot}`, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.status === 'success') {
+                btn.remove();
+                alert('✅ ' + data.message + (data.is_final ? '\nNotula sudah FINAL / selesai disetujui semua.' : ''));
+                if (data.is_final) {
+                    const row = document.getElementById('notula-row-' + id);
+                    if (row) row.style.opacity = '0.4';
+                }
+            } else {
+                alert('❌ ' + data.message);
+                btn.innerHTML = '<i class="ti ti-check me-1"></i> Setujui';
+                btn.disabled = false;
+            }
+        })
+        .catch(() => {
+            alert('Terjadi kesalahan jaringan.');
+            btn.innerHTML = '<i class="ti ti-check me-1"></i> Setujui';
+            btn.disabled = false;
+        });
+    }
 </script>
 <?= $this->endSection() ?>
