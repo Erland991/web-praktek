@@ -78,8 +78,8 @@
                                             <i class="ti ti-device-laptop fs-5"></i>
                                         </div>
                                         <div>
-                                            <h6 class="fw-bold mb-0 text-dark text-wrap" style="word-break: break-word; max-width: 200px;"><?= esc($p['nama_app']) ?></h6>
-                                            <small class="text-muted d-block mt-1 text-wrap" style="word-break: break-word; max-width: 200px;">Diajukan: <strong class="text-primary"><?= esc($p['pic_name']) ?></strong> (<?= esc($p['pic_divisi'] ?? 'Divisi') ?>)</small>
+                                            <h6 class="fw-bold mb-0 text-dark text-wrap" style="min-width: 150px;"><?= esc($p['nama_app']) ?></h6>
+                                            <small class="text-muted d-block mt-1 text-wrap" style="min-width: 150px;">Diajukan: <strong class="text-primary"><?= esc($p['pic_name']) ?></strong> (<?= esc($p['pic_divisi'] ?? 'Divisi') ?>)</small>
                                         </div>
                                     </div>
                                 </td>
@@ -160,8 +160,8 @@
                                             <i class="ti ti-device-laptop fs-5"></i>
                                         </div>
                                         <div>
-                                            <h6 class="fw-bold mb-0 text-dark text-wrap" style="word-break: break-word; max-width: 200px;"><?= esc($h['nama_app']) ?></h6>
-                                            <small class="text-muted d-block mt-1 text-wrap" style="word-break: break-word; max-width: 200px;">Oleh: <strong class="text-primary"><?= esc($h['pic_name']) ?></strong> (<?= esc($h['pic_divisi'] ?? 'Divisi') ?>)</small>
+                                            <h6 class="fw-bold mb-0 text-dark text-wrap" style="min-width: 150px;"><?= esc($h['nama_app']) ?></h6>
+                                            <small class="text-muted d-block mt-1 text-wrap" style="min-width: 150px;">Oleh: <strong class="text-primary"><?= esc($h['pic_name']) ?></strong> (<?= esc($h['pic_divisi'] ?? 'Divisi') ?>)</small>
                                         </div>
                                     </div>
                                 </td>

@@ -80,7 +80,7 @@
         <div class="md:w-6/12 p-8 md:p-14 flex flex-col justify-center bg-white/80 backdrop-blur-md relative" data-aos="fade-left" data-aos-delay="200">
 
             <!-- Deretan Logo Perusahaan -->
-            <div class="flex items-center justify-center gap-2 md:gap-4 mb-8 pb-5 border-b border-slate-100 flex-wrap">
+            <div class="flex items-center justify-center gap-1 sm:gap-2 md:gap-3 mb-8 pb-5 border-b border-slate-100 flex-nowrap">
                 <img src="<?= base_url('images/logo_danantara.png') ?>" alt="Logo Danantara"
                     class="h-4 sm:h-5 md:h-7 object-contain opacity-80">
                 <img src="<?= base_url('images/logo_idsurvey.png') ?>" alt="Logo IDSurvey"

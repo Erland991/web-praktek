@@ -113,8 +113,12 @@
     .table-responsive { 
       border-radius: var(--radius-md); 
       overflow: hidden; 
+      overflow-x: auto;
       border: 1px solid var(--border-color); 
       box-shadow: var(--shadow-sm);
+    }
+    .table-responsive table {
+      min-width: 900px !important;
     }
     .table thead th { 
       background-color: transparent !important; 
@@ -125,6 +129,7 @@
       letter-spacing: 0.05em; 
       border-bottom: 1px solid var(--border-color) !important; 
       padding: 1.1rem 1rem; 
+      white-space: nowrap;
     }
     .table tbody td { 
       padding: 1.1rem 1rem; 

@@ -16,6 +16,8 @@ class PermintaanController extends BaseController
                 deskripsi TEXT NULL,
                 latar_belakang TEXT NULL,
                 tgl_target DATE NULL,
+                uraian_tambahan TEXT NULL,
+                lampiran TEXT NULL,
                 user_id INT(11) UNSIGNED NOT NULL,
                 nama_disiapkan VARCHAR(100) NULL,
                 jabatan_disiapkan VARCHAR(100) NULL,
@@ -31,6 +33,14 @@ class PermintaanController extends BaseController
                 created_at DATETIME NULL,
                 updated_at DATETIME NULL
             ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4");
+        } else {
+            // Check for missing columns in existing table (for hosting)
+            if (!$db->fieldExists('uraian_tambahan', 'permintaan_aplikasi')) {
+                $db->simpleQuery("ALTER TABLE permintaan_aplikasi ADD COLUMN uraian_tambahan TEXT NULL AFTER tgl_target");
+            }
+            if (!$db->fieldExists('lampiran', 'permintaan_aplikasi')) {
+                $db->simpleQuery("ALTER TABLE permintaan_aplikasi ADD COLUMN lampiran TEXT NULL AFTER uraian_tambahan");
+            }
         }
     }
 
