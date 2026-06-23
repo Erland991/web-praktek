@@ -27,7 +27,7 @@
 
 <style>
     .fc-header-toolbar { padding: 10px; }
-    .fc-toolbar-title { font-weight: 800; color: #1e293b; font-family: 'Inter', sans-serif !important; }
+    .fc-toolbar-title { font-weight: 800; color: #1e293b; font-family: 'Nunito Sans', sans-serif !important; }
     .fc-button-primary { background-color: #0d6efd !important; border-color: #0d6efd !important; border-radius: 8px !important; font-weight: 600 !important; }
     .fc-event { border-radius: 6px !important; padding: 2px 5px; cursor: pointer; transition: transform 0.2s; }
     .fc-event:hover { transform: scale(1.02); }

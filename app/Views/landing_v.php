@@ -8,7 +8,7 @@
     <link rel="shortcut icon" type="image/png" href="<?= base_url('images/icon_simpa.png') ?>" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script>
         tailwind.config = {
@@ -25,8 +25,8 @@
                         }
                     },
                     fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                        inter: ['"Inter"', 'sans-serif'],
+                        sans: ['"Nunito Sans"', 'sans-serif'],
+                        inter: ['"Nunito Sans"', 'sans-serif'],
                     },
                     animation: {
                         'float': 'float 7s ease-in-out infinite',
