@@ -224,13 +224,22 @@
                         </td>
                         <td class="text-end px-4">
                             <div class="d-flex flex-wrap gap-1 justify-content-end">
-                                <?php if (!empty($a['is_app'])) : ?>
-                                    <a href="<?= base_url('notula?app_id=' . ($a['id'] ?? '') . '&quick=1') ?>" class="btn btn-sm btn-light-success text-success hover-success px-2" data-bs-toggle="tooltip" title="Quick MoM Build"><i class="ti ti-bolt fs-4"></i></a>
-                                    <a href="<?= base_url('absensi?app_id=' . ($a['id'] ?? '')) ?>" class="btn btn-sm btn-light-info text-info hover-info px-2" data-bs-toggle="tooltip" title="Buat Daftar Hadir"><i class="ti ti-users fs-4"></i></a>
-                                <?php endif; ?>
-                                <?php if (session()->get('role') == 'Admin' || session()->get('role') == 'PM') : ?>
-                                    <a href="<?= !empty($a['is_app']) ? base_url('admin/app-master') : base_url('dashboard/edit/' . ($a['id'] ?? '')) ?>" class="btn btn-sm btn-light text-primary hover-primary px-2" data-bs-toggle="tooltip" title="Edit Data"><i class="ti ti-pencil fs-4"></i></a>
-                                    <a href="<?= !empty($a['is_app']) ? base_url('admin/app-master/delete/' . ($a['id'] ?? '')) : base_url('dashboard/delete/' . ($a['id'] ?? '')) ?>" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini secara permanen?')" class="btn btn-sm btn-light text-danger hover-danger px-2" data-bs-toggle="tooltip" title="Hapus Data"><i class="ti ti-trash fs-4"></i></a>
+                                <?php if (isset($a['delete_request']) && $a['delete_request'] == 1): ?>
+                                    <?php if (session()->get('role') == 'Admin' || session()->get('role') == 'PM') : ?>
+                                        <button type="button" onclick="showReviewModal(<?= $a['id'] ?>, <?= !empty($a['is_app']) ? 1 : 0 ?>, '<?= esc($a['nama_aset'] ?? '') ?>', '<?= esc(str_replace(array("\r", "\n"), ' ', $a['delete_reason'] ?? '')) ?>')" class="btn btn-sm btn-warning text-white px-2" data-bs-toggle="tooltip" title="Review Pengajuan Penghapusan"><i class="ti ti-alert-circle fs-4"></i></button>
+                                    <?php else: ?>
+                                        <span class="badge bg-warning bg-opacity-10 text-warning px-2 py-1 rounded-pill" style="font-size:0.7rem;"><i class="ti ti-clock"></i> Menunggu Dihapus</span>
+                                    <?php endif; ?>
+                                <?php else: ?>
+                                    <?php if (!empty($a['is_app'])) : ?>
+                                        <a href="<?= base_url('notula?app_id=' . ($a['id'] ?? '') . '&quick=1') ?>" class="btn btn-sm btn-light-success text-success hover-success px-2" data-bs-toggle="tooltip" title="Quick MoM Build"><i class="ti ti-bolt fs-4"></i></a>
+                                        <a href="<?= base_url('absensi?app_id=' . ($a['id'] ?? '')) ?>" class="btn btn-sm btn-light-info text-info hover-info px-2" data-bs-toggle="tooltip" title="Buat Daftar Hadir"><i class="ti ti-users fs-4"></i></a>
+                                    <?php endif; ?>
+                                    <?php if (session()->get('role') == 'Admin' || session()->get('role') == 'PM') : ?>
+                                        <a href="<?= !empty($a['is_app']) ? base_url('admin/app-master') : base_url('dashboard/edit/' . ($a['id'] ?? '')) ?>" class="btn btn-sm btn-light text-primary hover-primary px-2" data-bs-toggle="tooltip" title="<?= !empty($a['is_app']) ? 'Lihat di Master Aplikasi' : 'Edit Data' ?>"><i class="ti <?= !empty($a['is_app']) ? 'ti-eye' : 'ti-pencil' ?> fs-4"></i></a>
+                                    <?php elseif (session()->get('role') == 'User' && (($a['pic'] ?? '') == session()->get('nama_lengkap'))) : ?>
+                                        <button type="button" onclick="showRequestDeleteModal(<?= $a['id'] ?>, <?= !empty($a['is_app']) ? 1 : 0 ?>, '<?= esc($a['nama_aset'] ?? '') ?>')" class="btn btn-sm btn-light-danger text-danger hover-danger px-2" data-bs-toggle="tooltip" title="Ajukan Penghapusan"><i class="ti ti-trash fs-4"></i></button>
+                                    <?php endif; ?>
                                 <?php endif; ?>
                             </div>
                         </td>
@@ -455,4 +464,87 @@ document.addEventListener("DOMContentLoaded", function() {
     .text-info { color: #d49a00 !important; }
     table > thead > tr > th { text-transform: uppercase; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.5px; }
 </style>
+
+<!-- Modal Ajukan Penghapusan (User) -->
+<div class="modal fade" id="modalRequestDelete" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header bg-danger text-white p-4">
+                <h5 class="modal-title fw-bold"><i class="ti ti-alert-triangle me-2"></i>Pengajuan Penghapusan</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="formRequestDelete" action="" method="POST" data-no-ajax="true">
+                <?= csrf_field() ?>
+                <div class="modal-body p-4">
+                    <p class="mb-3">Anda akan mengajukan permohonan hapus untuk aplikasi <strong><span id="req_app_name"></span></strong>.</p>
+                    <div class="alert alert-warning border-0 bg-light-warning text-warning d-flex align-items-center rounded-3 mb-3">
+                        <i class="ti ti-info-circle fs-5 me-2"></i>
+                        <div class="fs-3">Aplikasi tidak akan langsung terhapus. Permohonan Anda akan ditinjau oleh Admin/PM.</div>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label fw-semibold">Alasan Penghapusan</label>
+                        <textarea name="alasan" class="form-control" rows="3" placeholder="Contoh: Aplikasi sudah digantikan sistem baru, atau sudah tidak dipakai..." required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light p-3">
+                    <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-danger px-4 fw-bold shadow-sm">KIRIM PENGAJUAN</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Review Penghapusan (Admin/PM) -->
+<div class="modal fade" id="modalReviewDelete" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header bg-warning text-white p-4">
+                <h5 class="modal-title fw-bold text-dark"><i class="ti ti-alert-circle me-2"></i>Review Pengajuan Hapus</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <p class="mb-2">User mengajukan penghapusan untuk aplikasi:</p>
+                <h5 class="fw-bold mb-3"><span id="rev_app_name"></span></h5>
+                <div class="alert alert-secondary border-0 d-flex flex-column rounded-3 mb-3">
+                    <span class="fw-bold fs-2 text-uppercase text-muted mb-1">Alasan User:</span>
+                    <div class="fs-3 text-dark fst-italic" id="rev_app_reason"></div>
+                </div>
+                <p class="fs-3 text-muted mb-0">Apakah Anda menyetujui penghapusan aplikasi ini secara permanen?</p>
+            </div>
+            <div class="modal-footer bg-light p-3 justify-content-between">
+                <a href="#" id="btnRejectDelete" class="btn btn-outline-secondary px-4 fw-bold shadow-sm">TOLAK</a>
+                <a href="#" id="btnApproveDelete" class="btn btn-danger px-4 fw-bold shadow-sm">SETUJUI & HAPUS</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let requestModal = null;
+    function showRequestDeleteModal(id, is_app, name) {
+        document.getElementById('formRequestDelete').action = '<?= base_url('dashboard/request_delete') ?>/' + id + '/' + is_app;
+        document.getElementById('req_app_name').innerText = name;
+        if(!requestModal) {
+            let modalEl = document.getElementById('modalRequestDelete');
+            document.body.appendChild(modalEl);
+            requestModal = new bootstrap.Modal(modalEl);
+        }
+        requestModal.show();
+    }
+
+    let reviewModal = null;
+    function showReviewModal(id, is_app, name, reason) {
+        document.getElementById('rev_app_name').innerText = name;
+        document.getElementById('rev_app_reason').innerText = `"` + reason + `"`;
+        document.getElementById('btnApproveDelete').href = '<?= base_url('dashboard/approve_delete') ?>/' + id + '/' + is_app;
+        document.getElementById('btnRejectDelete').href = '<?= base_url('dashboard/reject_delete') ?>/' + id + '/' + is_app;
+        if(!reviewModal) {
+            let modalEl = document.getElementById('modalReviewDelete');
+            document.body.appendChild(modalEl);
+            reviewModal = new bootstrap.Modal(modalEl);
+        }
+        reviewModal.show();
+    }
+</script>
 <?= $this->endSection() ?>

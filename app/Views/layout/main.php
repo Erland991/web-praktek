@@ -647,6 +647,72 @@
                   <p class="mb-0 text-muted" style="font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;"><?= session()->get('role') ?></p>
                   <p class="mb-0 text-dark fw-bold" style="font-size: 0.85rem;"><?= session()->get('nama_lengkap') ?></p>
               </div>
+              
+              <?php 
+                $db = \Config\Database::connect();
+                $notifCount = 0;
+                $notifs = [];
+                if ($db->tableExists('notifikasi')) {
+                    $userId = session()->get('id');
+                    $notifQuery = $db->table('notifikasi')
+                                     ->where('user_id', $userId)
+                                     ->orWhere('user_id', 0) // broadcast
+                                     ->orderBy('created_at', 'DESC')
+                                     ->limit(5);
+                    $notifs = $notifQuery->get()->getResultArray();
+                    $notifCount = $db->table('notifikasi')
+                                     ->groupStart()
+                                         ->where('user_id', $userId)
+                                         ->orWhere('user_id', 0)
+                                     ->groupEnd()
+                                     ->where('is_read', 0)
+                                     ->countAllResults();
+                }
+              ?>
+              
+              <!-- Notification Bell -->
+              <li class="nav-item dropdown">
+                <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="dropNotif" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="ti ti-bell fs-6"></i>
+                  <?php if($notifCount > 0): ?>
+                  <span class="position-absolute top-25 start-75 translate-middle p-1 bg-danger border border-light rounded-circle">
+                    <span class="visually-hidden">New alerts</span>
+                  </span>
+                  <?php endif; ?>
+                </a>
+                <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="dropNotif" style="width: 300px; max-height: 400px; overflow-y: auto;">
+                  <div class="d-flex justify-content-between align-items-center px-3 py-2 border-bottom">
+                      <h6 class="mb-0 fw-bold">Pemberitahuan</h6>
+                      <?php if($notifCount > 0): ?>
+                      <a href="<?= base_url('notifications/read-all') ?>" class="text-primary fs-2 fw-medium text-decoration-none">Tandai sudah dibaca</a>
+                      <?php endif; ?>
+                  </div>
+                  <div class="message-body">
+                    <?php if(empty($notifs)): ?>
+                        <div class="text-center p-4">
+                            <i class="ti ti-bell-off fs-6 text-muted mb-2"></i>
+                            <p class="mb-0 text-muted fs-3">Tidak ada pemberitahuan</p>
+                        </div>
+                    <?php else: ?>
+                        <?php foreach($notifs as $n): ?>
+                        <a href="<?= base_url('notifications/read/' . $n['id']) ?>" class="dropdown-item py-3 border-bottom <?= $n['is_read'] ? 'bg-light text-muted' : 'bg-white' ?>">
+                            <div class="d-flex align-items-start">
+                                <div class="bg-light-primary text-primary rounded-circle p-2 me-3">
+                                    <i class="ti ti-info-circle"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1 fw-semibold fs-3 <?= $n['is_read'] ? 'text-muted' : 'text-dark' ?>"><?= esc($n['judul']) ?></h6>
+                                    <p class="mb-1 fs-2 text-wrap" style="white-space: normal; line-height: 1.4; <?= $n['is_read'] ? 'color: #9da9bb;' : 'color: #5e6e82;' ?>"><?= esc($n['pesan']) ?></p>
+                                    <small class="fs-2 text-muted"><?= date('d M Y, H:i', strtotime($n['created_at'])) ?></small>
+                                </div>
+                            </div>
+                        </a>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                  </div>
+                </div>
+              </li>
+
               <li class="nav-item dropdown">
                 <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
                   aria-expanded="false">

@@ -54,15 +54,57 @@ class AppMaster extends BaseController
         return redirect()->back()->with('error', 'Gagal menambah data');
     }
 
+    public function update($id)
+    {
+        $model = new AppMasterModel();
+        $data = [
+            'nama_app'   => $this->request->getPost('nama_app'),
+            'pic_id'     => $this->request->getPost('pic_id') ?: null,
+            'divisi_id'  => $this->request->getPost('divisi_id') ?: null,
+            'status'     => $this->request->getPost('status'),
+            'deskripsi'  => $this->request->getPost('deskripsi'),
+            'tgl_mulai'  => $this->request->getPost('tgl_mulai') ?: null,
+            'tgl_target' => $this->request->getPost('tgl_target') ?: null,
+        ];
+
+        if ($model->update($id, $data)) {
+            (new LogModel())->record('EDIT MASTER APP', 'Mengubah aplikasi master id: ' . $id);
+            if ($this->request->isAJAX()) {
+                return $this->response->setJSON(['status' => 'success', 'message' => 'Aplikasi berhasil diperbarui!']);
+            }
+            return redirect()->back()->with('sukses', 'Aplikasi berhasil diperbarui!');
+        }
+        if ($this->request->isAJAX()) {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Gagal memperbarui data.']);
+        }
+        return redirect()->back()->with('error', 'Gagal memperbarui data.');
+    }
+
     public function delete($id)
     {
         $model = new AppMasterModel();
-        $model->delete($id);
-        (new LogModel())->record('HAPUS MASTER APP', 'Menghapus aplikasi master id: ' . $id);
-        if ($this->request->isAJAX()) {
-            return $this->response->setJSON(['status' => 'success', 'message' => 'Aplikasi berhasil dihapus']);
+        $app = $model->find($id);
+        if ($app) {
+            $alasan = $this->request->getPost('alasan');
+            
+            // Insert notification
+            $db = \Config\Database::connect();
+            if ($db->tableExists('notifikasi') && !empty($alasan)) {
+                $db->table('notifikasi')->insert([
+                    'user_id' => $app['pic_id'] ?? 0,
+                    'judul' => 'Penghapusan Aplikasi Master',
+                    'pesan' => 'Aplikasi "' . $app['nama_app'] . '" telah dihapus oleh Admin/PM. Alasan: ' . $alasan,
+                    'created_at' => date('Y-m-d H:i:s')
+                ]);
+            }
+
+            $model->delete($id);
+            (new LogModel())->record('HAPUS MASTER APP', 'Menghapus aplikasi master id: ' . $id . ' Alasan: ' . ($alasan ?: 'Tanpa alasan'));
         }
-        return redirect()->back()->with('sukses', 'Aplikasi berhasil dihapus');
+        if ($this->request->isAJAX()) {
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Aplikasi berhasil dihapus & User telah diberitahu!']);
+        }
+        return redirect()->back()->with('sukses', 'Aplikasi berhasil dihapus & User telah diberitahu!');
     }
 
     public function release()

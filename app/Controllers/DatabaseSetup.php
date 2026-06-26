@@ -270,6 +270,8 @@ class DatabaseSetup extends BaseController
             'tgl_target'     => "DATE NULL",
             'versi_current'  => "VARCHAR(50) NULL",
             'sdlc_checklist' => "TEXT NULL",
+            'delete_request' => "TINYINT(1) DEFAULT 0",
+            'delete_reason'  => "TEXT NULL",
             'created_at'     => "DATETIME NULL",
             'updated_at'     => "DATETIME NULL",
         ];
@@ -484,6 +486,23 @@ class DatabaseSetup extends BaseController
         }
         $this->addCol('aset', 'created_at', "DATETIME NULL");
         $this->addCol('aset', 'updated_at', "DATETIME NULL");
+        $this->addCol('aset', 'delete_request', "TINYINT(1) DEFAULT 0");
+        $this->addCol('aset', 'delete_reason', "TEXT NULL");
+
+        // ================================================================
+        // 8.5. Tabel notifikasi
+        // ================================================================
+        if (!$this->tableOk('notifikasi')) {
+            $this->run("CREATE TABLE notifikasi (
+                id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                user_id INT(11) DEFAULT 0,
+                judul VARCHAR(255) NOT NULL,
+                pesan TEXT NOT NULL,
+                is_read TINYINT(1) DEFAULT 0,
+                created_at DATETIME NULL
+            ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4", "Create notifikasi");
+            echo "<li>✅ Tabel <b>notifikasi</b> dibuat.</li>";
+        }
 
         // ================================================================
         // 9. Seeding data awal jika aplikasi_master kosong

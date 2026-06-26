@@ -87,9 +87,9 @@
                                 <button type="button" class="btn btn-sm btn-light text-primary hover-primary px-2" data-bs-toggle="tooltip" title="Kelola Modul & Bobot" onclick="showModulModal(<?= $app['id'] ?>, '<?= $app['nama_app'] ?>')">
                                     <i class="ti ti-puzzle fs-4"></i>
                                 </button>
-                                <a href="<?= base_url('admin/app-master/delete/'.$app['id']) ?>" onclick="return confirm('Hapus data master aplikasi ini?')" class="btn btn-sm btn-light text-danger hover-danger px-2" data-bs-toggle="tooltip" title="Hapus Data">
-                                    <i class="ti ti-trash fs-4"></i>
-                                </a>
+                                <button type="button" class="btn btn-sm btn-light text-warning hover-warning px-2" data-bs-toggle="tooltip" title="Edit Aplikasi" onclick="showEditModal(<?= $app['id'] ?>, '<?= addslashes($app['nama_app']) ?>', <?= $app['pic_id'] ?? 'null' ?>, <?= $app['divisi_id'] ?? 'null' ?>, '<?= addslashes($app['status']) ?>', '<?= addslashes($app['tgl_mulai'] ?? '') ?>', '<?= addslashes($app['tgl_target'] ?? '') ?>', '<?= addslashes($app['deskripsi'] ?? '') ?>')">
+                                    <i class="ti ti-pencil fs-4"></i>
+                                </button>
                             </div>
                         </td>
                         <?php endif; ?>
@@ -284,6 +284,101 @@
     </div>
 </div>
 
+<!-- Modal Edit Aplikasi -->
+<div class="modal fade" id="modalEdit" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="modal-header bg-warning text-dark p-4">
+                <h5 class="modal-title fw-bold"><i class="ti ti-pencil me-2"></i>Edit Aplikasi</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="formEdit" action="" method="POST" data-no-ajax="true">
+                <?= csrf_field() ?>
+                <div class="modal-body p-4">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Nama Aplikasi</label>
+                            <input type="text" name="nama_app" id="edit_nama_app" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">PIC User</label>
+                            <select name="pic_id" id="edit_pic_id" class="form-select">
+                                <option value="">-- Pilih User --</option>
+                                <?php foreach($list_pic as $p): ?>
+                                    <option value="<?= $p['id'] ?>"><?= esc($p['nama_lengkap']) ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Divisi Pemilik</label>
+                            <select name="divisi_id" id="edit_divisi_id" class="form-select">
+                                <option value="">-- Pilih Divisi --</option>
+                                <?php foreach($list_divisi as $d): ?>
+                                    <option value="<?= $d['id'] ?>"><?= esc($d['nama_divisi']) ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Status</label>
+                            <select name="status" id="edit_status" class="form-select">
+                                <option value="Development">Development</option>
+                                <option value="Production">Production</option>
+                                <option value="Maintenance">Maintenance</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Tgl Mulai</label>
+                            <input type="date" name="tgl_mulai" id="edit_tgl_mulai" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Tgl Target</label>
+                            <input type="date" name="tgl_target" id="edit_tgl_target" class="form-control">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Deskripsi Singkat</label>
+                            <textarea name="deskripsi" id="edit_deskripsi" class="form-control" rows="2"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light p-3">
+                    <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-warning px-4 fw-bold shadow-sm text-dark">SIMPAN PERUBAHAN</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Hapus dengan Alasan -->
+<div class="modal fade" id="modalDeleteMaster" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header bg-danger text-white p-4">
+                <h5 class="modal-title fw-bold"><i class="ti ti-alert-triangle me-2"></i>Konfirmasi Penghapusan</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="formDeleteMaster" action="" method="POST">
+                <?= csrf_field() ?>
+                <div class="modal-body p-4">
+                    <p class="mb-3">Anda akan menghapus aplikasi master <strong><span id="del_master_name"></span></strong>.</p>
+                    <div class="alert alert-warning border-0 bg-light-warning text-warning d-flex align-items-center rounded-3 mb-3">
+                        <i class="ti ti-info-circle fs-5 me-2"></i>
+                        <div class="fs-3">Wajib memberikan alasan penghapusan agar user pemohon mendapatkan pemberitahuan via sistem.</div>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label fw-semibold">Alasan Penghapusan</label>
+                        <textarea name="alasan" class="form-control" rows="3" placeholder="Aplikasi dibatalkan, sudah digabung dengan modul lain..." required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light p-3">
+                    <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-danger px-4 fw-bold shadow-sm">HAPUS APLIKASI</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
     let releaseModal = null;
     let modulModal = null;
@@ -377,6 +472,41 @@
                 if(!modulModal) modulModal = new bootstrap.Modal(document.getElementById('modalModul'));
                 modulModal.show();
             });
+    }
+
+    let deleteMasterModal = null;
+    function showDeleteMasterModal(url, name) {
+        document.getElementById('formDeleteMaster').action = url;
+        document.getElementById('del_master_name').innerText = name;
+        if(!deleteMasterModal) deleteMasterModal = new bootstrap.Modal(document.getElementById('modalDeleteMaster'));
+        deleteMasterModal.show();
+    }
+
+    let editModal = null;
+    function showEditModal(id, nama, pic_id, divisi_id, status, tgl_mulai, tgl_target, deskripsi) {
+        document.getElementById('formEdit').action = '<?= base_url('admin/app-master/update') ?>/' + id;
+        document.getElementById('edit_nama_app').value = nama;
+        document.getElementById('edit_deskripsi').value = deskripsi;
+        document.getElementById('edit_tgl_mulai').value = tgl_mulai;
+        document.getElementById('edit_tgl_target').value = tgl_target;
+        // Set status
+        const statusSel = document.getElementById('edit_status');
+        for(let i=0; i<statusSel.options.length; i++) {
+            if(statusSel.options[i].value === status) { statusSel.selectedIndex = i; break; }
+        }
+        // Set PIC
+        const picSel = document.getElementById('edit_pic_id');
+        picSel.value = pic_id || '';
+        // Set Divisi
+        const divSel = document.getElementById('edit_divisi_id');
+        divSel.value = divisi_id || '';
+
+        if(!editModal) {
+            let modalEl = document.getElementById('modalEdit');
+            document.body.appendChild(modalEl);
+            editModal = new bootstrap.Modal(modalEl);
+        }
+        editModal.show();
     }
 </script>
 <?= $this->endSection() ?>

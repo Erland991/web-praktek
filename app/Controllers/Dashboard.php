@@ -50,7 +50,7 @@ class Dashboard extends BaseController
         // B. Ambil Data dari Tabel APLIKASI_MASTER (Agar sinkron)
         $db = \Config\Database::connect();
         $appQuery = $db->table('aplikasi_master')
-                       ->select('aplikasi_master.id, aplikasi_master.nama_app as nama_aset, divisi.nama_divisi as kategori, users.nama_lengkap as pic, aplikasi_master.status, aplikasi_master.deskripsi')
+                       ->select('aplikasi_master.id, aplikasi_master.nama_app as nama_aset, divisi.nama_divisi as kategori, users.nama_lengkap as pic, aplikasi_master.status, aplikasi_master.deskripsi, aplikasi_master.delete_request, aplikasi_master.delete_reason')
                        ->join('users', 'users.id = aplikasi_master.pic_id', 'left')
                        ->join('divisi', 'divisi.id = aplikasi_master.divisi_id', 'left');
 
@@ -238,9 +238,132 @@ class Dashboard extends BaseController
     public function delete($id) {
         if (!session()->get('logged_in')) return redirect()->to('/');
         $model = new AssetModel();
-        $model->delete($id);
-        (new LogModel())->record('HAPUS APLIKASI', 'Menghapus aplikasi id: ' . $id);
-        return redirect()->to('/dashboard')->with('sukses', 'Aplikasi Berhasil Dihapus!');
+        
+        $aset = $model->find($id);
+        if ($aset) {
+            $alasan = $this->request->getPost('alasan');
+            
+            // Insert notification
+            $db = \Config\Database::connect();
+            if ($db->tableExists('notifikasi') && !empty($alasan)) {
+                $user = $db->table('users')->where('nama_lengkap', $aset['pic'])->get()->getRowArray();
+                $userId = $user ? $user['id'] : 0;
+                
+                $db->table('notifikasi')->insert([
+                    'user_id' => $userId,
+                    'judul' => 'Penghapusan Aplikasi',
+                    'pesan' => 'Aplikasi "' . $aset['nama_aset'] . '" telah dihapus oleh Admin/PM. Alasan: ' . $alasan,
+                    'created_at' => date('Y-m-d H:i:s')
+                ]);
+            }
+            
+            $model->delete($id);
+            (new LogModel())->record('HAPUS APLIKASI', 'Menghapus aplikasi id: ' . $id . ' Alasan: ' . ($alasan ?: 'Tanpa alasan'));
+        }
+        
+    }
+
+    public function request_delete($id, $is_app) {
+        if (!session()->get('logged_in')) return redirect()->to('/');
+        $db = \Config\Database::connect();
+        $table = $is_app ? 'aplikasi_master' : 'aset';
+        $alasan = $this->request->getPost('alasan');
+
+        $db->table($table)->where('id', $id)->update([
+            'delete_request' => 1,
+            'delete_reason'  => $alasan
+        ]);
+
+        // Kirim notifikasi ke Admin/PM
+        if ($db->tableExists('notifikasi')) {
+            $admins = $db->table('users')->whereIn('role', ['Admin', 'PM'])->get()->getResultArray();
+            foreach ($admins as $adm) {
+                $db->table('notifikasi')->insert([
+                    'user_id' => $adm['id'],
+                    'judul' => 'Pengajuan Penghapusan Aplikasi',
+                    'pesan' => session()->get('nama_lengkap') . ' mengajukan penghapusan aplikasi ID: ' . $id . '. Alasan: ' . $alasan,
+                    'created_at' => date('Y-m-d H:i:s')
+                ]);
+            }
+        }
+
+        (new LogModel())->record('PENGAJUAN HAPUS', 'User mengajukan penghapusan aplikasi id: ' . $id);
+        return redirect()->to('/dashboard')->with('sukses', 'Pengajuan penghapusan berhasil dikirim ke Admin/PM!');
+    }
+
+    public function approve_delete($id, $is_app) {
+        if (!session()->get('logged_in') || !in_array(session()->get('role'), ['Admin', 'PM'])) return redirect()->to('/');
+        
+        $db = \Config\Database::connect();
+        $table = $is_app ? 'aplikasi_master' : 'aset';
+        $app = $db->table($table)->where('id', $id)->get()->getRowArray();
+        
+        if ($app) {
+            // Delete the application
+            $db->table($table)->where('id', $id)->delete();
+            
+            // Send notification to user
+            if ($db->tableExists('notifikasi')) {
+                // If it's aplikasi_master, we have pic_id. If aset, we only have pic name.
+                $userId = 0;
+                if ($is_app && !empty($app['pic_id'])) {
+                    $userId = $app['pic_id'];
+                } elseif (!$is_app && !empty($app['pic'])) {
+                    $user = $db->table('users')->where('nama_lengkap', $app['pic'])->get()->getRowArray();
+                    $userId = $user ? $user['id'] : 0;
+                }
+
+                if ($userId) {
+                    $db->table('notifikasi')->insert([
+                        'user_id' => $userId,
+                        'judul' => 'Penghapusan Aplikasi Disetujui',
+                        'pesan' => 'Pengajuan penghapusan aplikasi Anda telah disetujui oleh Admin/PM.',
+                        'created_at' => date('Y-m-d H:i:s')
+                    ]);
+                }
+            }
+            (new LogModel())->record('HAPUS APLIKASI', 'Admin/PM menyetujui penghapusan aplikasi id: ' . $id);
+        }
+        
+        return redirect()->to('/dashboard')->with('sukses', 'Penghapusan disetujui dan aplikasi telah dihapus!');
+    }
+
+    public function reject_delete($id, $is_app) {
+        if (!session()->get('logged_in') || !in_array(session()->get('role'), ['Admin', 'PM'])) return redirect()->to('/');
+        
+        $db = \Config\Database::connect();
+        $table = $is_app ? 'aplikasi_master' : 'aset';
+        $app = $db->table($table)->where('id', $id)->get()->getRowArray();
+
+        if ($app) {
+            $db->table($table)->where('id', $id)->update([
+                'delete_request' => 0,
+                'delete_reason'  => null
+            ]);
+            
+            // Send notification to user
+            if ($db->tableExists('notifikasi')) {
+                $userId = 0;
+                if ($is_app && !empty($app['pic_id'])) {
+                    $userId = $app['pic_id'];
+                } elseif (!$is_app && !empty($app['pic'])) {
+                    $user = $db->table('users')->where('nama_lengkap', $app['pic'])->get()->getRowArray();
+                    $userId = $user ? $user['id'] : 0;
+                }
+
+                if ($userId) {
+                    $db->table('notifikasi')->insert([
+                        'user_id' => $userId,
+                        'judul' => 'Penghapusan Aplikasi Ditolak',
+                        'pesan' => 'Pengajuan penghapusan aplikasi Anda ditolak oleh Admin/PM.',
+                        'created_at' => date('Y-m-d H:i:s')
+                    ]);
+                }
+            }
+            (new LogModel())->record('TOLAK HAPUS', 'Admin/PM menolak penghapusan aplikasi id: ' . $id);
+        }
+        
+        return redirect()->to('/dashboard')->with('sukses', 'Pengajuan penghapusan telah ditolak.');
     }
 
     public function export()
@@ -279,7 +402,7 @@ class Dashboard extends BaseController
 
         // B. Data dari tabel APLIKASI_MASTER
         $appQuery = $db->table('aplikasi_master')
-                       ->select('aplikasi_master.id, aplikasi_master.nama_app as nama_aset, divisi.nama_divisi as kategori, users.nama_lengkap as pic, aplikasi_master.status, aplikasi_master.deskripsi')
+                       ->select('aplikasi_master.id, aplikasi_master.nama_app as nama_aset, divisi.nama_divisi as kategori, users.nama_lengkap as pic, aplikasi_master.status, aplikasi_master.deskripsi, aplikasi_master.delete_request, aplikasi_master.delete_reason')
                        ->join('users', 'users.id = aplikasi_master.pic_id', 'left')
                        ->join('divisi', 'divisi.id = aplikasi_master.divisi_id', 'left');
         if ($role === 'User') {

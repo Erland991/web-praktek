@@ -27,6 +27,9 @@ $routes->post('/dashboard/update/(:num)', 'Dashboard::update/$1');
 $routes->get('/dashboard/delete/(:num)', 'Dashboard::delete/$1');
 $routes->get('/dashboard/export', 'Dashboard::export');
 $routes->post('/dashboard/update-profile-photo', 'Dashboard::updateProfilePhoto');
+$routes->post('/dashboard/request_delete/(:num)/(:num)', 'Dashboard::request_delete/$1/$2');
+$routes->get('/dashboard/approve_delete/(:num)/(:num)', 'Dashboard::approve_delete/$1/$2');
+$routes->get('/dashboard/reject_delete/(:num)/(:num)', 'Dashboard::reject_delete/$1/$2');
 
 // --- PROGRESS FEATURES ---
 $routes->get('/progress', 'Progress::index');
@@ -100,6 +103,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin'], function($rout
     // Master Aplikasi Register
     $routes->get('app-master', 'AppMaster::index');
     $routes->post('app-master/save', 'AppMaster::save');
+    $routes->post('app-master/update/(:num)', 'AppMaster::update/$1');
     $routes->post('app-master/release', 'AppMaster::release');
     $routes->get('app-master/delete/(:num)', 'AppMaster::delete/$1');
 
@@ -131,3 +135,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin'], function($rout
 
 // --- MEMO PERSETUJUAN (shortcut, akses semua user) ---
 $routes->get('memo/persetujuan', 'Admin\Approval::memo_persetujuan');
+
+// --- NOTIFICATIONS ---
+$routes->get('notifications/read-all', 'NotificationController::readAll');
+$routes->get('notifications/read/(:num)', 'NotificationController::read/$1');
