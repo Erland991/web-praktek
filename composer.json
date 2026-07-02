@@ -14,6 +14,7 @@
         "ext-intl": "*",
         "ext-mbstring": "*",
         "dompdf/dompdf": "*",
+        "google/apiclient": "*",
         "laminas/laminas-escaper": "^2.18",
         "psr/log": "^3.0",
         "setasign/fpdf": "*",

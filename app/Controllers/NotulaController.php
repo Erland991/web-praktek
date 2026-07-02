@@ -313,6 +313,21 @@ class NotulaController extends BaseController
             $data['created_at'] = date('Y-m-d H:i:s');
             $db->table('notula_rapat')->insert($data);
             $msg = 'Notula Rapat Berhasil Disimpan!';
+            
+            // --- Integrasi Google Calendar API ---
+            try {
+                $gcal = new \App\Libraries\GoogleCalendarService();
+                $gcal->createEvent(
+                    $data['agenda'], // Judul
+                    "Notula Rapat: " . $data['agenda'] . "\nOleh: " . $data['nama_disiapkan'], // Deskripsi
+                    $data['tempat'], // Lokasi
+                    $data['tanggal'] . ' 08:00:00', // Mulai (default pagi)
+                    $data['tanggal'] . ' 10:00:00'  // Selesai (default 2 jam)
+                );
+            } catch (\Exception $e) {
+                log_message('error', 'Gagal sync Google Calendar: ' . $e->getMessage());
+            }
+            // -------------------------------------
         }
 
         (new LogModel())->record('BUAT NOTULA', 'Menyimpan notula rapat: ' . $this->request->getPost('agenda'));

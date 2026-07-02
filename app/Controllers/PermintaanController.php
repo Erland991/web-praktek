@@ -222,6 +222,19 @@ class PermintaanController extends BaseController
 
         (new LogModel())->record('APPROVE PERMINTAAN', 'Menyetujui permintaan aplikasi: ' . $permintaan['nama_app']);
 
+        // --- Integrasi Google Calendar API ---
+        try {
+            $gcal = new \App\Libraries\GoogleCalendarService();
+            $gcal->createAllDayEvent(
+                "Deadline Project: " . $permintaan['nama_app'],
+                "Tanggal Mulai: " . $tgl_mulai_pengembangan . "\nTarget Selesai: " . $permintaan['tgl_target'] . "\n\nDeskripsi: " . $permintaan['deskripsi'],
+                $permintaan['tgl_target']
+            );
+        } catch (\Exception $e) {
+            log_message('error', 'Gagal sync Google Calendar: ' . $e->getMessage());
+        }
+        // -------------------------------------
+
         if ($this->request->isAJAX()) {
             return $this->response->setJSON([
                 'status' => 'success', 

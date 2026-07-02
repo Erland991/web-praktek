@@ -2,3 +2,16 @@
 /writable/cache
 /writable/session
 /writable/debugbar
+
+# Composer dependencies (generated via composer install)
+/vendor/
+
+# Sensitive credentials - JANGAN DI-PUSH!
+/app/credentials.json
+/.env
+
+# Test/debug scripts
+/public/test_gcal.php
+
+# Node modules (jika ada)
+/node_modules/
