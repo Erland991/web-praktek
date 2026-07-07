@@ -19,9 +19,39 @@
     </div>
 </div>
 
-<div class="card shadow-sm border-0 rounded-4 mb-4">
-    <div class="card-body p-4">
-        <div id='calendar' class="calendar-app"></div>
+<!-- Tab Toggle -->
+<div class="mb-3 d-flex gap-2">
+    <button class="btn btn-primary rounded-pill px-4 fw-semibold" id="btnInternal" onclick="switchTab('internal')">
+        <i class="ti ti-layout-dashboard me-1"></i> Kalender Internal
+    </button>
+    <button class="btn btn-outline-danger rounded-pill px-4 fw-semibold" id="btnGoogle" onclick="switchTab('google')">
+        <i class="ti ti-brand-google me-1"></i> Google Calendar
+    </button>
+</div>
+
+<!-- Internal Calendar (FullCalendar) -->
+<div id="tab-internal">
+    <div class="card shadow-sm border-0 rounded-4 mb-4">
+        <div class="card-body p-4">
+            <div id='calendar' class="calendar-app"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Google Calendar Embed -->
+<div id="tab-google" style="display:none;">
+    <div class="card shadow-sm border-0 rounded-4 mb-4">
+        <div class="card-body p-0 overflow-hidden rounded-4">
+            <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden;">
+                <iframe 
+                    src="https://calendar.google.com/calendar/embed?src=erland3112%40gmail.com&ctz=Asia%2FJakarta&showNav=1&showDate=1&showPrint=0&showTabs=1&showCalendars=1&showTz=1&mode=MONTH"
+                    style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;" 
+                    frameborder="0" 
+                    scrolling="no"
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -71,6 +101,20 @@
 </style>
 
 <script>
+  function switchTab(tab) {
+    if (tab === 'internal') {
+        document.getElementById('tab-internal').style.display = 'block';
+        document.getElementById('tab-google').style.display = 'none';
+        document.getElementById('btnInternal').className = 'btn btn-primary rounded-pill px-4 fw-semibold';
+        document.getElementById('btnGoogle').className = 'btn btn-outline-danger rounded-pill px-4 fw-semibold';
+    } else {
+        document.getElementById('tab-internal').style.display = 'none';
+        document.getElementById('tab-google').style.display = 'block';
+        document.getElementById('btnInternal').className = 'btn btn-outline-primary rounded-pill px-4 fw-semibold';
+        document.getElementById('btnGoogle').className = 'btn btn-danger rounded-pill px-4 fw-semibold';
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -89,4 +133,7 @@
     calendar.render();
   });
 </script>
+<?= $this->endSection() ?>
+
+
 <?= $this->endSection() ?>
