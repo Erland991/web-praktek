@@ -144,25 +144,42 @@
 
 <!-- Main Inventory Table -->
 <div class="card mb-4" data-aos="fade-up" data-aos-delay="500">
-    <div class="card-header bg-white border-bottom-0 pt-4 px-4 pb-2 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
-        <div>
+    <div class="card-header bg-white border-bottom-0 pt-4 px-4 pb-3 d-flex flex-wrap align-items-center justify-content-between gap-3">
+        <div class="flex-grow-1" style="min-width: 320px;">
             <h5 class="fw-bold mb-1 text-dark"><i class="ti ti-list-check text-primary me-2"></i>Database Inventaris & Aplikasi</h5>
             <p class="text-muted fs-3 mb-0">Manajemen komprehensif aplikasi IT dan aplikasi terpusat.</p>
         </div>
-        <div class="d-flex flex-wrap gap-2 align-items-center mt-3 mt-md-0 ms-md-auto">
-            <form action="<?= base_url('dashboard') ?>" method="GET" class="d-flex gap-2">
-                <div class="input-group input-group-sm rounded-3 shadow-none border" style="width: 220px; max-width: 100%;">
-                    <span class="input-group-text bg-white border-0 text-muted"><i class="ti ti-search fs-5"></i></span>
-                    <input type="text" name="keyword" class="form-control border-0 ps-0 shadow-none" placeholder="Cari aplikasi..." value="<?= $keyword ?? '' ?>">
-                </div>
-                <button type="submit" class="btn btn-sm btn-primary px-3 rounded-3 fw-medium">Filter</button>
-            </form>
-            <div class="vr my-2 mx-1 d-none d-md-block"></div>
-            <a href="<?= base_url('dashboard/export') . '?' . http_build_query(['keyword' => $keyword ?? '', 'kategori' => $kategori ?? '', 'status' => $status ?? '']) ?>" class="btn btn-sm btn-outline-danger shadow-sm rounded-3 d-flex justify-content-center align-items-center fw-medium px-3 text-nowrap" target="_blank">
+        
+        <div class="d-flex flex-wrap gap-2 align-items-center justify-content-xl-end">
+            <div class="input-group input-group-sm rounded-3 shadow-none border" style="width: 120px;">
+                <input type="date" id="filter_start_date" class="form-control border-0 shadow-none text-muted fs-2 px-1" value="<?= esc($start_date ?? '') ?>" title="Tanggal Mulai">
+            </div>
+            <span class="text-muted d-none d-sm-inline">-</span>
+            <div class="input-group input-group-sm rounded-3 shadow-none border" style="width: 120px;">
+                <input type="date" id="filter_end_date" class="form-control border-0 shadow-none text-muted fs-2 px-1" value="<?= esc($end_date ?? '') ?>" title="Tanggal Akhir">
+            </div>
+            <div class="input-group input-group-sm rounded-3 shadow-none border" style="width: 180px; max-width: 100%;">
+                <span class="input-group-text bg-white border-0 text-muted px-2"><i class="ti ti-search fs-5"></i></span>
+                <input type="text" id="filter_keyword" class="form-control border-0 ps-0 shadow-none fs-3" placeholder="Cari aplikasi..." value="<?= esc($keyword ?? '') ?>">
+            </div>
+            <button type="button" id="btn_filter_dashboard" class="btn btn-sm btn-primary px-3 rounded-3 fw-medium">
+                <i class="ti ti-filter me-1"></i>Filter
+            </button>
+            <?php if(!empty($start_date) || !empty($keyword)): ?>
+                <a href="<?= base_url('dashboard') ?>" class="btn btn-sm btn-light text-muted px-2 rounded-3" title="Reset Filter">
+                    <i class="ti ti-refresh"></i>
+                </a>
+            <?php endif; ?>
+            
+            <div class="vr my-1 mx-1 d-none d-xl-block"></div>
+            
+            <a href="<?= base_url('dashboard/export') . '?' . http_build_query(['keyword' => $keyword ?? '', 'kategori' => $kategori ?? '', 'status' => $status ?? '', 'start_date' => $start_date ?? '', 'end_date' => $end_date ?? '']) ?>" class="btn btn-sm btn-outline-danger shadow-sm rounded-3 fw-medium px-3 text-nowrap" target="_blank">
                 <i class="ti ti-file-type-pdf fs-5 me-1"></i> Cetak PDF
             </a>
             <?php if (session()->get('role') == 'Admin' || session()->get('role') == 'PM') : ?>
-            <a href="<?= base_url('dashboard/add') ?>" class="btn btn-sm btn-dark px-3 rounded-3 fw-medium d-flex justify-content-center align-items-center text-nowrap"><i class="ti ti-plus me-1"></i>Tambah Aplikasi</a>
+            <a href="<?= base_url('dashboard/add') ?>" class="btn btn-sm btn-dark px-3 rounded-3 fw-medium text-nowrap">
+                <i class="ti ti-plus me-1"></i>Tambah Aplikasi
+            </a>
             <?php endif; ?>
         </div>
     </div>
@@ -259,7 +276,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-document.addEventListener("DOMContentLoaded", function() {
+function renderDashboardCharts() {
     // Enable Tooltips
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
     var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
@@ -267,7 +284,9 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     // 1. Chart 1: Distribusi Aplikasi
-    const ctx1 = document.getElementById('categoryChart').getContext('2d');
+    const canvas1 = document.getElementById('categoryChart');
+    if (!canvas1) return;
+    const ctx1 = canvas1.getContext('2d');
     new Chart(ctx1, {
         type: 'bar',
         data: {
@@ -358,7 +377,9 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     // 2. Chart 2: Capaian Progres Proyek
-    const ctx2 = document.getElementById('progressChart').getContext('2d');
+    const canvas2 = document.getElementById('progressChart');
+    if (!canvas2) return;
+    const ctx2 = canvas2.getContext('2d');
     new Chart(ctx2, {
         type: 'line',
         data: {
@@ -451,7 +472,8 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
     });
-});
+}
+document.addEventListener("DOMContentLoaded", renderDashboardCharts);
 </script>
 
 <style>
@@ -520,7 +542,100 @@ document.addEventListener("DOMContentLoaded", function() {
     </div>
 </div>
 
+<style>
+    #filter-progress-bar {
+        position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+        background: linear-gradient(90deg, #3874ff, #00c6ff);
+        z-index: 99999;
+        transition: width 0.3s ease;
+        border-radius: 0 2px 2px 0;
+    }
+</style>
+<div id="filter-progress-bar"></div>
+
 <script>
+    // --- FILTER DASHBOARD: Menggunakan reloadSPA bawaan ---
+    function doFilterDashboard() {
+        const startDate = document.getElementById('filter_start_date').value;
+        const endDate   = document.getElementById('filter_end_date').value;
+        const keyword   = document.getElementById('filter_keyword').value;
+
+        const params = new URLSearchParams();
+        if (startDate) params.set('start_date', startDate);
+        if (endDate)   params.set('end_date', endDate);
+        if (keyword)   params.set('keyword', keyword);
+
+        const url = '<?= base_url('dashboard') ?>' + (params.toString() ? '?' + params.toString() : '');
+
+        // Tampilkan progress bar
+        let progressBar = document.getElementById('filter-progress-bar');
+        if (progressBar) {
+            progressBar.style.width = '30%';
+        }
+
+        // Tampilkan loading
+        const btn = document.getElementById('btn_filter_dashboard');
+        if (btn) { btn.innerHTML = '<i class="ti ti-loader ti-spin me-1"></i>Loading...'; btn.disabled = true; }
+
+        // Fetch data secara manual agar kita bisa menghapus animasi AOS
+        fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+            .then(response => response.text())
+            .then(html => {
+                if (progressBar) progressBar.style.width = '70%';
+                
+                // Gunakan DOMParser untuk memparsing HTML
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const newMainContent = doc.getElementById('main-content');
+                
+                if (newMainContent) {
+                    // Hapus semua data-aos agar tidak berkedip (tidak ada animasi fade-up ulang)
+                    newMainContent.querySelectorAll('[data-aos]').forEach(el => {
+                        el.removeAttribute('data-aos');
+                    });
+                    
+                    // Timpa konten
+                    document.getElementById('main-content').innerHTML = newMainContent.innerHTML;
+                    
+                    // Re-init chart
+                    if (typeof renderDashboardCharts === 'function') {
+                        renderDashboardCharts();
+                    }
+                    
+                    // Update URL browser
+                    history.pushState(null, '', url);
+                } else {
+                    window.location.href = url; // Fallback
+                }
+                
+                if (progressBar) {
+                    progressBar.style.width = '100%';
+                    setTimeout(() => { progressBar.style.width = '0%'; }, 300);
+                }
+            })
+            .catch(error => {
+                console.error('Filter error:', error);
+                window.location.href = url; // Fallback jika gagal
+            });
+    }
+
+    // Event Delegation menggunakan pure JS agar tidak error saat jQuery belum siap (initial load)
+    // dan flag window agar listener tidak dobel saat SPA direload.
+    if (!window.filterDashboardInitialized) {
+        document.addEventListener('click', function(e) {
+            if (e.target && e.target.closest('#btn_filter_dashboard')) {
+                doFilterDashboard();
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.target && e.target.id === 'filter_keyword' && e.key === 'Enter') {
+                doFilterDashboard();
+            }
+        });
+        window.filterDashboardInitialized = true;
+    }
+
     let requestModal = null;
     function showRequestDeleteModal(id, is_app, name) {
         document.getElementById('formRequestDelete').action = '<?= base_url('dashboard/request_delete') ?>/' + id + '/' + is_app;

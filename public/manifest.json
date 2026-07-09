@@ -1,0 +1,21 @@
+{
+  "name": "SIMPA Enterprise",
+  "short_name": "SIMPA",
+  "description": "Sistem Informasi Manajemen Progress Aplikasi",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#002d5c",
+  "icons": [
+    {
+      "src": "images/icon_simpa.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "images/icon_simpa.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

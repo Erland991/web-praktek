@@ -6,6 +6,8 @@
     <title>SIMPA | PT Surveyor Indonesia (Persero)</title>
     <meta name="description" content="Sistem Manajemen Proyek Aplikasi (SIMPA) - Platform monitoring proyek terpadu PT Surveyor Indonesia (Persero) untuk transparansi dan akurasi pelaporan.">
     <link rel="shortcut icon" type="image/png" href="<?= base_url('images/icon_simpa.png') ?>" />
+    <link rel="manifest" href="<?= base_url('manifest.json') ?>" />
+    <meta name="theme-color" content="#002d5c">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
@@ -841,6 +843,19 @@
                 if (link.getAttribute('href') === '#' + current) link.classList.add('active');
             });
         });
+    </script>
+    
+    <!-- PWA Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('<?= base_url('sw.js') ?>').then(function(registration) {
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                }, function(err) {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
     </script>
 </body>
 </html>

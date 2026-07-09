@@ -18,10 +18,12 @@ class Dashboard extends BaseController
 
         $model = new AssetModel();
         
-        // 2. Ambil Input Filter (Pencarian)
+        // 2. Ambil Input Filter (Pencarian & Tanggal)
         $keyword  = $this->request->getGet('keyword');
         $kategori = $this->request->getGet('kategori');
         $status   = $this->request->getGet('status');
+        $start_date = $this->request->getGet('start_date');
+        $end_date   = $this->request->getGet('end_date');
 
         // 3. Query Data & Filter berdasarkan Role
         $role = session()->get('role');
@@ -42,6 +44,8 @@ class Dashboard extends BaseController
         }
         if ($kategori) $builder = $builder->where('kategori', $kategori);
         if ($status)   $builder = $builder->where('status', $status);
+        if ($start_date) $builder = $builder->where('created_at >=', $start_date . ' 00:00:00');
+        if ($end_date)   $builder = $builder->where('created_at <=', $end_date . ' 23:59:59');
         $assets = $builder->findAll();
         foreach ($assets as &$asset) {
             $asset['is_app'] = false;
@@ -65,6 +69,8 @@ class Dashboard extends BaseController
                      ->orLike('aplikasi_master.deskripsi', $keyword)
                      ->groupEnd();
         }
+        if ($start_date) $appQuery->where('aplikasi_master.created_at >=', $start_date . ' 00:00:00');
+        if ($end_date)   $appQuery->where('aplikasi_master.created_at <=', $end_date . ' 23:59:59');
         
         $apps = $appQuery->get()->getResultArray();
         foreach ($apps as &$app) {
@@ -80,7 +86,9 @@ class Dashboard extends BaseController
             'total_app'    => $db->table('aplikasi_master')->countAllResults(),
             'keyword'      => $keyword,
             'kategori'     => $kategori,
-            'status'       => $status
+            'status'       => $status,
+            'start_date'   => $start_date,
+            'end_date'     => $end_date
         ];
 
         // --- DATA UNTUK GRAFIK (Menggunakan gaya template namun data asli aplikasi) ---
@@ -88,7 +96,10 @@ class Dashboard extends BaseController
         $chart1_data = [];
         
         // Data dari Aset
-        $asets = $db->table('aset')->select('kategori, status')->get()->getResultArray();
+        $asetsQuery = $db->table('aset')->select('kategori, status');
+        if ($start_date) $asetsQuery->where('created_at >=', $start_date . ' 00:00:00');
+        if ($end_date)   $asetsQuery->where('created_at <=', $end_date . ' 23:59:59');
+        $asets = $asetsQuery->get()->getResultArray();
         foreach($asets as $a) {
             $kat = trim($a['kategori'] ?? '');
             if(empty($kat)) $kat = 'Lainnya';
@@ -99,10 +110,12 @@ class Dashboard extends BaseController
         }
 
         // Data dari Aplikasi Master
-        $apps = $db->table('aplikasi_master')
+        $appsQuery = $db->table('aplikasi_master')
                    ->select('divisi.nama_divisi as kategori, aplikasi_master.status')
-                   ->join('divisi', 'divisi.id = aplikasi_master.divisi_id', 'left')
-                   ->get()->getResultArray();
+                   ->join('divisi', 'divisi.id = aplikasi_master.divisi_id', 'left');
+        if ($start_date) $appsQuery->where('aplikasi_master.created_at >=', $start_date . ' 00:00:00');
+        if ($end_date)   $appsQuery->where('aplikasi_master.created_at <=', $end_date . ' 23:59:59');
+        $apps = $appsQuery->get()->getResultArray();
         foreach($apps as $app) {
             $kat = trim($app['kategori'] ?? '');
             if(empty($kat)) $kat = 'Lainnya';
@@ -121,7 +134,10 @@ class Dashboard extends BaseController
         $data['proj_aktual'] = [];
         $data['proj_target'] = [];
         // Ambil 7 aplikasi terbaru
-        $projectApps = $db->table('aplikasi_master')->orderBy('id', 'DESC')->limit(7)->get()->getResultArray();
+        $projectAppsQuery = $db->table('aplikasi_master')->orderBy('id', 'DESC')->limit(7);
+        if ($start_date) $projectAppsQuery->where('created_at >=', $start_date . ' 00:00:00');
+        if ($end_date)   $projectAppsQuery->where('created_at <=', $end_date . ' 23:59:59');
+        $projectApps = $projectAppsQuery->get()->getResultArray();
         // Balik array agar yang paling lama di sebelah kiri grafik
         $projectApps = array_reverse($projectApps);
         

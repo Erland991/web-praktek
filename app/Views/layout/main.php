@@ -6,6 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SIMPA</title>
   <link rel="shortcut icon" type="image/png" href="<?= base_url('images/icon_simpa.png') ?>" />
+  <link rel="manifest" href="<?= base_url('manifest.json') ?>" />
+  <meta name="theme-color" content="#002d5c">
   <link rel="stylesheet" href="<?= base_url('template/src/assets/css/styles.min.css') ?>" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -797,7 +799,7 @@
         item.classList.add('animate__animated', 'animate__fadeInLeft');
       });
 
-      // --- SPA RELOAD FUNCTION ---
+      // --- SPA RELOAD FUNCTION (juga global agar bisa dipanggil dari view) ---
       function reloadSPA(url = window.location.href, isNewPage = false) {
           const $mainContent = $('#main-content');
           $.get(url, function(data) {
@@ -847,6 +849,8 @@
               window.location.href = url;
           });
       }
+      // Expose ke global agar bisa dipanggil dari view scripts
+      window.reloadSPA = reloadSPA;
 
       // --- GLOBAL AJAX FORMS INTERCEPTOR ---
       document.addEventListener('submit', function(e) {
@@ -998,22 +1002,33 @@
           });
       });
 
-      // --- SPA SIDEBAR NAVIGATION ---
-      $(document).on('click', '.sidebar-link', function(e) {
+      // --- SPA GENERIC LINK NAVIGATION ---
+      $(document).on('click', 'a[href]', function(e) {
           const url = $(this).attr('href');
-          // Skip empty links or logout routes
-          if (!url || url === 'javascript:void(0)' || url.includes('#') || url.includes('logout')) return;
+          
+          // Ignore conditions
+          if (!url || url === 'javascript:void(0)' || url.startsWith('#') || url.includes('logout') || 
+              $(this).attr('target') === '_blank' || $(this).hasClass('no-ajax') || $(this).attr('data-no-ajax') ||
+              url.includes('/delete/') || url.includes('/delete-module/')) {
+              return;
+          }
+          
+          // Ensure it's an internal link
+          const baseUrl = "<?= base_url() ?>";
+          if (url.startsWith('http') && !url.startsWith(baseUrl)) {
+              return;
+          }
 
           e.preventDefault();
 
-          // Close sidebar on mobile
-          if (window.innerWidth < 1200) {
-              $('#sidebarCollapse').click();
+          // Sidebar specific handling
+          if ($(this).hasClass('sidebar-link')) {
+              if (window.innerWidth < 1200) {
+                  $('#sidebarCollapse').click();
+              }
+              $('.sidebar-link').removeClass('active');
+              $(this).addClass('active');
           }
-
-          // Update active state
-          $('.sidebar-link').removeClass('active');
-          $(this).addClass('active');
 
           reloadSPA(url, true);
       });
@@ -1051,6 +1066,19 @@
         </div>
     </div>
   </div>
+
+  <!-- PWA Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('<?= base_url('sw.js') ?>').then(function(registration) {
+          console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        }, function(err) {
+          console.log('ServiceWorker registration failed: ', err);
+        });
+      });
+    }
+  </script>
 </body>
 
 </html>
