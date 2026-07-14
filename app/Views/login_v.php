@@ -93,7 +93,7 @@
             </div>
 
             <!-- Header Form -->
-            <div class="mb-8 text-center">
+            <div class="mb-5 text-center">
                 <h3 class="text-2xl font-bold text-slate-800">Login SIMPA</h3>
                 <p class="text-slate-500 text-sm mt-2 px-2">Masukkan username dan password Anda untuk melanjutkan</p>
                 
@@ -140,7 +140,10 @@
                         <input type="password" name="password"
                             class="w-full pl-11 pr-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-[#004996] focus:ring-4 focus:ring-[#004996]/10 focus:outline-none transition-all duration-300"
                             placeholder="Masukkan Password" required>
-                <div class="flex justify-center mt-2 mb-2">
+                    </div>
+                </div>
+
+                <div class="flex justify-center mt-4 mb-2">
                     <!-- Google reCAPTCHA Asli (Kunci dikonfigurasi di .env) -->
                     <div class="g-recaptcha" data-sitekey="<?= $recaptcha_site_key ?>"></div>
                 </div>
