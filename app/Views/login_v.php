@@ -8,6 +8,7 @@
     <link rel="shortcut icon" type="image/png" href="<?= base_url('images/icon_simpa.png') ?>" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap');
 
@@ -139,7 +140,9 @@
                         <input type="password" name="password"
                             class="w-full pl-11 pr-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:border-[#004996] focus:ring-4 focus:ring-[#004996]/10 focus:outline-none transition-all duration-300"
                             placeholder="Masukkan Password" required>
-                    </div>
+                <div class="flex justify-center mt-2 mb-2">
+                    <!-- Google reCAPTCHA Asli (Kunci dikonfigurasi di .env) -->
+                    <div class="g-recaptcha" data-sitekey="<?= $recaptcha_site_key ?>"></div>
                 </div>
 
                 <div class="pt-2">

@@ -17,7 +17,10 @@ class Home extends BaseController
         if (session()->get('logged_in')) {
             return redirect()->to('/dashboard');
         }
-        return view('login_v'); 
+        
+        $data['recaptcha_site_key'] = getenv('RECAPTCHA_SITE_KEY') ?: 'GANTI_DENGAN_SITE_KEY_KAMU';
+        
+        return view('login_v', $data); 
     }
 
     public function login()
@@ -27,6 +30,21 @@ class Home extends BaseController
         
         $username = $this->request->getPost('username');
         $password = $this->request->getPost('password');
+        $captcha  = $this->request->getPost('g-recaptcha-response');
+        
+        // Validasi reCAPTCHA ke Server Google
+        if (empty($captcha)) {
+            return redirect()->back()->with('error', 'Silakan centang "Saya bukan robot" terlebih dahulu!');
+        }
+        
+        $secretKey = getenv('RECAPTCHA_SECRET_KEY');
+        $verifyUrl = "https://www.google.com/recaptcha/api/siteverify?secret={$secretKey}&response={$captcha}";
+        $verifyResponse = file_get_contents($verifyUrl);
+        $responseData = json_decode($verifyResponse);
+        
+        if (!$responseData->success) {
+            return redirect()->back()->with('error', 'Verifikasi Keamanan Gagal. Silakan coba lagi.');
+        }
         
         $user = $model->where('username', $username)->first();
 

@@ -28,7 +28,7 @@ class GoogleCalendarService
         }
         
         // Kita gunakan ID kalender spesifik kamu (agar tidak masuk ke kalender internal Service Account)
-        $this->calendarId = 'erland3112@gmail.com';
+        $this->calendarId = '77b803fcf364cc98e177cf63f85c221184c34b1ae2be51fdcb5bfb7343f1fce6@group.calendar.google.com';
         $this->service = new Google_Service_Calendar($this->client);
     }
 

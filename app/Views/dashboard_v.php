@@ -14,7 +14,7 @@
                 </p>
             </div>
             <div class="d-none d-lg-block text-end">
-                <span class="badge bg-light-primary text-primary fs-3 fw-bold px-3 py-2 rounded-pill border border-primary border-opacity-10"><i class="ti ti-building-monitor me-1"></i> SIMPA Enterprise</span>
+                <span class="badge bg-light-primary text-primary fs-3 fw-bold px-3 py-2 rounded-pill border border-primary border-opacity-10"><i class="ti ti-building-monitor me-1"></i> SIMPA</span>
             </div>
         </div>
     </div>
