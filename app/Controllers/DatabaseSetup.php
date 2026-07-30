@@ -516,7 +516,7 @@ class DatabaseSetup extends BaseController
                 $divisiId  = $divisiRow['id'] ?? 1;
 
                 $this->db->table('aplikasi_master')->insert([
-                    'nama_app'      => 'SIMPA Enterprise',
+                    'nama_app'      => 'SIMPA',
                     'pic_id'        => $picId,
                     'divisi_id'     => $divisiId,
                     'status'        => 'Development',
@@ -527,7 +527,7 @@ class DatabaseSetup extends BaseController
                     'created_at'    => date('Y-m-d H:i:s'),
                     'updated_at'    => date('Y-m-d H:i:s'),
                 ]);
-                echo "<li>🌱 Aplikasi Master <b>SIMPA Enterprise</b> berhasil di-seed.</li>";
+                echo "<li>🌱 Aplikasi Master <b>SIMPA</b> berhasil di-seed.</li>";
             }
         } catch (\Exception $e) {
             echo "<li style='color:orange;'>⚠️ Seeding dilewati: " . $e->getMessage() . "</li>";

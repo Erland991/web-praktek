@@ -473,7 +473,13 @@ function renderDashboardCharts() {
         }
     });
 }
-document.addEventListener("DOMContentLoaded", renderDashboardCharts);
+
+// Pastikan grafik dirender saat load pertama kali ATAU saat kembali dari SPA (pjax)
+if (document.readyState === 'loading') {
+    document.addEventListener("DOMContentLoaded", renderDashboardCharts);
+} else {
+    renderDashboardCharts();
+}
 </script>
 
 <style>
@@ -636,7 +642,7 @@ document.addEventListener("DOMContentLoaded", renderDashboardCharts);
         window.filterDashboardInitialized = true;
     }
 
-    let requestModal = null;
+    var requestModal = null;
     function showRequestDeleteModal(id, is_app, name) {
         document.getElementById('formRequestDelete').action = '<?= base_url('dashboard/request_delete') ?>/' + id + '/' + is_app;
         document.getElementById('req_app_name').innerText = name;
@@ -648,7 +654,7 @@ document.addEventListener("DOMContentLoaded", renderDashboardCharts);
         requestModal.show();
     }
 
-    let reviewModal = null;
+    var reviewModal = null;
     function showReviewModal(id, is_app, name, reason) {
         document.getElementById('rev_app_name').innerText = name;
         document.getElementById('rev_app_reason').innerText = `"` + reason + `"`;

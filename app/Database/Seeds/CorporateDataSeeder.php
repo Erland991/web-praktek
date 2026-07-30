@@ -74,7 +74,7 @@ class CorporateDataSeeder extends Seeder
         // 4. Seed Aplikasi Master
         $this->db->table('aplikasi_master')->emptyTable();
         $appMasterData = [
-            ['nama_app' => 'SIMPA Enterprise', 'pic_id' => $user_id_1, 'divisi_id' => $ti_id, 'status' => 'Production', 'deskripsi' => 'Sistem Informasi Manajemen Proyek Aplikasi PT Surveyor Indonesia', 'tgl_mulai' => '2025-01-01', 'tgl_target' => '2026-07-31', 'versi_current' => '1.0.0', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama_app' => 'SIMPA', 'pic_id' => $user_id_1, 'divisi_id' => $ti_id, 'status' => 'Production', 'deskripsi' => 'Sistem Informasi Manajemen Proyek Aplikasi PT Surveyor Indonesia', 'tgl_mulai' => '2025-01-01', 'tgl_target' => '2026-07-31', 'versi_current' => '1.0.0', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
             ['nama_app' => 'HCIS (Human Capital)', 'pic_id' => $user_id_2, 'divisi_id' => $sdm_id, 'status' => 'Production', 'deskripsi' => 'Human Capital Information System untuk rekrutmen dan penggajian', 'tgl_mulai' => '2024-05-10', 'tgl_target' => '2025-12-31', 'versi_current' => '2.1.4', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
             ['nama_app' => 'E-Procurement Surveyor', 'pic_id' => $user_id_1, 'divisi_id' => $peng_id, 'status' => 'Development', 'deskripsi' => 'Aplikasi tender dan pengadaan barang/jasa perusahaan', 'tgl_mulai' => '2026-01-15', 'tgl_target' => '2026-10-30', 'versi_current' => '0.5.0', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
             ['nama_app' => 'Nadine (Naskah Dinas Elektronik)', 'pic_id' => $user_id_2, 'divisi_id' => $sec_id, 'status' => 'Production', 'deskripsi' => 'Aplikasi persuratan digital terpusat BUMN', 'tgl_mulai' => '2023-08-20', 'tgl_target' => '2024-01-01', 'versi_current' => '3.0.1', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
@@ -87,7 +87,7 @@ class CorporateDataSeeder extends Seeder
         $simpa_id = 1;
         $app_master = $this->db->table('aplikasi_master')->get()->getResultArray();
         foreach($app_master as $a) {
-            if($a['nama_app'] == 'SIMPA Enterprise') $simpa_id = $a['id'];
+            if($a['nama_app'] == 'SIMPA') $simpa_id = $a['id'];
         }
 
         // 5. Seed Aset (Dashboard Cards)
@@ -101,7 +101,7 @@ class CorporateDataSeeder extends Seeder
             ['nama_aset' => 'Budgeting App', 'kategori' => 'Aplikasi Keuangan', 'status' => 'Development', 'pic' => 'Budi Santoso', 'deskripsi' => 'Aplikasi Penyusunan Anggaran', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
 
             // Manajemen (4)
-            ['nama_aset' => 'SIMPA Enterprise', 'kategori' => 'Aplikasi Manajemen', 'status' => 'Aktif', 'pic' => 'Budi Santoso', 'deskripsi' => 'Manajemen Proyek Aplikasi', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
+            ['nama_aset' => 'SIMPA', 'kategori' => 'Aplikasi Manajemen', 'status' => 'Aktif', 'pic' => 'Budi Santoso', 'deskripsi' => 'Manajemen Proyek Aplikasi', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
             ['nama_aset' => 'Risk Management', 'kategori' => 'Aplikasi Manajemen', 'status' => 'Aktif', 'pic' => 'Siti Aminah', 'deskripsi' => 'Sistem Manajemen Risiko', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
             ['nama_aset' => 'Asset Tracker', 'kategori' => 'Aplikasi Manajemen', 'status' => 'Maintenance', 'pic' => 'Budi Santoso', 'deskripsi' => 'Pelacakan Aset Fisik', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],
             ['nama_aset' => 'Document Controller', 'kategori' => 'Aplikasi Manajemen', 'status' => 'Aktif', 'pic' => 'Siti Aminah', 'deskripsi' => 'Pengendali Dokumen Mutu', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')],

@@ -16,6 +16,8 @@ class PermintaanController extends BaseController
                 deskripsi TEXT NULL,
                 latar_belakang TEXT NULL,
                 tgl_target DATE NULL,
+                jenis_aplikasi VARCHAR(50) NULL,
+                pengguna VARCHAR(50) NULL,
                 uraian_tambahan TEXT NULL,
                 lampiran TEXT NULL,
                 user_id INT(11) UNSIGNED NOT NULL,
@@ -40,6 +42,12 @@ class PermintaanController extends BaseController
             }
             if (!$db->fieldExists('lampiran', 'permintaan_aplikasi')) {
                 $db->simpleQuery("ALTER TABLE permintaan_aplikasi ADD COLUMN lampiran TEXT NULL AFTER uraian_tambahan");
+            }
+            if (!$db->fieldExists('jenis_aplikasi', 'permintaan_aplikasi')) {
+                $db->simpleQuery("ALTER TABLE permintaan_aplikasi ADD COLUMN jenis_aplikasi VARCHAR(50) NULL AFTER tgl_target");
+            }
+            if (!$db->fieldExists('pengguna', 'permintaan_aplikasi')) {
+                $db->simpleQuery("ALTER TABLE permintaan_aplikasi ADD COLUMN pengguna VARCHAR(50) NULL AFTER jenis_aplikasi");
             }
         }
     }
@@ -138,6 +146,8 @@ class PermintaanController extends BaseController
             'deskripsi' => $this->request->getPost('deskripsi'),
             'latar_belakang' => $this->request->getPost('latar_belakang'),
             'tgl_target' => $this->request->getPost('tgl_target'),
+            'jenis_aplikasi' => $this->request->getPost('jenis_aplikasi'),
+            'pengguna' => $this->request->getPost('pengguna'),
             'uraian_tambahan' => $this->request->getPost('uraian_tambahan'),
             'lampiran' => $this->request->getPost('lampiran'),
             'user_id' => session()->get('id'),
@@ -417,8 +427,8 @@ class PermintaanController extends BaseController
             $drawRow('Tujuan', $permintaan['deskripsi']);
             $drawRow('Target Implementasi Sistem', date('d/m/Y', strtotime($permintaan['tgl_target'])));
             $drawRow('Fungsi-fungsi Sistem Informasi', "Nama Aplikasi: " . $permintaan['nama_app']);
-            $drawRow('Jenis Aplikasi', 'Web / Desktop / Mobile *');
-            $drawRow('Pengguna', 'Internal / Eksternal *');
+            $drawRow('Jenis Aplikasi', $permintaan['jenis_aplikasi'] ? $permintaan['jenis_aplikasi'] : 'Web / Desktop / Mobile *');
+            $drawRow('Pengguna', $permintaan['pengguna'] ? $permintaan['pengguna'] : 'Internal / Eksternal *');
             $drawRow('Uraian Permintaan Tambahan/Khusus', $permintaan['uraian_tambahan']);
             $drawRow('Lampiran', $permintaan['lampiran']);
 

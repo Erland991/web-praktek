@@ -81,6 +81,51 @@
                 </div>
 
                 <div class="row g-4 mt-1">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="fw-bold text-muted mb-2 d-block"><i class="ti ti-device-desktop me-1"></i>Jenis Aplikasi <span class="text-danger">*</span></label>
+                            <?php if ($is_approved): ?>
+                                <input type="text" class="form-control border-2 bg-light rounded-3" value="<?= esc($permintaan['jenis_aplikasi'] ?? '-') ?>" readonly>
+                            <?php else: ?>
+                            <div class="d-flex flex-wrap gap-3 mt-1 ps-1">
+                                <?php 
+                                    $jenis_options = ['Web', 'Desktop', 'Mobile'];
+                                    $current_jenis = $permintaan['jenis_aplikasi'] ?? '';
+                                ?>
+                                <?php foreach($jenis_options as $opt): ?>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="jenis_aplikasi" id="jenis_<?= strtolower($opt) ?>" value="<?= $opt ?>" <?= $current_jenis === $opt ? 'checked' : '' ?>>
+                                    <label class="form-check-label fw-semibold" for="jenis_<?= strtolower($opt) ?>"><?= $opt ?></label>
+                                </div>
+                                <?php endforeach; ?>
+                            </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="fw-bold text-muted mb-2 d-block"><i class="ti ti-users me-1"></i>Target Pengguna <span class="text-danger">*</span></label>
+                            <?php if ($is_approved): ?>
+                                <input type="text" class="form-control border-2 bg-light rounded-3" value="<?= esc($permintaan['pengguna'] ?? '-') ?>" readonly>
+                            <?php else: ?>
+                            <div class="d-flex flex-wrap gap-3 mt-1 ps-1">
+                                <?php
+                                    $pengguna_options = ['Internal', 'Eksternal', 'Internal & Eksternal'];
+                                    $current_pengguna = $permintaan['pengguna'] ?? '';
+                                ?>
+                                <?php foreach($pengguna_options as $opt): ?>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="pengguna" id="pengguna_<?= strtolower(str_replace([' ', '&'], ['_', 'dan'], $opt)) ?>" value="<?= $opt ?>" <?= $current_pengguna === $opt ? 'checked' : '' ?>>
+                                    <label class="form-check-label fw-semibold" for="pengguna_<?= strtolower(str_replace([' ', '&'], ['_', 'dan'], $opt)) ?>"><?= $opt ?></label>
+                                </div>
+                                <?php endforeach; ?>
+                            </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4 mt-1">
                     <div class="col-md-12">
                         <div class="form-floating mb-3">
                             <textarea name="uraian_tambahan" class="form-control border-2 bg-light rounded-3 custom-textarea" id="uraian_tambahan" placeholder="Catatan tambahan khusus (opsional)" <?= $readonly ?> style="height: 100px;"><?= $permintaan['uraian_tambahan'] ?? '' ?></textarea>
